@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Criativos Automóveis - Templates</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Montserrat:wght@400;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; font-family: 'Roboto', sans-serif; padding: 40px 20px; }
+
+  h1 { color: #fff; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 28px; margin-bottom: 10px; }
+  .subtitle { color: #aaa; text-align: center; margin-bottom: 50px; font-size: 14px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(540px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto; }
+
+  /* ============================================
+     TEMPLATE 1 - DARK RED (estilo original)
+     ============================================ */
+  .card-1 {
+    width: 540px;
+    height: 540px;
+    background: #111;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Oswald', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card-1 .bg-pattern {
+    position: absolute;
+    right: 0; top: 0;
+    width: 60%;
+    height: 100%;
+    background: radial-gradient(ellipse at right, rgba(180,20,20,0.35) 0%, transparent 70%);
+  }
+  .card-1 .bg-dots {
+    position: absolute;
+    right: 0; top: 0;
+    width: 50%;
+    height: 65%;
+    background-image: radial-gradient(circle, rgba(200,30,30,0.4) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+  .card-1 .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    padding: 14px 20px;
+    z-index: 10;
+  }
+  .card-1 .title-box {
+    background: #111;
+    border: 2px solid #cc1111;
+    border-radius: 6px;
+    padding: 8px 20px;
+    flex: 1;
+  }
+  .card-1 .title-box h2 {
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .card-1 .logo-area {
+    margin-left: 16px;
+    text-align: right;
+  }
+  .card-1 .logo-area .brand-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .card-1 .logo-area .logo-icon {
+    width: 80px;
+    height: 30px;
+    background: linear-gradient(135deg, #cc1111, #ff3333);
+    clip-path: polygon(0 50%, 15% 0, 85% 0, 100% 50%, 85% 100%, 15% 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 4px;
+  }
+  .card-1 .car-img {
+    position: absolute;
+    bottom: 130px;
+    left: 0; right: 0;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-1 .car-placeholder {
+    width: 480px;
+    height: 270px;
+    background: linear-gradient(135deg, #222 0%, #333 50%, #222 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .car-svg { width: 380px; height: 200px; }
+  .card-1 .model-tag {
+    position: absolute;
+    bottom: 130px;
+    right: 20px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-style: italic;
+    font-size: 15px;
+    font-weight: 300;
+    z-index: 10;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+  }
+  .card-1 .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 120px;
+    background: #111;
+    display: flex;
+    align-items: stretch;
+    z-index: 10;
+  }
+  .card-1 .price-box {
+    background: #cc1111;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+    padding-right: 20px;
+  }
+  .card-1 .price-box .price {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .card-1 .specs {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+  }
+  .card-1 .spec-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid #333;
+    gap: 6px;
+    padding: 10px;
+  }
+  .card-1 .spec-icon { font-size: 22px; color: #cc1111; }
+  .card-1 .spec-value { font-size: 13px; color: #fff; font-family: 'Roboto', sans-serif; font-weight: 500; text-align: center; }
+
+  /* ============================================
+     TEMPLATE 2 - AZUL MODERNO
+     ============================================ */
+  .card-2 {
+    width: 540px;
+    height: 540px;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card-2 .accent-line {
+    position: absolute;
+    left: 0; top: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, #00a8ff, #0066cc);
+  }
+  .card-2 .diagonal-bg {
+    position: absolute;
+    right: -80px;
+    top: -80px;
+    width: 350px;
+    height: 350px;
+    background: linear-gradient(135deg, rgba(0,168,255,0.12), transparent);
+    border-radius: 50%;
+  }
+  .card-2 .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 18px 24px 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+  }
+  .card-2 .title-area h2 {
+    font-size: 32px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 2px;
+  }
+  .card-2 .title-area h3 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #00a8ff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .card-2 .badge {
+    background: linear-gradient(135deg, #00a8ff, #0066cc);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .card-2 .car-area {
+    position: absolute;
+    bottom: 140px;
+    left: 0; right: 0;
+    height: 290px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-2 .car-glow {
+    position: absolute;
+    bottom: 0;
+    width: 400px;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(0,168,255,0.3), transparent 70%);
+    filter: blur(15px);
+  }
+  .card-2 .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 130px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,168,255,0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 24px 0 30px;
+    z-index: 10;
+    gap: 20px;
+  }
+  .card-2 .price-section {
+    flex: 0 0 auto;
+  }
+  .card-2 .price-label { font-size: 10px; color: #00a8ff; letter-spacing: 2px; text-transform: uppercase; }
+  .card-2 .price { font-size: 34px; font-weight: 900; color: #fff; line-height: 1; }
+  .card-2 .divider {
+    width: 1px;
+    height: 70px;
+    background: rgba(0,168,255,0.4);
+    flex: 0 0 auto;
+  }
+  .card-2 .specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+    flex: 1;
+  }
+  .card-2 .spec { display: flex; align-items: center; gap: 8px; }
+  .card-2 .spec-icon { color: #00a8ff; font-size: 16px; }
+  .card-2 .spec-text { font-size: 12px; color: #ccc; }
+  .card-2 .spec-text strong { color: #fff; display: block; font-size: 13px; }
+
+  /* ============================================
+     TEMPLATE 3 - LUXO OURO/PRETO
+     ============================================ */
+  .card-3 {
+    width: 540px;
+    height: 540px;
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Rajdhani', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card-3 .gold-stripe-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #c9a227, #f0c040, #c9a227, transparent);
+  }
+  .card-3 .gold-stripe-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #c9a227, #f0c040, #c9a227, transparent);
+  }
+  .card-3 .corner-tl {
+    position: absolute;
+    top: 15px; left: 15px;
+    width: 40px; height: 40px;
+    border-top: 2px solid #c9a227;
+    border-left: 2px solid #c9a227;
+  }
+  .card-3 .corner-tr {
+    position: absolute;
+    top: 15px; right: 15px;
+    width: 40px; height: 40px;
+    border-top: 2px solid #c9a227;
+    border-right: 2px solid #c9a227;
+  }
+  .card-3 .corner-bl {
+    position: absolute;
+    bottom: 15px; left: 15px;
+    width: 40px; height: 40px;
+    border-bottom: 2px solid #c9a227;
+    border-left: 2px solid #c9a227;
+  }
+  .card-3 .corner-br {
+    position: absolute;
+    bottom: 15px; right: 15px;
+    width: 40px; height: 40px;
+    border-bottom: 2px solid #c9a227;
+    border-right: 2px solid #c9a227;
+  }
+  .card-3 .brand-header {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .card-3 .brand-header .luxury-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 6px;
+    color: #c9a227;
+    text-transform: uppercase;
+  }
+  .card-3 .brand-header h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(201,162,39,0.5);
+  }
+  .card-3 .brand-header h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #c9a227;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+  }
+  .card-3 .car-area {
+    position: absolute;
+    bottom: 140px;
+    left: 0; right: 0;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-3 .car-glow {
+    position: absolute;
+    bottom: 0;
+    width: 460px;
+    height: 50px;
+    background: radial-gradient(ellipse, rgba(201,162,39,0.25), transparent 70%);
+    filter: blur(20px);
+  }
+  .card-3 .bottom-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 10;
+    border-top: 1px solid rgba(201,162,39,0.2);
+  }
+  .card-3 .price-area {
+    text-align: center;
+  }
+  .card-3 .price-area .from { font-size: 10px; letter-spacing: 3px; color: #888; text-transform: uppercase; }
+  .card-3 .price-area .amount { font-size: 40px; font-weight: 700; color: #c9a227; line-height: 1; }
+  .card-3 .price-area .currency { font-size: 18px; vertical-align: super; }
+  .card-3 .gold-divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, #c9a227, transparent);
+  }
+  .card-3 .spec-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 100px;
+  }
+  .card-3 .spec-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-3 .spec-row .icon { color: #c9a227; font-size: 16px; }
+  .card-3 .spec-row .text { font-size: 13px; color: #ddd; }
+  .card-3 .spec-row .text span { display: block; font-size: 10px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+
+  /* ============================================
+     TEMPLATE 4 - LARANJA ESPORTIVO
+     ============================================ */
+  .card-4 {
+    width: 540px;
+    height: 540px;
+    background: #0f0f0f;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card-4 .diagonal-cut {
+    position: absolute;
+    top: 0; right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 200px 200px 0;
+    border-color: transparent #ff6b00 transparent transparent;
+  }
+  .card-4 .diagonal-cut-2 {
+    position: absolute;
+    top: 0; right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 160px 160px 0;
+    border-color: transparent #0f0f0f transparent transparent;
+  }
+  .card-4 .sport-lines {
+    position: absolute;
+    bottom: 140px;
+    left: -20px;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #ff6b00 30%, #ff6b00 70%, transparent);
+  }
+  .card-4 .sport-lines-2 {
+    position: absolute;
+    bottom: 148px;
+    left: -20px;
+    right: 100px;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(255,107,0,0.4) 30%, transparent);
+  }
+  .card-4 .header {
+    position: absolute;
+    top: 20px; left: 20px;
+    z-index: 10;
+  }
+  .card-4 .header .sport-tag {
+    display: inline-block;
+    background: #ff6b00;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+    margin-bottom: 8px;
+  }
+  .card-4 .header h2 {
+    font-size: 34px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 1px;
+  }
+  .card-4 .header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ff6b00;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+  .card-4 .year-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    text-align: right;
+  }
+  .card-4 .year-badge .year {
+    font-size: 50px;
+    font-weight: 900;
+    color: rgba(255,107,0,0.15);
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+  .card-4 .car-area {
+    position: absolute;
+    bottom: 150px;
+    left: 0; right: 0;
+    height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-4 .bottom-panel {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 140px;
+    background: #1a1a1a;
+    z-index: 10;
+    display: flex;
+  }
+  .card-4 .price-col {
+    background: #ff6b00;
+    width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+    padding-right: 15px;
+  }
+  .card-4 .price-col .price { font-size: 28px; font-weight: 900; color: #fff; line-height: 1; }
+  .card-4 .price-col .price-sub { font-size: 10px; color: rgba(255,255,255,0.8); letter-spacing: 1px; text-transform: uppercase; }
+  .card-4 .specs-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 10px;
+  }
+  .card-4 .spec-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .card-4 .spec-pill .icon { font-size: 20px; color: #ff6b00; }
+  .card-4 .spec-pill .val { font-size: 13px; color: #fff; font-weight: 600; }
+  .card-4 .spec-pill .label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ============================================
+     TEMPLATE 5 - VERDE CLEAN/ECO
+     ============================================ */
+  .card-5 {
+    width: 540px;
+    height: 540px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .card-5 .top-band {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(135deg, #1a5c1a 0%, #2d8c2d 60%, #3aab3a 100%);
+  }
+  .card-5 .wave {
+    position: absolute;
+    top: 160px;
+    left: 0; right: 0;
+    height: 80px;
+    overflow: hidden;
+  }
+  .card-5 .wave svg { width: 100%; height: 80px; }
+  .card-5 .header {
+    position: absolute;
+    top: 16px; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 10;
+  }
+  .card-5 .brand {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+  }
+  .card-5 .brand h2 { font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+  .card-5 .brand h3 { font-size: 11px; color: rgba(255,255,255,0.8); text-transform: uppercase; letter-spacing: 2px; }
+  .card-5 .eco-badge {
+    background: #2d8c2d;
+    border: 2px solid rgba(255,255,255,0.5);
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+  }
+  .card-5 .eco-badge .eco-text { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+  .card-5 .eco-badge .fuel { font-size: 16px; font-weight: 700; }
+  .card-5 .car-area {
+    position: absolute;
+    top: 80px;
+    left: 0; right: 0;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-5 .info-section {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 200px;
+    padding: 20px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .card-5 .model-info h4 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .card-5 .model-info p { font-size: 13px; color: #666; }
+  .card-5 .stats-row {
+    display: flex;
+    gap: 12px;
+  }
+  .card-5 .stat-card {
+    flex: 1;
+    background: #f5f5f5;
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    border-bottom: 3px solid #2d8c2d;
+  }
+  .card-5 .stat-card .stat-icon { font-size: 18px; color: #2d8c2d; }
+  .card-5 .stat-card .stat-val { font-size: 14px; font-weight: 700; color: #111; }
+  .card-5 .stat-card .stat-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+  .card-5 .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #1a5c1a, #2d8c2d);
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+  .card-5 .price-row .price { font-size: 28px; font-weight: 900; color: #fff; }
+  .card-5 .price-row .price-info { font-size: 11px; color: rgba(255,255,255,0.8); text-align: right; }
+
+  /* ============================================
+     TEMPLATE 6 - ROXO PREMIUM GRADIENT
+     ============================================ */
+  .card-6 {
+    width: 540px;
+    height: 540px;
+    background: linear-gradient(135deg, #1a0533 0%, #2d0d5c 40%, #1a0533 100%);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .card-6 .neon-circle-1 {
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(180,50,255,0.2), transparent 60%);
+  }
+  .card-6 .neon-circle-2 {
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(100,0,200,0.3), transparent 60%);
+  }
+  .card-6 .neon-line {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(180,50,255,0.6), transparent);
+  }
+  .card-6 .neon-line.top { top: 80px; }
+  .card-6 .neon-line.bottom { bottom: 140px; }
+  .card-6 .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+  }
+  .card-6 .title-block h2 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(180,50,255,0.8);
+  }
+  .card-6 .title-block h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(180,50,255,0.9);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+  }
+  .card-6 .brand-pill {
+    background: rgba(180,50,255,0.2);
+    border: 1px solid rgba(180,50,255,0.5);
+    border-radius: 20px;
+    padding: 6px 16px;
+    color: #d580ff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .card-6 .car-area {
+    position: absolute;
+    bottom: 140px;
+    left: 0; right: 0;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+  .card-6 .car-glow {
+    position: absolute;
+    bottom: -10px;
+    width: 400px;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(180,50,255,0.4), transparent 70%);
+    filter: blur(15px);
+  }
+  .card-6 .bottom-section {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 135px;
+    background: rgba(255,255,255,0.04);
+    border-top: 1px solid rgba(180,50,255,0.3);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 20px;
+    z-index: 10;
+  }
+  .card-6 .price-block .label { font-size: 9px; color: #d580ff; letter-spacing: 3px; text-transform: uppercase; }
+  .card-6 .price-block .price { font-size: 36px; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 0 15px rgba(180,50,255,0.6); }
+  .card-6 .vline { width: 1px; height: 70px; background: rgba(180,50,255,0.3); }
+  .card-6 .spec-list { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .card-6 .spec-row { display: flex; align-items: center; gap: 10px; }
+  .card-6 .spec-row .dot { width: 6px; height: 6px; background: #b432ff; border-radius: 50%; flex-shrink: 0; }
+  .card-6 .spec-row .text { font-size: 12px; color: #ccc; }
+  .card-6 .spec-row .text strong { color: #fff; }
+  .card-6 .year-stamp {
+    font-size: 100px;
+    font-weight: 900;
+    color: rgba(180,50,255,0.05);
+    position: absolute;
+    bottom: 100px;
+    right: -10px;
+    letter-spacing: -5px;
+    z-index: 1;
+  }
+
+  /* Labels */
+  .template-label {
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin-top: 12px;
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .card-wrapper { display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<h1>🚗 CRIATIVOS AUTOMÓVEIS</h1>
+<p class="subtitle">6 Templates Prontos | Diferentes Designs, Cores e Estilos</p>
+
+<div class="grid">
+
+  <!-- ===== TEMPLATE 1: DARK RED ===== -->
+  <div class="card-wrapper">
+    <div class="card-1">
+      <div class="bg-pattern"></div>
+      <div class="bg-dots"></div>
+      <div class="header">
+        <div class="title-box">
+          <h2>FORD<br>TOURNEO</h2>
+        </div>
+        <div class="logo-area">
+          <div class="brand-name">RAUL MARÇAL</div>
+          <div style="color:#cc1111;font-size:10px;letter-spacing:1px;margin-top:2px;font-family:'Roboto',sans-serif;">AUTOMÓVEIS</div>
+        </div>
+      </div>
+      <div class="car-area">
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Shadow -->
+          <ellipse cx="200" cy="185" rx="160" ry="8" fill="rgba(0,0,0,0.4)"/>
+          <!-- Body -->
+          <rect x="40" y="90" width="320" height="80" rx="8" fill="#d0d0d0"/>
+          <!-- Roof -->
+          <path d="M90 90 Q100 40 160 38 L260 38 Q310 40 320 90Z" fill="#c8c8c8"/>
+          <!-- Windows -->
+          <path d="M100 88 Q108 52 155 50 L195 50 L195 88Z" fill="rgba(100,180,255,0.7)" stroke="#999" stroke-width="1"/>
+          <rect x="200" y="50" width="70" height="38" rx="3" fill="rgba(100,180,255,0.7)" stroke="#999" stroke-width="1"/>
+          <rect x="278" y="58" width="38" height="30" rx="3" fill="rgba(100,180,255,0.7)" stroke="#999" stroke-width="1"/>
+          <!-- Door lines -->
+          <line x1="195" y1="90" x2="195" y2="165" stroke="#bbb" stroke-width="1.5"/>
+          <line x1="278" y1="90" x2="278" y2="165" stroke="#bbb" stroke-width="1.5"/>
+          <line x1="120" y1="90" x2="120" y2="165" stroke="#bbb" stroke-width="1.5"/>
+          <!-- Wheels -->
+          <circle cx="105" cy="170" r="24" fill="#222"/><circle cx="105" cy="170" r="16" fill="#555"/><circle cx="105" cy="170" r="7" fill="#333"/>
+          <circle cx="300" cy="170" r="24" fill="#222"/><circle cx="300" cy="170" r="16" fill="#555"/><circle cx="300" cy="170" r="7" fill="#333"/>
+          <!-- Bumper front -->
+          <rect x="320" y="120" width="30" height="30" rx="4" fill="#c0c0c0"/>
+          <rect x="330" y="105" width="15" height="20" rx="3" fill="rgba(255,200,50,0.8)"/>
+          <!-- Bumper rear -->
+          <rect x="40" y="120" width="20" height="30" rx="4" fill="#c0c0c0"/>
+          <!-- Hood line -->
+          <line x1="320" y1="90" x2="350" y2="100" stroke="#bbb" stroke-width="1"/>
+          <!-- Roof rack -->
+          <rect x="100" y="36" width="200" height="4" rx="2" fill="#999"/>
+          <rect x="115" y="32" width="4" height="8" rx="1" fill="#888"/>
+          <rect x="285" y="32" width="4" height="8" rx="1" fill="#888"/>
+        </svg>
+      </div>
+      <div class="model-tag">Courier 1.0 EcoBoost – 2016</div>
+      <div class="bottom-bar">
+        <div class="price-box">
+          <span class="price">€8 900</span>
+        </div>
+        <div class="specs">
+          <div class="spec-item">
+            <div class="spec-icon">🔢</div>
+            <div class="spec-value">145 131<br>Km</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-icon">⚙️</div>
+            <div class="spec-value">100 CV</div>
+          </div>
+          <div class="spec-item">
+            <div class="spec-icon">⛽</div>
+            <div class="spec-value">Gasolina</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 1 — Dark Red Clássico</div>
+  </div>
+
+  <!-- ===== TEMPLATE 2: AZUL MODERNO ===== -->
+  <div class="card-wrapper">
+    <div class="card-2">
+      <div class="accent-line"></div>
+      <div class="diagonal-bg"></div>
+      <div class="header">
+        <div class="title-area">
+          <h2>BMW<br>Série 3</h2>
+          <h3>320d Sport Line</h3>
+        </div>
+        <div class="badge">2020 · Diesel</div>
+      </div>
+      <div class="car-area">
+        <div class="car-glow"></div>
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="185" rx="155" ry="7" fill="rgba(0,168,255,0.15)"/>
+          <!-- Sedan body -->
+          <path d="M50 130 L55 100 L80 70 L140 55 L265 55 L320 80 L355 110 L355 150 L50 150Z" fill="#1a2a4a"/>
+          <!-- Roof -->
+          <path d="M90 98 Q100 60 155 56 L260 56 Q300 62 310 90 L320 98Z" fill="#162040"/>
+          <!-- Windows -->
+          <path d="M102 97 L110 65 L155 58 L195 58 L195 97Z" fill="rgba(0,168,255,0.5)" stroke="#1e4080" stroke-width="1"/>
+          <rect x="200" y="58" width="68" height="39" rx="2" fill="rgba(0,168,255,0.5)" stroke="#1e4080" stroke-width="1"/>
+          <path d="M274 97 L274 65 L305 75 L315 95Z" fill="rgba(0,168,255,0.4)" stroke="#1e4080" stroke-width="1"/>
+          <!-- Chrome accents -->
+          <rect x="50" y="148" width="305" height="3" rx="1" fill="rgba(0,168,255,0.5)"/>
+          <line x1="195" y1="97" x2="195" y2="150" stroke="#1e4080" stroke-width="1.5"/>
+          <line x1="274" y1="97" x2="274" y2="150" stroke="#1e4080" stroke-width="1.5"/>
+          <!-- Wheels -->
+          <circle cx="110" cy="158" r="26" fill="#0a0a0a"/><circle cx="110" cy="158" r="18" fill="#1a1a2a"/><circle cx="110" cy="158" r="8" fill="#00a8ff" opacity="0.8"/>
+          <circle cx="295" cy="158" r="26" fill="#0a0a0a"/><circle cx="295" cy="158" r="18" fill="#1a1a2a"/><circle cx="295" cy="158" r="8" fill="#00a8ff" opacity="0.8"/>
+          <!-- Headlights -->
+          <rect x="330" y="100" width="25" height="12" rx="6" fill="rgba(255,220,100,0.9)"/>
+          <rect x="336" y="114" width="18" height="6" rx="3" fill="rgba(255,100,100,0.8)"/>
+          <!-- Grille -->
+          <rect x="328" y="120" width="28" height="20" rx="3" fill="#0a1020" stroke="#00a8ff" stroke-width="1"/>
+          <line x1="342" y1="120" x2="342" y2="140" stroke="#00a8ff" stroke-width="0.5" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="bottom-bar">
+        <div class="price-section">
+          <div class="price-label">Preço</div>
+          <div class="price">€24 900</div>
+        </div>
+        <div class="divider"></div>
+        <div class="specs-grid">
+          <div class="spec"><span class="spec-icon">🔢</span><div class="spec-text"><strong>89 000 Km</strong>Quilometragem</div></div>
+          <div class="spec"><span class="spec-icon">⚙️</span><div class="spec-text"><strong>190 CV</strong>Potência</div></div>
+          <div class="spec"><span class="spec-icon">⛽</span><div class="spec-text"><strong>Diesel</strong>Combustível</div></div>
+          <div class="spec"><span class="spec-icon">🚗</span><div class="spec-text"><strong>Automático</strong>Câmbio</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 2 — Azul Moderno Premium</div>
+  </div>
+
+  <!-- ===== TEMPLATE 3: LUXO OURO ===== -->
+  <div class="card-wrapper">
+    <div class="card-3">
+      <div class="gold-stripe-top"></div>
+      <div class="gold-stripe-bottom"></div>
+      <div class="corner-tl"></div>
+      <div class="corner-tr"></div>
+      <div class="corner-bl"></div>
+      <div class="corner-br"></div>
+      <div class="brand-header">
+        <div class="luxury-label">Exclusividade e Performance</div>
+        <h2>MERCEDES</h2>
+        <h3>C 200 AMG Line</h3>
+      </div>
+      <div class="car-area">
+        <div class="car-glow"></div>
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="184" rx="150" ry="8" fill="rgba(201,162,39,0.2)"/>
+          <!-- Luxury sedan body -->
+          <path d="M55 135 L60 105 L85 72 L145 56 L270 56 L325 80 L350 115 L350 148 L55 148Z" fill="#1c1c1c"/>
+          <path d="M95 103 Q105 62 158 58 L258 58 Q298 64 314 96 L322 103Z" fill="#141414"/>
+          <!-- Windows with gold tint -->
+          <path d="M107 101 L114 66 L157 60 L197 60 L197 101Z" fill="rgba(201,162,39,0.25)" stroke="#3a3000" stroke-width="1"/>
+          <rect x="202" y="60" width="66" height="41" rx="2" fill="rgba(201,162,39,0.25)" stroke="#3a3000" stroke-width="1"/>
+          <path d="M274 101 L276 66 L308 78 L318 98Z" fill="rgba(201,162,39,0.2)" stroke="#3a3000" stroke-width="1"/>
+          <!-- Gold chrome lines -->
+          <rect x="55" y="146" width="295" height="2" rx="1" fill="#c9a227"/>
+          <rect x="55" y="120" width="295" height="1" rx="1" fill="rgba(201,162,39,0.3)"/>
+          <!-- Wheels -->
+          <circle cx="112" cy="157" r="27" fill="#0d0d0d"/><circle cx="112" cy="157" r="19" fill="#1a1a1a"/>
+          <circle cx="112" cy="157" r="3" fill="#c9a227"/>
+          <line x1="112" y1="138" x2="112" y2="156" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="112" y1="158" x2="112" y2="176" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="93" y1="157" x2="111" y2="157" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="113" y1="157" x2="131" y2="157" stroke="#c9a227" stroke-width="1.5"/>
+          <circle cx="293" cy="157" r="27" fill="#0d0d0d"/><circle cx="293" cy="157" r="19" fill="#1a1a1a"/>
+          <circle cx="293" cy="157" r="3" fill="#c9a227"/>
+          <line x1="293" y1="138" x2="293" y2="156" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="293" y1="158" x2="293" y2="176" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="274" y1="157" x2="292" y2="157" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="294" y1="157" x2="312" y2="157" stroke="#c9a227" stroke-width="1.5"/>
+          <!-- Star logo placeholder -->
+          <circle cx="202" cy="58" r="12" fill="#1c1c1c" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="202" y1="48" x2="202" y2="56" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="193" y1="63" x2="202" y2="56" stroke="#c9a227" stroke-width="1.5"/>
+          <line x1="211" y1="63" x2="202" y2="56" stroke="#c9a227" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="year-stamp">2022</div>
+      <div class="bottom-info">
+        <div class="price-area">
+          <div class="from">A partir de</div>
+          <div class="amount"><span class="currency">€</span>38 500</div>
+        </div>
+        <div class="gold-divider"></div>
+        <div class="spec-col">
+          <div class="spec-row">
+            <span class="icon">🔢</span>
+            <div class="text">32 000 Km <span>Quilometragem</span></div>
+          </div>
+          <div class="spec-row">
+            <span class="icon">⚙️</span>
+            <div class="text">204 CV <span>Potência</span></div>
+          </div>
+        </div>
+        <div class="gold-divider"></div>
+        <div class="spec-col">
+          <div class="spec-row">
+            <span class="icon">⛽</span>
+            <div class="text">Gasolina <span>Combustível</span></div>
+          </div>
+          <div class="spec-row">
+            <span class="icon">🚗</span>
+            <div class="text">9G-Tronic <span>Câmbio</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 3 — Luxo Ouro & Preto</div>
+  </div>
+
+  <!-- ===== TEMPLATE 4: LARANJA SPORT ===== -->
+  <div class="card-wrapper">
+    <div class="card-4">
+      <div class="diagonal-cut"></div>
+      <div class="diagonal-cut-2"></div>
+      <div class="sport-lines-2"></div>
+      <div class="sport-lines"></div>
+      <div class="header">
+        <div class="sport-tag">Sport Edition</div>
+        <h2>HONDA<br>CIVIC</h2>
+        <h3>Type R · Turbo</h3>
+      </div>
+      <div class="year-badge">
+        <div class="year">2021</div>
+      </div>
+      <div class="car-area">
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="183" rx="155" ry="7" fill="rgba(255,107,0,0.2)"/>
+          <!-- Sport hatchback body -->
+          <path d="M55 130 L65 98 L100 65 L175 52 L270 52 L320 72 L355 110 L355 148 L55 148Z" fill="#111"/>
+          <!-- Sporty roof -->
+          <path d="M110 97 Q118 58 175 54 L268 54 Q304 62 317 90 L325 97Z" fill="#0d0d0d"/>
+          <!-- Windows orange tint -->
+          <path d="M120 96 L126 62 L173 56 L193 56 L193 96Z" fill="rgba(255,107,0,0.3)" stroke="#ff6b00" stroke-width="0.5"/>
+          <rect x="198" y="56" width="64" height="40" rx="2" fill="rgba(255,107,0,0.3)" stroke="#ff6b00" stroke-width="0.5"/>
+          <path d="M268 96 L268 70 L308 78 L320 93Z" fill="rgba(255,107,0,0.25)" stroke="#ff6b00" stroke-width="0.5"/>
+          <!-- Orange accents -->
+          <rect x="55" y="148" width="300" height="2" rx="1" fill="#ff6b00"/>
+          <rect x="55" y="128" width="300" height="1" rx="1" fill="rgba(255,107,0,0.4)"/>
+          <!-- Side intake -->
+          <rect x="57" y="118" width="25" height="8" rx="2" fill="#ff6b00" opacity="0.8"/>
+          <!-- Sport wheels -->
+          <circle cx="110" cy="158" r="26" fill="#0a0a0a"/>
+          <circle cx="110" cy="158" r="18" fill="#1a1a1a"/>
+          <circle cx="110" cy="158" r="6" fill="#ff6b00"/>
+          <line x1="110" y1="140" x2="110" y2="176" stroke="#ff6b00" stroke-width="1.5"/>
+          <line x1="92" y1="158" x2="128" y2="158" stroke="#ff6b00" stroke-width="1.5"/>
+          <circle cx="295" cy="158" r="26" fill="#0a0a0a"/>
+          <circle cx="295" cy="158" r="18" fill="#1a1a1a"/>
+          <circle cx="295" cy="158" r="6" fill="#ff6b00"/>
+          <line x1="295" y1="140" x2="295" y2="176" stroke="#ff6b00" stroke-width="1.5"/>
+          <line x1="277" y1="158" x2="313" y2="158" stroke="#ff6b00" stroke-width="1.5"/>
+          <!-- Spoiler -->
+          <rect x="55" y="95" width="50" height="5" rx="2" fill="#ff6b00"/>
+          <!-- Exhaust -->
+          <ellipse cx="65" cy="148" rx="8" ry="4" fill="#222" stroke="#ff6b00" stroke-width="1"/>
+          <ellipse cx="80" cy="148" rx="8" ry="4" fill="#222" stroke="#ff6b00" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="bottom-panel">
+        <div class="price-col">
+          <div class="price-sub">Preço</div>
+          <div class="price">€19 900</div>
+        </div>
+        <div class="specs-row">
+          <div class="spec-pill">
+            <div class="icon">🔢</div>
+            <div class="val">65 000</div>
+            <div class="label">KM</div>
+          </div>
+          <div class="spec-pill">
+            <div class="icon">⚙️</div>
+            <div class="val">320 CV</div>
+            <div class="label">Potência</div>
+          </div>
+          <div class="spec-pill">
+            <div class="icon">⛽</div>
+            <div class="val">Gasolina</div>
+            <div class="label">Combust.</div>
+          </div>
+          <div class="spec-pill">
+            <div class="icon">⚡</div>
+            <div class="val">5.7s</div>
+            <div class="label">0-100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 4 — Laranja Sport Racing</div>
+  </div>
+
+  <!-- ===== TEMPLATE 5: VERDE ECO ===== -->
+  <div class="card-wrapper">
+    <div class="card-5">
+      <div class="top-band"></div>
+      <div class="wave">
+        <svg viewBox="0 0 540 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,40 C90,80 180,0 270,40 C360,80 450,0 540,40 L540,80 L0,80 Z" fill="#fff"/>
+        </svg>
+      </div>
+      <div class="header">
+        <div class="brand">
+          <h2>TOYOTA</h2>
+          <h3>Yaris Hybrid</h3>
+        </div>
+        <div class="eco-badge">
+          <span class="eco-text">ECO</span>
+          <span class="fuel">🌿</span>
+        </div>
+      </div>
+      <div class="car-area">
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="183" rx="145" ry="6" fill="rgba(45,140,45,0.3)"/>
+          <!-- Compact hybrid body -->
+          <path d="M65 132 L72 104 L105 72 L170 56 L260 56 L310 75 L345 112 L345 148 L65 148Z" fill="#e8f5e8"/>
+          <!-- Roof -->
+          <path d="M112 102 Q120 62 170 58 L258 58 Q298 68 310 95 L316 102Z" fill="#d4edd4"/>
+          <!-- Windows -->
+          <path d="M122 100 L129 65 L168 60 L190 60 L190 100Z" fill="rgba(45,180,45,0.4)" stroke="#2d8c2d" stroke-width="1"/>
+          <rect x="195" y="60" width="60" height="40" rx="2" fill="rgba(45,180,45,0.4)" stroke="#2d8c2d" stroke-width="1"/>
+          <path d="M260 100 L262 68 L300 78 L312 97Z" fill="rgba(45,180,45,0.3)" stroke="#2d8c2d" stroke-width="1"/>
+          <!-- Green accents -->
+          <rect x="65" y="146" width="280" height="2" rx="1" fill="#2d8c2d"/>
+          <!-- Wheels -->
+          <circle cx="115" cy="157" r="25" fill="#1a3a1a"/><circle cx="115" cy="157" r="17" fill="#2d4a2d"/>
+          <circle cx="115" cy="157" r="7" fill="#2d8c2d"/>
+          <circle cx="298" cy="157" r="25" fill="#1a3a1a"/><circle cx="298" cy="157" r="17" fill="#2d4a2d"/>
+          <circle cx="298" cy="157" r="7" fill="#2d8c2d"/>
+          <!-- Headlight modern -->
+          <path d="M316 100 L344 108 L344 118 L316 112Z" fill="rgba(255,220,100,0.9)" stroke="#2d8c2d" stroke-width="0.5"/>
+          <!-- Eco leaf decoration -->
+          <text x="330" y="80" font-size="18" fill="rgba(45,140,45,0.2)">🌿</text>
+        </svg>
+      </div>
+      <div class="info-section">
+        <div class="model-info">
+          <h4>Toyota Yaris Hybrid</h4>
+          <p>1.5 Hybrid Dynamic Force · 2023</p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">🔢</div>
+            <div class="stat-val">28 500</div>
+            <div class="stat-label">KM</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⚙️</div>
+            <div class="stat-val">116 CV</div>
+            <div class="stat-label">Potência</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🌿</div>
+            <div class="stat-val">Híbrido</div>
+            <div class="stat-label">Tipo</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💨</div>
+            <div class="stat-val">95 g/km</div>
+            <div class="stat-label">CO₂</div>
+          </div>
+        </div>
+        <div class="price-row">
+          <div class="price">€22 500</div>
+          <div class="price-info">Financiamento disponível<br>a partir de €199/mês</div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 5 — Verde Eco & Híbrido</div>
+  </div>
+
+  <!-- ===== TEMPLATE 6: ROXO NEON ===== -->
+  <div class="card-wrapper">
+    <div class="card-6">
+      <div class="neon-circle-1"></div>
+      <div class="neon-circle-2"></div>
+      <div class="neon-line top"></div>
+      <div class="neon-line bottom"></div>
+      <div class="year-stamp">2023</div>
+      <div class="header">
+        <div class="title-block">
+          <h2>AUDI<br>RS6</h2>
+          <h3>Avant · Quattro</h3>
+        </div>
+        <div class="brand-pill">AutoPremium</div>
+      </div>
+      <div class="car-area">
+        <div class="car-glow"></div>
+        <svg class="car-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="200" cy="184" rx="155" ry="8" fill="rgba(180,50,255,0.2)"/>
+          <!-- Station wagon body -->
+          <path d="M50 130 L55 100 L80 68 L150 52 L300 52 L340 80 L358 115 L358 148 L50 148Z" fill="#1a0f2e"/>
+          <!-- Roof flat (wagon) -->
+          <rect x="82" y="52" width="218" height="48" rx="3" fill="#14082a"/>
+          <!-- Windows -->
+          <path d="M92 100 L95 62 L148 54 L195 54 L195 100Z" fill="rgba(180,50,255,0.4)" stroke="#7b22cc" stroke-width="0.5"/>
+          <rect x="200" y="54" width="72" height="46" rx="2" fill="rgba(180,50,255,0.4)" stroke="#7b22cc" stroke-width="0.5"/>
+          <rect x="276" y="60" width="50" height="40" rx="2" fill="rgba(180,50,255,0.3)" stroke="#7b22cc" stroke-width="0.5"/>
+          <!-- Purple neon accents -->
+          <rect x="50" y="146" width="308" height="2" rx="1" fill="#b432ff"/>
+          <rect x="50" y="120" width="308" height="1" rx="1" fill="rgba(180,50,255,0.3)"/>
+          <!-- Sport wheels with neon -->
+          <circle cx="108" cy="157" r="27" fill="#0d0820"/>
+          <circle cx="108" cy="157" r="19" fill="#180f30"/>
+          <circle cx="108" cy="157" r="9" fill="#b432ff" opacity="0.7"/>
+          <circle cx="108" cy="157" r="4" fill="#b432ff"/>
+          <circle cx="295" cy="157" r="27" fill="#0d0820"/>
+          <circle cx="295" cy="157" r="19" fill="#180f30"/>
+          <circle cx="295" cy="157" r="9" fill="#b432ff" opacity="0.7"/>
+          <circle cx="295" cy="157" r="4" fill="#b432ff"/>
+          <!-- DRL neon lights -->
+          <path d="M330 95 L358 105" stroke="#b432ff" stroke-width="3" stroke-linecap="round"/>
+          <path d="M330 99 L355 107" stroke="rgba(180,50,255,0.4)" stroke-width="6" stroke-linecap="round"/>
+          <!-- Exhaust neon -->
+          <ellipse cx="58" cy="147" rx="10" ry="4" fill="#1a0f2e" stroke="#b432ff" stroke-width="1"/>
+          <ellipse cx="72" cy="147" rx="10" ry="4" fill="#1a0f2e" stroke="#b432ff" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="bottom-section">
+        <div class="price-block">
+          <div class="label">Preço</div>
+          <div class="price">€74 900</div>
+        </div>
+        <div class="vline"></div>
+        <div class="spec-list">
+          <div class="spec-row">
+            <div class="dot"></div>
+            <div class="text"><strong>39 000 Km</strong> · Quilometragem</div>
+          </div>
+          <div class="spec-row">
+            <div class="dot"></div>
+            <div class="text"><strong>600 CV</strong> · Motor 4.0 V8 Biturbo</div>
+          </div>
+          <div class="spec-row">
+            <div class="dot"></div>
+            <div class="text"><strong>Gasolina · Automático</strong> · Quattro AWD</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="template-label">Template 6 — Roxo Neon Premium</div>
+  </div>
+
+</div>
+
+<div style="text-align:center;margin-top:50px;padding:30px;background:rgba(255,255,255,0.04);border-radius:12px;max-width:800px;margin:50px auto 0;">
+  <p style="color:#aaa;font-family:'Roboto',sans-serif;font-size:13px;line-height:1.8;">
+    <strong style="color:#fff;">Como usar:</strong> Abra este ficheiro no browser, faça screenshot de cada template individualmente
+    (cada card é 540×540px) ou use ferramentas como <em>html2canvas</em>, <em>puppeteer</em> ou
+    simplesmente imprima para PDF. Personalize os textos, cores e imagens conforme necessário.
+  </p>
+</div>
+
+</body>
+</html>
