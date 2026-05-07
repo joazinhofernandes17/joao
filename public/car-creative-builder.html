@@ -1,0 +1,1952 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoCreative — Dealership Template Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Anton&family=Barlow+Condensed:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sidebar-bg: #0f0f13;
+    --sidebar-border: #2a2a35;
+    --input-bg: #1a1a22;
+    --input-border: #333344;
+    --input-focus: #5b6ef5;
+    --label-color: #888899;
+    --text-primary: #e8e8f0;
+    --text-secondary: #aaaacc;
+    --accent: #5b6ef5;
+    --accent-hover: #6f80ff;
+    --success: #22c55e;
+    --sidebar-width: 320px;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Barlow', sans-serif;
+    background: #0a0a10;
+    color: var(--text-primary);
+    overflow: hidden;
+  }
+
+  /* ── APP LAYOUT ── */
+  .app {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #5b6ef5, #a855f7);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sidebar-logo span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+
+  .sidebar-tagline {
+    font-size: 11px;
+    color: var(--label-color);
+    letter-spacing: 0.5px;
+  }
+
+  .sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .sidebar-body::-webkit-scrollbar { width: 4px; }
+  .sidebar-body::-webkit-scrollbar-track { background: transparent; }
+  .sidebar-body::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+
+  /* ── FIELD GROUPS ── */
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--label-color);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--sidebar-border);
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field.full { grid-column: 1 / -1; }
+
+  .field label {
+    font-size: 11px;
+    color: var(--label-color);
+    font-weight: 500;
+  }
+
+  .field input,
+  .field select {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    border-color: var(--input-focus);
+  }
+
+  .field select option { background: #1a1a22; }
+
+  /* ── COLOR PICKERS ── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  .color-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .color-field label {
+    font-size: 10px;
+    color: var(--label-color);
+    text-align: center;
+  }
+
+  .color-wrap {
+    position: relative;
+    width: 100%;
+    height: 36px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--input-border);
+    cursor: pointer;
+  }
+
+  .color-wrap input[type="color"] {
+    position: absolute;
+    inset: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    background: none;
+  }
+
+  /* ── PHOTO UPLOAD ── */
+  .photo-upload {
+    border: 2px dashed var(--input-border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-upload:hover {
+    border-color: var(--accent);
+    background: rgba(91, 110, 245, 0.05);
+  }
+
+  .photo-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .photo-upload-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+    color: var(--label-color);
+  }
+
+  .photo-upload p {
+    font-size: 12px;
+    color: var(--label-color);
+  }
+
+  .photo-upload p strong {
+    color: var(--accent);
+  }
+
+  .photo-preview {
+    width: 100%;
+    border-radius: 6px;
+    margin-top: 8px;
+    display: none;
+    object-fit: cover;
+    height: 80px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #5b6ef5, #a855f7);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  /* ── MAIN AREA ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0a0a10;
+  }
+
+  .template-tabs {
+    display: flex;
+    gap: 0;
+    padding: 16px 24px 0;
+    border-bottom: 1px solid var(--sidebar-border);
+    flex-shrink: 0;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--label-color);
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    margin-bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--text-primary); }
+
+  .tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--accent);
+  }
+
+  .preview-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 32px;
+  }
+
+  .preview-area::-webkit-scrollbar { width: 6px; height: 6px; }
+  .preview-area::-webkit-scrollbar-track { background: transparent; }
+  .preview-area::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+  /* ── TEMPLATE WRAPPER ── */
+  .template-wrapper {
+    position: relative;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.8);
+    border-radius: 4px;
+  }
+
+  /* ── ALL TEMPLATES: 600×800 ── */
+  .card {
+    width: 600px;
+    height: 800px;
+    position: relative;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+  }
+
+  .card.active { display: flex; }
+
+  /* ═══════════════════════════════════════
+     TEMPLATE 1 — SPORT DARK
+  ═══════════════════════════════════════ */
+  #tpl-sport {
+    background: #0a0a0a;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .sport-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,60,0,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .sport-stripes {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff4500, #ff8c00, transparent);
+    box-shadow: -6px 0 0 rgba(255,69,0,0.3), -12px 0 0 rgba(255,69,0,0.1);
+  }
+
+  .sport-stripes::before {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff4500, transparent);
+    opacity: 0.4;
+  }
+
+  .sport-header {
+    position: relative;
+    z-index: 2;
+    padding: 28px 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sport-dealer-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .sport-year-badge {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 5px 12px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .sport-car-name-block {
+    position: relative;
+    z-index: 2;
+    padding: 20px 28px 0;
+  }
+
+  .sport-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 2px;
+  }
+
+  .sport-model {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: #ff4500;
+    letter-spacing: 3px;
+  }
+
+  .sport-version {
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .sport-image-area {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 -20px;
+  }
+
+  .sport-car-glow {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 60px;
+    background: radial-gradient(ellipse, rgba(255,69,0,0.4) 0%, transparent 70%);
+    filter: blur(20px);
+  }
+
+  .sport-car-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 20px 40px rgba(255,69,0,0.3));
+    padding: 0 10px;
+  }
+
+  .sport-car-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sport-bottom {
+    position: relative;
+    z-index: 2;
+    padding: 0 28px 28px;
+  }
+
+  .sport-divider {
+    height: 1px;
+    background: linear-gradient(to right, #ff4500, rgba(255,69,0,0.2), transparent);
+    margin-bottom: 16px;
+  }
+
+  .sport-price-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .sport-price-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 2px;
+  }
+
+  .sport-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    color: #ffd700;
+    letter-spacing: 1px;
+  }
+
+  .sport-price-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    padding-bottom: 6px;
+  }
+
+  .sport-specs {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 14px;
+  }
+
+  .sport-spec {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 0 8px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .sport-spec:last-child { border-right: none; }
+
+  .sport-spec svg { color: #ff4500; }
+
+  .sport-spec-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .sport-spec-key {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ═══════════════════════════════════════
+     TEMPLATE 2 — LUXURY WHITE
+  ═══════════════════════════════════════ */
+  #tpl-luxury {
+    background: #f5f5f0;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .luxury-gold-top {
+    height: 4px;
+    background: linear-gradient(90deg, #c8a84b, #f0d080, #c8a84b);
+  }
+
+  .luxury-header {
+    padding: 28px 36px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .luxury-dealer {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .luxury-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: #c8a84b;
+    font-style: italic;
+  }
+
+  .luxury-divider {
+    margin: 20px 36px 0;
+    height: 1px;
+    background: linear-gradient(90deg, #c8a84b, rgba(200,168,75,0.2));
+  }
+
+  .luxury-car-name {
+    padding: 22px 36px 0;
+  }
+
+  .luxury-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .luxury-model {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #c8a84b;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .luxury-version {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #999;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .luxury-image-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .luxury-car-img {
+    max-width: 90%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2));
+  }
+
+  .luxury-car-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .luxury-bottom {
+    padding: 0 36px 32px;
+  }
+
+  .luxury-gold-line {
+    height: 1px;
+    background: linear-gradient(90deg, #c8a84b, rgba(200,168,75,0.2));
+    margin-bottom: 20px;
+  }
+
+  .luxury-price-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .luxury-price-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 4px;
+  }
+
+  .luxury-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1;
+  }
+
+  .luxury-contact {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #c8a84b;
+    text-transform: uppercase;
+    padding-bottom: 8px;
+  }
+
+  .luxury-specs {
+    display: flex;
+    gap: 12px;
+  }
+
+  .luxury-spec {
+    flex: 1;
+    background: #fff;
+    border: 1px solid rgba(200,168,75,0.3);
+    border-radius: 4px;
+    padding: 10px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .luxury-spec svg { color: #c8a84b; flex-shrink: 0; }
+
+  .luxury-spec-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .luxury-spec-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+
+  .luxury-spec-key {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #999;
+  }
+
+  .luxury-gold-bottom {
+    height: 4px;
+    background: linear-gradient(90deg, #c8a84b, #f0d080, #c8a84b);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  /* ═══════════════════════════════════════
+     TEMPLATE 3 — MODERN GRADIENT
+  ═══════════════════════════════════════ */
+  #tpl-gradient {
+    background: linear-gradient(145deg, #020b1a 0%, #0a1628 35%, #060c18 65%, #010508 100%);
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .grad-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,162,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,162,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .grad-glow-top {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(0,102,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .grad-header {
+    position: relative;
+    z-index: 2;
+    padding: 26px 28px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .grad-dealer {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .grad-badge {
+    background: rgba(0,162,255,0.15);
+    border: 1px solid rgba(0,162,255,0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #00c2ff;
+  }
+
+  .grad-car-name {
+    position: relative;
+    z-index: 2;
+    padding: 18px 28px 0;
+  }
+
+  .grad-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 68px;
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 3px;
+    text-shadow: 0 0 40px rgba(0,162,255,0.3);
+  }
+
+  .grad-model {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: #00c2ff;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(0,194,255,0.5);
+    margin-top: 2px;
+  }
+
+  .grad-version {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .grad-image-area {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 10px 0 0;
+  }
+
+  .grad-car-img {
+    width: 100%;
+    max-height: 85%;
+    object-fit: contain;
+    object-position: center bottom;
+    filter:
+      drop-shadow(0 0 30px rgba(0,162,255,0.4))
+      drop-shadow(0 30px 60px rgba(0,0,0,0.8));
+  }
+
+  .grad-car-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grad-reflection {
+    width: 80%;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(0,162,255,0.15), transparent);
+    filter: blur(8px);
+    transform: scaleY(-1);
+    margin-top: -5px;
+    border-radius: 50%;
+  }
+
+  .grad-bottom {
+    position: relative;
+    z-index: 2;
+    padding: 0 28px 28px;
+  }
+
+  .grad-price-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(0,162,255,0.2), rgba(0,50,120,0.4));
+    border: 1px solid rgba(0,162,255,0.4);
+    border-radius: 6px;
+    padding: 10px 20px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 30px rgba(0,162,255,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  .grad-price-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(0,194,255,0.7);
+    margin-bottom: 2px;
+  }
+
+  .grad-price {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 46px;
+    line-height: 1;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(0,162,255,0.5);
+  }
+
+  .grad-specs {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 0;
+  }
+
+  .grad-spec {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0 6px;
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .grad-spec:last-child { border-right: none; }
+  .grad-spec svg { color: #00c2ff; }
+
+  .grad-spec-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .grad-spec-key {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ═══════════════════════════════════════
+     TEMPLATE 4 — STREET BOLD
+  ═══════════════════════════════════════ */
+  #tpl-street {
+    background: #111;
+    font-family: 'Anton', sans-serif;
+  }
+
+  .street-diagonal {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, #c8000a 0%, #c8000a 45%, transparent 45.1%);
+    pointer-events: none;
+  }
+
+  .street-diagonal-black {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(125deg, transparent 0%, transparent 44.9%, #111 45%);
+    pointer-events: none;
+  }
+
+  .street-header {
+    position: relative;
+    z-index: 2;
+    padding: 28px 28px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .street-dealer {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .street-year-pill {
+    background: #fff;
+    color: #111;
+    padding: 4px 14px;
+    border-radius: 2px;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1px;
+  }
+
+  .street-brand-watermark {
+    position: absolute;
+    z-index: 1;
+    top: 60px;
+    left: -20px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 160px;
+    line-height: 1;
+    color: rgba(255,255,255,0.04);
+    text-align: center;
+    letter-spacing: 10px;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+  }
+
+  .street-car-name {
+    position: relative;
+    z-index: 2;
+    padding: 16px 28px 0;
+  }
+
+  .street-brand {
+    font-family: 'Anton', sans-serif;
+    font-size: 76px;
+    line-height: 0.9;
+    color: #fff;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.5);
+  }
+
+  .street-model {
+    font-family: 'Anton', sans-serif;
+    font-size: 38px;
+    color: #fff;
+    letter-spacing: 3px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  }
+
+  .street-version {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .street-image-area {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+
+  .street-car-img {
+    width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+  }
+
+  .street-car-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .street-bottom {
+    position: relative;
+    z-index: 2;
+    padding: 0 28px 28px;
+  }
+
+  .street-price-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .street-price {
+    font-family: 'Anton', sans-serif;
+    font-size: 60px;
+    line-height: 1;
+    color: #fff;
+    -webkit-text-stroke: 2px #000;
+    paint-order: stroke fill;
+    text-shadow:
+      3px 3px 0 #000,
+      -1px -1px 0 #000,
+      1px -1px 0 #000,
+      -1px 1px 0 #000;
+  }
+
+  .street-cta {
+    background: #fff;
+    color: #c8000a;
+    padding: 8px 20px;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+
+  .street-specs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .street-spec-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 2px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+  }
+
+  .street-spec-pill svg { color: #ff4040; }
+
+  /* ── LOADING STATE ── */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,16,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .loading-overlay.active { display: flex; }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(91,110,245,0.2);
+    border-top-color: #5b6ef5;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p style="font-size:14px;color:#888;">A gerar imagem...</p>
+</div>
+
+<div class="app">
+
+  <!-- ══════════════════ SIDEBAR ══════════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/>
+            <rect x="9" y="11" width="14" height="10" rx="2"/>
+            <circle cx="12" cy="19" r="1"/><circle cx="20" cy="19" r="1"/>
+          </svg>
+        </div>
+        <span>AutoCreative</span>
+      </div>
+      <p class="sidebar-tagline">Editor de Criativos para Concessionários</p>
+    </div>
+
+    <div class="sidebar-body">
+
+      <!-- CAR INFO -->
+      <div class="field-group">
+        <div class="group-label">Informação do Veículo</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Marca</label>
+            <input type="text" id="carBrand" value="Ford" placeholder="ex: Ford">
+          </div>
+          <div class="field">
+            <label>Modelo</label>
+            <input type="text" id="carModel" value="Tourneo Courier" placeholder="ex: Tourneo">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Versão</label>
+            <input type="text" id="carVersion" value="1.0 EcoBoost" placeholder="ex: 1.0 EcoBoost">
+          </div>
+          <div class="field">
+            <label>Ano</label>
+            <input type="text" id="carYear" value="2016" placeholder="2024">
+          </div>
+        </div>
+        <div class="field full">
+          <label>Preço (€)</label>
+          <input type="text" id="carPrice" value="8 900" placeholder="ex: 8 900">
+        </div>
+      </div>
+
+      <!-- SPECS -->
+      <div class="field-group">
+        <div class="group-label">Especificações</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Quilómetros</label>
+            <input type="text" id="carKm" value="145 131 km" placeholder="ex: 145 131 km">
+          </div>
+          <div class="field">
+            <label>Potência</label>
+            <input type="text" id="carCv" value="100 CV" placeholder="ex: 100 CV">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Combustível</label>
+            <select id="carFuel">
+              <option value="Gasolina" selected>Gasolina</option>
+              <option value="Diesel">Diesel</option>
+              <option value="Híbrido">Híbrido</option>
+              <option value="Elétrico">Elétrico</option>
+              <option value="GPL">GPL</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Transmissão</label>
+            <select id="carTransmission">
+              <option value="Manual" selected>Manual</option>
+              <option value="Automático">Automático</option>
+              <option value="Semi-Auto">Semi-Auto</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEALERSHIP -->
+      <div class="field-group">
+        <div class="group-label">Concessionário</div>
+        <div class="field full">
+          <label>Nome do Stand</label>
+          <input type="text" id="dealerName" value="AutoStand Premium" placeholder="ex: AutoStand Lisboa">
+        </div>
+      </div>
+
+      <!-- COLORS -->
+      <div class="field-group">
+        <div class="group-label">Personalização de Cor</div>
+        <div class="color-grid">
+          <div class="color-field">
+            <div class="color-wrap">
+              <input type="color" id="colorPrimary" value="#ff4500">
+            </div>
+            <label>Primária</label>
+          </div>
+          <div class="color-field">
+            <div class="color-wrap">
+              <input type="color" id="colorAccent" value="#ffd700">
+            </div>
+            <label>Destaque</label>
+          </div>
+          <div class="color-field">
+            <div class="color-wrap">
+              <input type="color" id="colorBg" value="#0a0a0a">
+            </div>
+            <label>Fundo</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- PHOTO UPLOAD -->
+      <div class="field-group">
+        <div class="group-label">Foto do Veículo</div>
+        <div class="photo-upload" id="photoUploadArea">
+          <input type="file" id="photoInput" accept="image/*">
+          <div class="photo-upload-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <p><strong>Clique para carregar</strong></p>
+          <p style="font-size:11px;margin-top:2px;">JPG, PNG, WebP</p>
+          <img id="photoPreview" class="photo-preview" src="" alt="Preview">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sidebar-footer">
+      <button class="btn-primary" id="downloadBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download PNG
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════ MAIN ══════════════════ -->
+  <main class="main">
+    <div class="template-tabs">
+      <button class="tab-btn active" data-tpl="sport">Sport Dark</button>
+      <button class="tab-btn" data-tpl="luxury">Luxury White</button>
+      <button class="tab-btn" data-tpl="gradient">Modern Gradient</button>
+      <button class="tab-btn" data-tpl="street">Street Bold</button>
+    </div>
+
+    <div class="preview-area">
+      <div class="template-wrapper">
+
+        <!-- ── TEMPLATE 1: SPORT DARK ── -->
+        <div class="card active" id="tpl-sport">
+          <div class="sport-bg"></div>
+          <div class="sport-stripes"></div>
+
+          <div class="sport-header">
+            <div class="sport-dealer-name" id="s1-dealer">AutoStand Premium</div>
+            <div class="sport-year-badge" id="s1-year">2016</div>
+          </div>
+
+          <div class="sport-car-name-block">
+            <div class="sport-brand" id="s1-brand">FORD</div>
+            <div class="sport-model" id="s1-model">TOURNEO COURIER</div>
+            <div class="sport-version" id="s1-version">1.0 EcoBoost</div>
+          </div>
+
+          <div class="sport-image-area">
+            <div class="sport-car-glow" id="s1-glow"></div>
+            <img id="s1-img" class="sport-car-img" src="" alt="Car" style="display:none;">
+            <div id="s1-placeholder" class="sport-car-placeholder">
+              <svg width="320" height="160" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 110 L60 70 Q90 50 130 48 L200 45 Q240 44 270 62 L300 78 L305 95 L310 110 Z" fill="rgba(255,69,0,0.12)" stroke="rgba(255,69,0,0.35)" stroke-width="1.5"/>
+                <path d="M95 70 L105 50 L215 48 L235 70" fill="rgba(255,69,0,0.08)" stroke="rgba(255,69,0,0.25)" stroke-width="1"/>
+                <circle cx="100" cy="110" r="18" fill="rgba(255,69,0,0.1)" stroke="rgba(255,69,0,0.4)" stroke-width="1.5"/>
+                <circle cx="220" cy="110" r="18" fill="rgba(255,69,0,0.1)" stroke="rgba(255,69,0,0.4)" stroke-width="1.5"/>
+                <circle cx="100" cy="110" r="8" fill="rgba(255,69,0,0.2)"/>
+                <circle cx="220" cy="110" r="8" fill="rgba(255,69,0,0.2)"/>
+                <text x="160" y="95" text-anchor="middle" fill="rgba(255,255,255,0.15)" font-family="Bebas Neue, sans-serif" font-size="14" letter-spacing="3">CARREGAR FOTO</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="sport-bottom">
+            <div class="sport-divider"></div>
+            <div class="sport-price-row">
+              <div>
+                <div class="sport-price-label">Preço</div>
+                <div class="sport-price" id="s1-price">€8 900</div>
+              </div>
+              <div class="sport-price-note">IVA incluído</div>
+            </div>
+            <div class="sport-specs">
+              <div class="sport-spec">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                </svg>
+                <div class="sport-spec-val" id="s1-km">145 131 km</div>
+                <div class="sport-spec-key">Quilómetros</div>
+              </div>
+              <div class="sport-spec">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                </svg>
+                <div class="sport-spec-val" id="s1-cv">100 CV</div>
+                <div class="sport-spec-key">Potência</div>
+              </div>
+              <div class="sport-spec">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/>
+                </svg>
+                <div class="sport-spec-val" id="s1-fuel">Gasolina</div>
+                <div class="sport-spec-key">Combustível</div>
+              </div>
+              <div class="sport-spec">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <div class="sport-spec-val" id="s1-trans">Manual</div>
+                <div class="sport-spec-key">Transmissão</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TEMPLATE 2: LUXURY WHITE ── -->
+        <div class="card" id="tpl-luxury">
+          <div class="luxury-gold-top"></div>
+          <div class="luxury-header">
+            <div class="luxury-dealer" id="s2-dealer">AutoStand Premium</div>
+            <div class="luxury-year" id="s2-year">2016</div>
+          </div>
+          <div class="luxury-divider"></div>
+
+          <div class="luxury-car-name">
+            <div class="luxury-brand" id="s2-brand">FORD</div>
+            <div class="luxury-model" id="s2-model">Tourneo Courier</div>
+            <div class="luxury-version" id="s2-version">1.0 EcoBoost</div>
+          </div>
+
+          <div class="luxury-image-area">
+            <img id="s2-img" class="luxury-car-img" src="" alt="Car" style="display:none;">
+            <div id="s2-placeholder" class="luxury-car-placeholder">
+              <svg width="320" height="160" viewBox="0 0 320 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 110 L60 70 Q90 50 130 48 L200 45 Q240 44 270 62 L300 78 L305 95 L310 110 Z" fill="rgba(200,168,75,0.06)" stroke="rgba(200,168,75,0.3)" stroke-width="1.5"/>
+                <path d="M95 70 L105 50 L215 48 L235 70" fill="rgba(200,168,75,0.04)" stroke="rgba(200,168,75,0.2)" stroke-width="1"/>
+                <circle cx="100" cy="110" r="18" fill="rgba(200,168,75,0.06)" stroke="rgba(200,168,75,0.35)" stroke-width="1.5"/>
+                <circle cx="220" cy="110" r="18" fill="rgba(200,168,75,0.06)" stroke="rgba(200,168,75,0.35)" stroke-width="1.5"/>
+                <circle cx="100" cy="110" r="8" fill="rgba(200,168,75,0.15)"/>
+                <circle cx="220" cy="110" r="8" fill="rgba(200,168,75,0.15)"/>
+                <text x="160" y="95" text-anchor="middle" fill="rgba(0,0,0,0.15)" font-family="Barlow Condensed, sans-serif" font-size="14" letter-spacing="3">CARREGAR FOTO</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="luxury-bottom">
+            <div class="luxury-gold-line"></div>
+            <div class="luxury-price-row">
+              <div>
+                <div class="luxury-price-label">Preço de venda</div>
+                <div class="luxury-price" id="s2-price">€8 900</div>
+              </div>
+              <div class="luxury-contact" id="s2-dealer2">AutoStand Premium</div>
+            </div>
+            <div class="luxury-specs">
+              <div class="luxury-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                </svg>
+                <div class="luxury-spec-info">
+                  <div class="luxury-spec-val" id="s2-km">145 131 km</div>
+                  <div class="luxury-spec-key">Kms</div>
+                </div>
+              </div>
+              <div class="luxury-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                </svg>
+                <div class="luxury-spec-info">
+                  <div class="luxury-spec-val" id="s2-cv">100 CV</div>
+                  <div class="luxury-spec-key">Potência</div>
+                </div>
+              </div>
+              <div class="luxury-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/>
+                </svg>
+                <div class="luxury-spec-info">
+                  <div class="luxury-spec-val" id="s2-fuel">Gasolina</div>
+                  <div class="luxury-spec-key">Combustível</div>
+                </div>
+              </div>
+              <div class="luxury-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <div class="luxury-spec-info">
+                  <div class="luxury-spec-val" id="s2-trans">Manual</div>
+                  <div class="luxury-spec-key">Caixa</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="luxury-gold-bottom"></div>
+        </div>
+
+        <!-- ── TEMPLATE 3: MODERN GRADIENT ── -->
+        <div class="card" id="tpl-gradient">
+          <div class="grad-grid"></div>
+          <div class="grad-glow-top"></div>
+
+          <div class="grad-header">
+            <div class="grad-dealer" id="s3-dealer">AutoStand Premium</div>
+            <div class="grad-badge" id="s3-year">2016</div>
+          </div>
+
+          <div class="grad-car-name">
+            <div class="grad-brand" id="s3-brand">FORD</div>
+            <div class="grad-model" id="s3-model">TOURNEO COURIER</div>
+            <div class="grad-version" id="s3-version">1.0 EcoBoost</div>
+          </div>
+
+          <div class="grad-image-area">
+            <img id="s3-img" class="grad-car-img" src="" alt="Car" style="display:none;width:100%;max-height:85%;object-fit:contain;object-position:center bottom;">
+            <div id="s3-placeholder" class="grad-car-placeholder" style="height:260px;">
+              <svg width="340" height="160" viewBox="0 0 340 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 110 L60 70 Q90 50 130 48 L210 45 Q255 44 285 62 L315 78 L320 95 L325 110 Z" fill="rgba(0,162,255,0.07)" stroke="rgba(0,162,255,0.3)" stroke-width="1.5"/>
+                <path d="M95 70 L105 50 L225 48 L250 70" fill="rgba(0,162,255,0.05)" stroke="rgba(0,162,255,0.2)" stroke-width="1"/>
+                <circle cx="110" cy="110" r="18" fill="rgba(0,162,255,0.07)" stroke="rgba(0,162,255,0.35)" stroke-width="1.5"/>
+                <circle cx="240" cy="110" r="18" fill="rgba(0,162,255,0.07)" stroke="rgba(0,162,255,0.35)" stroke-width="1.5"/>
+                <circle cx="110" cy="110" r="8" fill="rgba(0,162,255,0.15)"/>
+                <circle cx="240" cy="110" r="8" fill="rgba(0,162,255,0.15)"/>
+                <text x="177" y="95" text-anchor="middle" fill="rgba(255,255,255,0.15)" font-family="Bebas Neue, sans-serif" font-size="14" letter-spacing="3">CARREGAR FOTO</text>
+              </svg>
+            </div>
+            <div class="grad-reflection"></div>
+          </div>
+
+          <div class="grad-bottom">
+            <div class="grad-price-badge">
+              <div class="grad-price-label">Preço</div>
+              <div class="grad-price" id="s3-price">€8 900</div>
+            </div>
+            <div class="grad-specs">
+              <div class="grad-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                </svg>
+                <div class="grad-spec-val" id="s3-km">145 131 km</div>
+                <div class="grad-spec-key">Kms</div>
+              </div>
+              <div class="grad-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                </svg>
+                <div class="grad-spec-val" id="s3-cv">100 CV</div>
+                <div class="grad-spec-key">Potência</div>
+              </div>
+              <div class="grad-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/>
+                </svg>
+                <div class="grad-spec-val" id="s3-fuel">Gasolina</div>
+                <div class="grad-spec-key">Combustível</div>
+              </div>
+              <div class="grad-spec">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <div class="grad-spec-val" id="s3-trans">Manual</div>
+                <div class="grad-spec-key">Caixa</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TEMPLATE 4: STREET BOLD ── -->
+        <div class="card" id="tpl-street">
+          <div class="street-diagonal"></div>
+          <div class="street-diagonal-black"></div>
+          <div class="street-brand-watermark" id="s4-watermark">FORD</div>
+
+          <div class="street-header">
+            <div class="street-dealer" id="s4-dealer">AutoStand Premium</div>
+            <div class="street-year-pill" id="s4-year">2016</div>
+          </div>
+
+          <div class="street-car-name">
+            <div class="street-brand" id="s4-brand">FORD</div>
+            <div class="street-model" id="s4-model">TOURNEO COURIER</div>
+            <div class="street-version" id="s4-version">1.0 EcoBoost</div>
+          </div>
+
+          <div class="street-image-area">
+            <img id="s4-img" class="street-car-img" src="" alt="Car" style="display:none;">
+            <div id="s4-placeholder" class="street-car-placeholder">
+              <svg width="320" height="180" viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 130 L60 90 Q90 70 130 68 L200 65 Q240 64 270 82 L300 98 L305 115 L310 130 Z" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+                <path d="M95 90 L105 70 L215 68 L235 90" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+                <circle cx="100" cy="130" r="20" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+                <circle cx="220" cy="130" r="20" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+                <circle cx="100" cy="130" r="9" fill="rgba(255,255,255,0.12)"/>
+                <circle cx="220" cy="130" r="9" fill="rgba(255,255,255,0.12)"/>
+                <text x="160" y="112" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-family="Anton, sans-serif" font-size="14" letter-spacing="3">CARREGAR FOTO</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="street-bottom">
+            <div class="street-price-row">
+              <div class="street-price" id="s4-price">€8 900</div>
+              <div class="street-cta">COMPRAR AGORA</div>
+            </div>
+            <div class="street-specs">
+              <div class="street-spec-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                </svg>
+                <span id="s4-km">145 131 km</span>
+              </div>
+              <div class="street-spec-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+                </svg>
+                <span id="s4-cv">100 CV</span>
+              </div>
+              <div class="street-spec-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 22V8l9-6 9 6v14"/><path d="M9 22V12h6v10"/>
+                </svg>
+                <span id="s4-fuel">Gasolina</span>
+              </div>
+              <div class="street-spec-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span id="s4-trans">Manual</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /template-wrapper -->
+    </div><!-- /preview-area -->
+  </main>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── State ──
+  let carImageDataUrl = null;
+  let activeTemplate = 'sport';
+
+  // ── DOM refs ──
+  const inputs = {
+    brand:        document.getElementById('carBrand'),
+    model:        document.getElementById('carModel'),
+    version:      document.getElementById('carVersion'),
+    year:         document.getElementById('carYear'),
+    price:        document.getElementById('carPrice'),
+    km:           document.getElementById('carKm'),
+    cv:           document.getElementById('carCv'),
+    fuel:         document.getElementById('carFuel'),
+    transmission: document.getElementById('carTransmission'),
+    dealer:       document.getElementById('dealerName'),
+    colorPrimary: document.getElementById('colorPrimary'),
+    colorAccent:  document.getElementById('colorAccent'),
+    colorBg:      document.getElementById('colorBg'),
+  };
+
+  const photoInput   = document.getElementById('photoInput');
+  const photoPreview = document.getElementById('photoPreview');
+  const downloadBtn  = document.getElementById('downloadBtn');
+  const loadingOverlay = document.getElementById('loadingOverlay');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const cards   = document.querySelectorAll('.card');
+
+  // ── Template field maps ──
+  const fieldMap = {
+    sport: {
+      brand:        's1-brand',
+      model:        's1-model',
+      version:      's1-version',
+      year:         's1-year',
+      price:        's1-price',
+      km:           's1-km',
+      cv:           's1-cv',
+      fuel:         's1-fuel',
+      transmission: 's1-trans',
+      dealer:       's1-dealer',
+    },
+    luxury: {
+      brand:        's2-brand',
+      model:        's2-model',
+      version:      's2-version',
+      year:         's2-year',
+      price:        's2-price',
+      km:           's2-km',
+      cv:           's2-cv',
+      fuel:         's2-fuel',
+      transmission: 's2-trans',
+      dealer:       's2-dealer',
+      dealer2:      's2-dealer2',
+    },
+    gradient: {
+      brand:        's3-brand',
+      model:        's3-model',
+      version:      's3-version',
+      year:         's3-year',
+      price:        's3-price',
+      km:           's3-km',
+      cv:           's3-cv',
+      fuel:         's3-fuel',
+      transmission: 's3-trans',
+      dealer:       's3-dealer',
+    },
+    street: {
+      brand:        's4-brand',
+      model:        's4-model',
+      version:      's4-version',
+      year:         's4-year',
+      price:        's4-price',
+      km:           's4-km',
+      cv:           's4-cv',
+      fuel:         's4-fuel',
+      transmission: 's4-trans',
+      dealer:       's4-dealer',
+      watermark:    's4-watermark',
+    },
+  };
+
+  // ── Update all templates ──
+  function updateAll() {
+    const brand  = inputs.brand.value.toUpperCase() || 'MARCA';
+    const model  = inputs.model.value.toUpperCase() || 'MODELO';
+    const ver    = inputs.version.value || 'Versão';
+    const year   = inputs.year.value || '2024';
+    const price  = inputs.price.value ? '€' + inputs.price.value : '€0';
+    const km     = inputs.km.value || '—';
+    const cv     = inputs.cv.value || '—';
+    const fuel   = inputs.fuel.value || '—';
+    const trans  = inputs.transmission.value || '—';
+    const dealer = inputs.dealer.value || 'Stand';
+
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+
+    // Sport
+    set('s1-brand',   brand);
+    set('s1-model',   model);
+    set('s1-version', ver);
+    set('s1-year',    year);
+    set('s1-price',   price);
+    set('s1-km',      km);
+    set('s1-cv',      cv);
+    set('s1-fuel',    fuel);
+    set('s1-trans',   trans);
+    set('s1-dealer',  dealer);
+
+    // Luxury (mixed case)
+    set('s2-brand',   inputs.brand.value.toUpperCase() || 'MARCA');
+    set('s2-model',   inputs.model.value || 'Modelo');
+    set('s2-version', ver);
+    set('s2-year',    year);
+    set('s2-price',   price);
+    set('s2-km',      km);
+    set('s2-cv',      cv);
+    set('s2-fuel',    fuel);
+    set('s2-trans',   trans);
+    set('s2-dealer',  dealer);
+    set('s2-dealer2', dealer);
+
+    // Gradient
+    set('s3-brand',   brand);
+    set('s3-model',   model);
+    set('s3-version', ver);
+    set('s3-year',    year);
+    set('s3-price',   price);
+    set('s3-km',      km);
+    set('s3-cv',      cv);
+    set('s3-fuel',    fuel);
+    set('s3-trans',   trans);
+    set('s3-dealer',  dealer);
+
+    // Street
+    set('s4-brand',     brand);
+    set('s4-model',     model);
+    set('s4-version',   ver);
+    set('s4-year',      year);
+    set('s4-price',     price);
+    set('s4-km',        km);
+    set('s4-cv',        cv);
+    set('s4-fuel',      fuel);
+    set('s4-trans',     trans);
+    set('s4-dealer',    dealer);
+    set('s4-watermark', inputs.brand.value.toUpperCase() || 'MARCA');
+
+    applyColors();
+  }
+
+  // ── Color application ──
+  function applyColors() {
+    const primary = inputs.colorPrimary.value;
+    const accent  = inputs.colorAccent.value;
+    const bg      = inputs.colorBg.value;
+
+    // Sport Dark
+    const sportEl = document.getElementById('tpl-sport');
+    sportEl.style.background = bg;
+    sportEl.querySelectorAll('.sport-stripes').forEach(el => {
+      el.style.background = `linear-gradient(to bottom, ${primary}, ${accent}, transparent)`;
+      el.style.boxShadow = `-6px 0 0 ${primary}4d, -12px 0 0 ${primary}1a`;
+    });
+    sportEl.querySelectorAll('.sport-model').forEach(el => el.style.color = primary);
+    sportEl.querySelectorAll('.sport-price').forEach(el => el.style.color = accent);
+    sportEl.querySelectorAll('.sport-spec svg').forEach(el => el.style.color = primary);
+    sportEl.querySelectorAll('.sport-divider').forEach(el => {
+      el.style.background = `linear-gradient(to right, ${primary}, ${primary}33, transparent)`;
+    });
+    sportEl.querySelectorAll('.sport-car-glow').forEach(el => {
+      el.style.background = `radial-gradient(ellipse, ${primary}66 0%, transparent 70%)`;
+    });
+
+    // Luxury White — gold tint
+    const luxEl = document.getElementById('tpl-luxury');
+    const goldHex = accent !== '#ffd700' ? accent : '#c8a84b';
+    luxEl.querySelectorAll('.luxury-gold-top, .luxury-gold-bottom').forEach(el => {
+      el.style.background = `linear-gradient(90deg, ${goldHex}, ${accent}, ${goldHex})`;
+    });
+    luxEl.querySelectorAll('.luxury-model').forEach(el => el.style.color = goldHex);
+    luxEl.querySelectorAll('.luxury-spec svg').forEach(el => el.style.color = goldHex);
+    luxEl.querySelectorAll('.luxury-spec').forEach(el => el.style.borderColor = goldHex + '4d');
+    luxEl.querySelectorAll('.luxury-divider, .luxury-gold-line').forEach(el => {
+      el.style.background = `linear-gradient(90deg, ${goldHex}, ${goldHex}33)`;
+    });
+    luxEl.querySelectorAll('.luxury-contact').forEach(el => el.style.color = goldHex);
+    luxEl.querySelectorAll('.luxury-year').forEach(el => el.style.color = goldHex);
+
+    // Gradient — blue tones
+    const gradEl = document.getElementById('tpl-gradient');
+    gradEl.querySelectorAll('.grad-model').forEach(el => el.style.color = primary);
+    gradEl.querySelectorAll('.grad-badge').forEach(el => {
+      el.style.borderColor = primary + '4d';
+      el.style.color = primary;
+      el.style.background = primary + '26';
+    });
+    gradEl.querySelectorAll('.grad-spec svg').forEach(el => el.style.color = primary);
+    gradEl.querySelectorAll('.grad-price-badge').forEach(el => {
+      el.style.borderColor = primary + '66';
+      el.style.background = `linear-gradient(135deg, ${primary}33, ${primary}0d)`;
+    });
+    gradEl.querySelectorAll('.grad-price-label').forEach(el => el.style.color = primary + 'b3');
+    gradEl.querySelectorAll('.grad-brand').forEach(el => {
+      el.style.textShadow = `0 0 40px ${primary}4d`;
+    });
+    gradEl.querySelectorAll('.grad-model').forEach(el => {
+      el.style.textShadow = `0 0 20px ${primary}80`;
+    });
+
+    // Street — diagonal color
+    const streetEl = document.getElementById('tpl-street');
+    streetEl.querySelectorAll('.street-diagonal').forEach(el => {
+      el.style.background = `linear-gradient(125deg, ${primary} 0%, ${primary} 45%, transparent 45.1%)`;
+    });
+    streetEl.querySelectorAll('.street-spec-pill svg').forEach(el => el.style.color = accent);
+    streetEl.querySelectorAll('.street-cta').forEach(el => el.style.color = primary);
+  }
+
+  // ── Image handling ──
+  function applyImage(dataUrl) {
+    const imgIds = [
+      { img: 's1-img', placeholder: 's1-placeholder' },
+      { img: 's2-img', placeholder: 's2-placeholder' },
+      { img: 's3-img', placeholder: 's3-placeholder' },
+      { img: 's4-img', placeholder: 's4-placeholder' },
+    ];
+    imgIds.forEach(({ img, placeholder }) => {
+      const imgEl  = document.getElementById(img);
+      const phEl   = document.getElementById(placeholder);
+      if (dataUrl) {
+        imgEl.src = dataUrl;
+        imgEl.style.display = 'block';
+        if (phEl) phEl.style.display = 'none';
+      } else {
+        imgEl.src = '';
+        imgEl.style.display = 'none';
+        if (phEl) phEl.style.display = 'flex';
+      }
+    });
+  }
+
+  photoInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      carImageDataUrl = e.target.result;
+      photoPreview.src = carImageDataUrl;
+      photoPreview.style.display = 'block';
+      applyImage(carImageDataUrl);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── Tab switching ──
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const tpl = this.dataset.tpl;
+      tabBtns.forEach(b => b.classList.remove('active'));
+      cards.forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('tpl-' + tpl).classList.add('active');
+      activeTemplate = tpl;
+    });
+  });
+
+  // ── Live input binding ──
+  Object.values(inputs).forEach(inp => {
+    inp.addEventListener('input', updateAll);
+    inp.addEventListener('change', updateAll);
+  });
+
+  // ── Download ──
+  downloadBtn.addEventListener('click', function() {
+    const card = document.getElementById('tpl-' + activeTemplate);
+    if (!card) return;
+
+    loadingOverlay.classList.add('active');
+
+    const brand = (inputs.brand.value || 'carro').toLowerCase().replace(/\s+/g, '-');
+    const model = (inputs.model.value || 'modelo').toLowerCase().replace(/\s+/g, '-');
+
+    setTimeout(() => {
+      html2canvas(card, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: false,
+        width: 600,
+        height: 800,
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `${brand}-${model}-${activeTemplate}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        loadingOverlay.classList.remove('active');
+      }).catch(err => {
+        console.error('html2canvas error:', err);
+        loadingOverlay.classList.remove('active');
+        alert('Erro ao gerar imagem. Tente novamente.');
+      });
+    }, 100);
+  });
+
+  // ── Init ──
+  updateAll();
+})();
+</script>
+</body>
+</html>
