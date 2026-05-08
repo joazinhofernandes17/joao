@@ -157,28 +157,29 @@ export default function HomePage() {
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Ambientes de showroom</h2>
             <p className="text-muted-foreground">Escolha entre vários ambientes profissionais para cada viatura</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { name: 'Nova',    slug: 'nova',    desc: 'Branco minimalista',    tier: 'Grátis'  },
-              { name: 'Elise',   slug: 'elise',   desc: 'Cinzas premium',        tier: 'Grátis'  },
-              { name: 'Origin',  slug: 'origin',  desc: 'Clássico aquecido',     tier: 'Starter' },
-              { name: 'Eclipse', slug: 'eclipse', desc: 'Fundo escuro dramático', tier: 'Pro'    },
-              { name: 'Horizon', slug: 'horizon', desc: 'Exterior pôr do sol',   tier: 'Pro'     },
+              { name: 'Nova',    slug: 'nova',    desc: 'Estúdio branco minimalista com plataforma circular e luz suave',    tier: 'Grátis'  },
+              { name: 'Elise',   slug: 'elise',   desc: 'Ambiente escuro premium com iluminação azul fria e reflexos no chão', tier: 'Grátis'  },
+              { name: 'Origin',  slug: 'origin',  desc: 'Tons quentes clássicos com pavimento refletivo e luz âmbar',        tier: 'Starter' },
+              { name: 'Eclipse', slug: 'eclipse', desc: 'Fundo preto dramático com contorno azul néon de alto contraste',    tier: 'Pro'     },
+              { name: 'Horizon', slug: 'horizon', desc: 'Céu noturno profundo com luz de pôr do sol alaranjada',             tier: 'Pro'     },
             ].map(({ name, slug, desc, tier }, i) => (
-              <div key={i} className="rounded-xl overflow-hidden border border-border group">
-                <div className="h-28 overflow-hidden bg-secondary relative">
+              <div key={i} className="rounded-2xl overflow-hidden border border-border group hover:border-primary/50 transition-colors">
+                <div className="aspect-[3/2] overflow-hidden bg-secondary relative">
                   <img
                     src={`/showrooms/${slug}-thumb.png`}
                     alt={`Showroom ${name}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="p-3 bg-card">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="font-semibold text-sm">{name}</p>
+                <div className="p-4 bg-card">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-semibold">{name}</p>
                     <Badge variant="secondary" className="text-xs">{tier}</Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground">{desc}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
                 </div>
               </div>
             ))}
