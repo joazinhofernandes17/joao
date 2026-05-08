@@ -1,162 +1,161 @@
 import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import { StatsGrid } from '@/components/StatsGrid'
-import { ResultBadge } from '@/components/ResultBadge'
-import { ConfidenceBar } from '@/components/ConfidenceBar'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { formatDateShort, formatOdds } from '@/lib/utils'
-import { BarChart3, Target, TrendingUp, Trophy } from 'lucide-react'
-import { DashboardChart } from './DashboardChart'
+import { Plus, ImageIcon, CheckCircle, Clock, AlertCircle, Car, TrendingUp } from 'lucide-react'
 
-export const metadata: Metadata = { title: 'Dashboard' }
+export const metadata: Metadata = { title: 'Painel — AutoShowroom' }
 
 export default async function DashboardPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
-
   if (!user) redirect('/auth')
 
-  // Buscar histórico de apostas com detalhes dos picks
-  const { data: bets } = await supabase
-    .from('user_bets')
-    .select(`*, daily_picks(*)`)
-    .eq('user_id', user.id)
-    .order('saved_at', { ascending: false })
-
-  // Buscar stats do tipster
-  const { data: stats } = await supabase
-    .from('tipster_stats')
+  const { data: stand } = await supabase
+    .from('stands')
     .select('*')
     .eq('user_id', user.id)
     .single()
 
-  const totalBets = stats?.total_bets ?? 0
-  const winRate = stats?.win_rate ?? 0
-  const profitLoss = stats?.profit_loss ?? 0
-  const wins = stats?.wins ?? 0
+  if (!stand) redirect('/auth')
 
-  // Dados para o gráfico (últimas 30 apostas com resultado)
-  const chartData = (bets ?? [])
-    .filter(b => b.daily_picks?.result && b.daily_picks.result !== 'pending')
-    .slice(0, 30)
-    .reverse()
-    .map((b, idx) => ({
-      idx: idx + 1,
-      result: b.daily_picks?.result,
-      date: formatDateShort(b.saved_at),
-    }))
+  const { data: vehicles } = await supabase
+    .from('vehicles')
+    .select(`
+      id, make, model, year, price, status, created_at,
+      vehicle_images(id, showroom_url, is_primary, processing_status)
+    `)
+    .eq('stand_id', stand.id)
+    .order('created_at', { ascending: false })
+    .limit(20)
 
-  const gridStats = [
-    {
-      label: 'Apostas Guardadas',
-      value: (bets ?? []).length,
-      icon: Target,
-      color: 'bg-zinc-800',
-    },
-    {
-      label: 'Taxa de Acerto',
-      value: `${Number(winRate).toFixed(1)}%`,
-      icon: TrendingUp,
-      color: 'bg-green-500/20',
-      description: totalBets > 0 ? `${wins}/${totalBets} resolvidas` : 'Sem dados',
-    },
-    {
-      label: 'Lucro / Perda',
-      value: `${Number(profitLoss) >= 0 ? '+' : ''}${Number(profitLoss).toFixed(2)}€`,
-      icon: BarChart3,
-      color: Number(profitLoss) >= 0 ? 'bg-green-500/20' : 'bg-red-500/20',
-    },
-    {
-      label: 'Wins',
-      value: wins,
-      icon: Trophy,
-      color: 'bg-amber-500/20',
-    },
-  ]
+  const totalVehicles = vehicles?.length ?? 0
+  const doneImages = vehicles?.reduce((acc, v) => {
+    return acc + ((v.vehicle_images as any[])?.filter((i: any) => i.processing_status === 'done').length ?? 0)
+  }, 0) ?? 0
+  const pendingImages = vehicles?.reduce((acc, v) => {
+    return acc + ((v.vehicle_images as any[])?.filter((i: any) => i.processing_status === 'pending' || i.processing_status === 'processing').length ?? 0)
+  }, 0) ?? 0
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-zinc-100">O meu Dashboard</h1>
-        <p className="text-sm text-zinc-400 mt-1">Acompanha o teu desempenho como tipster</p>
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-bold">{stand.name}</h1>
+          <p className="text-muted-foreground text-sm mt-1">Painel de gestão de viaturas</p>
+        </div>
+        <Button asChild>
+          <Link href="/dashboard/upload">
+            <Plus className="h-4 w-4 mr-2" /> Nova Viatura
+          </Link>
+        </Button>
       </div>
 
-      {/* Métricas */}
-      <StatsGrid stats={gridStats} />
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        {[
+          { label: 'Viaturas', value: totalVehicles, icon: Car, color: 'text-primary' },
+          { label: 'Fotos processadas', value: doneImages, icon: CheckCircle, color: 'text-green-400' },
+          { label: 'Em processamento', value: pendingImages, icon: Clock, color: 'text-yellow-400' },
+          { label: 'Imagens usadas', value: `${stand.images_used_this_month}/${stand.images_limit === -1 ? '∞' : stand.images_limit}`, icon: TrendingUp, color: 'text-primary' },
+        ].map(({ label, value, icon: Icon, color }, i) => (
+          <Card key={i}>
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary">
+                <Icon className={`h-5 w-5 ${color}`} />
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{value}</p>
+                <p className="text-xs text-muted-foreground">{label}</p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-      {/* Gráfico de evolução */}
-      {chartData.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Evolução de resultados</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <DashboardChart data={chartData} />
-          </CardContent>
-        </Card>
-      )}
+      {/* Listagem de viaturas */}
+      <div>
+        <h2 className="text-base font-semibold mb-4">As suas viaturas</h2>
 
-      {/* Tabela de histórico */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Histórico de Apostas</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {!bets || bets.length === 0 ? (
-            <div className="py-12 text-center text-zinc-500">
-              <Target className="h-10 w-10 mx-auto mb-3 text-zinc-700" />
-              <p>Ainda não guardaste nenhuma aposta.</p>
-              <p className="text-sm mt-1">
-                Vai à página de <a href="/apostas" className="text-green-400 hover:underline">Apostas</a> e guarda as tuas preferidas!
-              </p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-zinc-800">
-                    <th className="px-4 py-3 text-left text-xs text-zinc-500 uppercase">Data</th>
-                    <th className="px-4 py-3 text-left text-xs text-zinc-500 uppercase">Jogo</th>
-                    <th className="px-4 py-3 text-left text-xs text-zinc-500 uppercase">Aposta</th>
-                    <th className="px-4 py-3 text-center text-xs text-zinc-500 uppercase">Odds</th>
-                    <th className="px-4 py-3 text-center text-xs text-zinc-500 uppercase">Confiança</th>
-                    <th className="px-4 py-3 text-center text-xs text-zinc-500 uppercase">Resultado</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800">
-                  {bets.map(bet => {
-                    const pick = bet.daily_picks
-                    if (!pick) return null
-                    return (
-                      <tr key={bet.id} className="hover:bg-zinc-800/30 transition-colors">
-                        <td className="px-4 py-3 text-zinc-400 whitespace-nowrap">
-                          {formatDateShort(pick.date)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <p className="text-zinc-100 font-medium">{pick.match}</p>
-                          <Badge variant="secondary" className="text-xs mt-0.5">{pick.league}</Badge>
-                        </td>
-                        <td className="px-4 py-3 text-zinc-300">{pick.pick_type}</td>
-                        <td className="px-4 py-3 text-center font-semibold text-amber-400">
-                          {formatOdds(pick.odds)}
-                        </td>
-                        <td className="px-4 py-3 w-32">
-                          <ConfidenceBar pct={pick.confidence_pct} />
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <ResultBadge result={pick.result} />
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {!vehicles || vehicles.length === 0 ? (
+          <Card className="border-dashed">
+            <CardContent className="py-16 text-center">
+              <Car className="h-12 w-12 mx-auto mb-4 text-muted-foreground/30" />
+              <p className="font-medium text-muted-foreground mb-4">Ainda não tem viaturas</p>
+              <Button asChild>
+                <Link href="/dashboard/upload">
+                  <Plus className="h-4 w-4 mr-2" /> Adicionar primeira viatura
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {vehicles.map(vehicle => {
+              const images = (vehicle.vehicle_images as any[]) ?? []
+              const primaryImage = images.find((i: any) => i.is_primary) ?? images[0]
+              const doneCount = images.filter((i: any) => i.processing_status === 'done').length
+              const hasProcessing = images.some((i: any) => i.processing_status === 'processing')
+              const hasError = images.some((i: any) => i.processing_status === 'error')
+
+              return (
+                <Link key={vehicle.id} href={`/dashboard/vehicles/${vehicle.id}`}>
+                  <Card className="overflow-hidden hover:border-primary/50 transition-colors cursor-pointer group">
+                    {/* Preview */}
+                    <div className="aspect-[16/9] bg-secondary flex items-center justify-center relative overflow-hidden">
+                      {primaryImage?.showroom_url ? (
+                        <img
+                          src={primaryImage.showroom_url}
+                          alt={`${vehicle.make} ${vehicle.model}`}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      ) : (
+                        <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
+                      )}
+
+                      {/* Status badge */}
+                      <div className="absolute top-2 right-2">
+                        {hasError ? (
+                          <Badge variant="destructive" className="text-xs gap-1">
+                            <AlertCircle className="h-3 w-3" /> Erro
+                          </Badge>
+                        ) : hasProcessing ? (
+                          <Badge variant="secondary" className="text-xs gap-1">
+                            <Clock className="h-3 w-3" /> A processar
+                          </Badge>
+                        ) : doneCount > 0 ? (
+                          <Badge className="text-xs gap-1 bg-green-500/80">
+                            <CheckCircle className="h-3 w-3" /> {doneCount} foto{doneCount !== 1 ? 's' : ''}
+                          </Badge>
+                        ) : null}
+                      </div>
+                    </div>
+
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-semibold">{vehicle.make} {vehicle.model}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {vehicle.year ?? '—'} · {images.length} imagem{images.length !== 1 ? 'ns' : ''}
+                          </p>
+                        </div>
+                        {vehicle.price && (
+                          <p className="font-bold text-primary text-sm">
+                            {Number(vehicle.price).toLocaleString('pt-PT')}€
+                          </p>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

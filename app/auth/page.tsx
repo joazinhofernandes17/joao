@@ -9,22 +9,21 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { TrendingUp, Globe } from 'lucide-react'
+import { Car } from 'lucide-react'
 import Link from 'next/link'
 
 type Mode = 'login' | 'register'
 
-// Componente interno que usa useSearchParams — precisa de estar dentro de <Suspense>
 function AuthForm() {
   const [mode, setMode] = useState<Mode>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const [standName, setStandName] = useState('')
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/apostas'
+  const redirect = searchParams.get('redirect') || '/dashboard'
   const supabase = createClient()
 
   async function handleSubmit(e: React.FormEvent) {
@@ -33,25 +32,31 @@ function AuthForm() {
 
     try {
       if (mode === 'register') {
-        if (!username.trim() || username.length < 3) {
-          toast.error('Username deve ter pelo menos 3 caracteres')
+        if (!standName.trim() || standName.length < 2) {
+          toast.error('Nome do stand deve ter pelo menos 2 caracteres')
           return
         }
 
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
-          options: {
-            data: { username: username.trim() },
-          },
+          options: { data: { stand_name: standName.trim() } },
         })
 
         if (error) throw error
-        toast.success('Conta criada! Verifica o teu email para confirmar o registo.')
+
+        if (data.user) {
+          await supabase.from('stands').insert({
+            user_id: data.user.id,
+            name: standName.trim(),
+            email,
+          })
+        }
+
+        toast.success('Conta criada! Verifique o seu email para confirmar o registo.')
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
-
         toast.success('Bem-vindo de volta!')
         router.push(redirect)
         router.refresh()
@@ -70,64 +75,30 @@ function AuthForm() {
     }
   }
 
-  async function handleGoogleLogin() {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: { prompt: 'select_account' },
-      },
-    })
-    if (error) toast.error('Erro ao iniciar sessão com Google')
-  }
-
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle>{mode === 'login' ? 'Entrar na conta' : 'Criar conta'}</CardTitle>
+        <CardTitle>{mode === 'login' ? 'Entrar na conta' : 'Criar conta do stand'}</CardTitle>
         <CardDescription>
           {mode === 'login'
-            ? 'Acede às apostas e ao teu dashboard'
-            : 'Junta-te à comunidade de tipsters'}
+            ? 'Aceda ao painel do seu stand'
+            : 'Registe o seu stand e comece a usar IA nas suas fotos'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Google OAuth */}
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleGoogleLogin}
-          type="button"
-        >
-          <Globe className="h-4 w-4 mr-2" />
-          Continuar com Google
-        </Button>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-zinc-700" />
-          </div>
-          <div className="relative flex justify-center text-xs text-zinc-500">
-            <span className="bg-zinc-900 px-2">ou</span>
-          </div>
-        </div>
-
-        {/* Formulário */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'register' && (
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="standName">Nome do Stand</Label>
               <Input
-                id="username"
+                id="standName"
                 type="text"
-                placeholder="o_meu_username"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
+                placeholder="Auto Stand Lisboa"
+                value={standName}
+                onChange={e => setStandName(e.target.value)}
                 required
-                minLength={3}
-                maxLength={30}
-                pattern="[a-zA-Z0-9_]+"
-                title="Apenas letras, números e underscore"
+                minLength={2}
+                maxLength={60}
               />
             </div>
           )}
@@ -137,7 +108,7 @@ function AuthForm() {
             <Input
               id="email"
               type="email"
-              placeholder="email@exemplo.com"
+              placeholder="stand@exemplo.pt"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
@@ -158,30 +129,29 @@ function AuthForm() {
           </div>
 
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'A processar...' : mode === 'login' ? 'Entrar' : 'Criar conta'}
+            {loading ? 'A processar...' : mode === 'login' ? 'Entrar' : 'Criar conta gratuita'}
           </Button>
         </form>
 
-        {/* Alternar modo */}
-        <p className="text-center text-sm text-zinc-400">
+        <p className="text-center text-sm text-muted-foreground">
           {mode === 'login' ? (
             <>
-              Não tens conta?{' '}
+              Ainda não tem conta?{' '}
               <button
                 type="button"
                 onClick={() => setMode('register')}
-                className="text-green-400 hover:text-green-300 font-medium"
+                className="text-primary hover:underline font-medium"
               >
-                Criar conta
+                Registar stand
               </button>
             </>
           ) : (
             <>
-              Já tens conta?{' '}
+              Já tem conta?{' '}
               <button
                 type="button"
                 onClick={() => setMode('login')}
-                className="text-green-400 hover:text-green-300 font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 Entrar
               </button>
@@ -201,28 +171,23 @@ function AuthFormSkeleton() {
         <Skeleton className="h-4 w-56 mx-auto" />
       </CardHeader>
       <CardContent className="space-y-4">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-10 w-full" />
+        {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-10 w-full" />)}
       </CardContent>
     </Card>
   )
 }
 
-// Página principal envolve AuthForm em Suspense (obrigatório para useSearchParams)
 export default function AuthPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
-        {/* Logo */}
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-500">
-              <TrendingUp className="h-6 w-6 text-white" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary">
+              <Car className="h-6 w-6 text-white" />
             </div>
-            <span className="font-bold text-xl text-zinc-100">
-              Bet<span className="text-green-400">Analytics</span>
+            <span className="font-bold text-xl">
+              Auto<span className="text-primary">Showroom</span>
             </span>
           </Link>
         </div>
@@ -231,8 +196,8 @@ export default function AuthPage() {
           <AuthForm />
         </Suspense>
 
-        <p className="text-center text-xs text-zinc-600">
-          Ao registares-te, aceitas apostar de forma responsável. +18.
+        <p className="text-center text-xs text-muted-foreground">
+          Plano gratuito inclui 10 fotos/mês. Sem cartão de crédito.
         </p>
       </div>
     </div>

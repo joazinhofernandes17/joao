@@ -7,16 +7,16 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'BetAnalytics — As 3 melhores apostas de futebol',
-    template: '%s | BetAnalytics',
+    default: 'AutoShowroom — Fotografia IA para Stands',
+    template: '%s | AutoShowroom',
   },
   description:
-    'Plataforma de análise de apostas desportivas com IA. Recebe as 3 melhores apostas de futebol todos os dias, com análise detalhada e taxa de acerto superior a 75%.',
-  keywords: ['apostas', 'futebol', 'análise', 'IA', 'tipster', 'Portugal'],
+    'Plataforma SaaS de fotografia com IA para stands automóvel. Transforme fotos simples em imagens de showroom profissional em minutos.',
+  keywords: ['stand automóvel', 'fotografia IA', 'showroom virtual', 'viaturas', 'Portugal'],
   openGraph: {
     type: 'website',
     locale: 'pt_PT',
-    siteName: 'BetAnalytics',
+    siteName: 'AutoShowroom',
   },
 }
 
@@ -29,9 +29,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           position="top-right"
           toastOptions={{
             style: {
-              background: '#18181b',
-              border: '1px solid #3f3f46',
-              color: '#f4f4f5',
+              background: '#0f1117',
+              border: '1px solid #1e2433',
+              color: '#f1f5f9',
             },
           }}
         />

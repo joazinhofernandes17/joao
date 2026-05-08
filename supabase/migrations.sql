@@ -1,134 +1,110 @@
--- ============================================================
--- BetAnalytics — Migrações SQL para Supabase
+-- AutoShowroom Platform Schema
 -- Execute no SQL Editor do Supabase
--- ============================================================
 
--- 1. Perfis de utilizadores (extende auth.users)
-create table if not exists profiles (
-  id uuid references auth.users on delete cascade primary key,
-  username text unique not null,
-  avatar_url text,
-  created_at timestamptz default now()
+-- Stands (concessionários/stands de automóveis)
+create table if not exists stands (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid references auth.users(id) on delete cascade not null unique,
+  name text not null,
+  logo_url text,
+  phone text,
+  email text,
+  address text,
+  website text,
+  subscription_tier text not null default 'free',
+  subscription_status text not null default 'active',
+  images_used_this_month int not null default 0,
+  images_limit int not null default 10,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
--- Trigger para criar perfil automaticamente ao registar
-create or replace function handle_new_user()
+-- Showroom templates (ambientes virtuais disponíveis)
+create table if not exists showroom_templates (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text not null unique,
+  description text,
+  background_url text not null,
+  thumbnail_url text not null,
+  is_active boolean not null default true,
+  tier_required text not null default 'free',
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- Viaturas
+create table if not exists vehicles (
+  id uuid primary key default gen_random_uuid(),
+  stand_id uuid references stands(id) on delete cascade not null,
+  make text not null,
+  model text not null,
+  year int,
+  price numeric(12,2),
+  mileage int,
+  fuel_type text,
+  transmission text,
+  color text,
+  description text,
+  status text not null default 'active',
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Imagens de viaturas
+create table if not exists vehicle_images (
+  id uuid primary key default gen_random_uuid(),
+  vehicle_id uuid references vehicles(id) on delete cascade not null,
+  stand_id uuid references stands(id) on delete cascade not null,
+  original_url text not null,
+  enhanced_url text,
+  nobg_url text,
+  showroom_url text,
+  showroom_template_id uuid references showroom_templates(id),
+  view_angle text,
+  processing_status text not null default 'pending',
+  processing_error text,
+  is_primary boolean not null default false,
+  sort_order int not null default 0,
+  original_width int,
+  original_height int,
+  final_width int,
+  final_height int,
+  file_size_kb int,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- RLS
+alter table stands enable row level security;
+alter table vehicles enable row level security;
+alter table vehicle_images enable row level security;
+alter table showroom_templates enable row level security;
+
+create policy "stands_own" on stands for all using (auth.uid() = user_id);
+create policy "vehicles_own" on vehicles for all using (
+  stand_id in (select id from stands where user_id = auth.uid())
+);
+create policy "vehicle_images_own" on vehicle_images for all using (
+  stand_id in (select id from stands where user_id = auth.uid())
+);
+create policy "showroom_templates_read" on showroom_templates for select using (is_active = true);
+
+-- Templates iniciais
+insert into showroom_templates (name, slug, description, background_url, thumbnail_url, tier_required, sort_order) values
+  ('Nova', 'nova', 'Showroom minimalista em branco com plataforma circular', '/showrooms/nova-bg.png', '/showrooms/nova-thumb.png', 'free', 1),
+  ('Elise', 'elise', 'Ambiente premium com tonalidades cinzas suaves', '/showrooms/elise-bg.png', '/showrooms/elise-thumb.png', 'free', 2),
+  ('Origin', 'origin', 'Showroom clássico com pavimento de mármore', '/showrooms/origin-bg.png', '/showrooms/origin-thumb.png', 'starter', 3),
+  ('Eclipse', 'eclipse', 'Fundo escuro dramático para máximo impacto', '/showrooms/eclipse-bg.png', '/showrooms/eclipse-thumb.png', 'pro', 4),
+  ('Horizon', 'horizon', 'Exterior ao pôr do sol com estrada panorâmica', '/showrooms/horizon-bg.png', '/showrooms/horizon-thumb.png', 'pro', 5)
+on conflict (slug) do nothing;
+
+-- updated_at automático
+create or replace function update_updated_at()
 returns trigger as $$
-begin
-  insert into public.profiles (id, username, avatar_url)
-  values (
-    new.id,
-    coalesce(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
-    new.raw_user_meta_data->>'avatar_url'
-  );
-  return new;
-end;
-$$ language plpgsql security definer;
+begin new.updated_at = now(); return new; end;
+$$ language plpgsql;
 
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure handle_new_user();
-
--- 2. Apostas diárias geradas pela IA
-create table if not exists daily_picks (
-  id uuid default gen_random_uuid() primary key,
-  date date not null,
-  match text not null,
-  league text not null,
-  pick_type text not null,
-  odds decimal(5,2) not null,
-  confidence_pct integer not null check (confidence_pct between 70 and 99),
-  analysis text not null,
-  result text not null default 'pending' check (result in ('win', 'loss', 'void', 'pending')),
-  created_at timestamptz default now()
-);
-
--- Índice para pesquisa por data
-create index if not exists daily_picks_date_idx on daily_picks(date desc);
-
--- 3. Histórico pessoal de apostas dos utilizadores
-create table if not exists user_bets (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references profiles(id) on delete cascade not null,
-  pick_id uuid references daily_picks(id) on delete cascade not null,
-  stake decimal(10,2),
-  saved_at timestamptz default now(),
-  unique(user_id, pick_id)
-);
-
--- Índice para listagens do dashboard
-create index if not exists user_bets_user_id_idx on user_bets(user_id);
-
--- 4. Estatísticas de tipsters (calculadas/atualizadas via função)
-create table if not exists tipster_stats (
-  user_id uuid references profiles(id) on delete cascade primary key,
-  total_bets integer default 0,
-  wins integer default 0,
-  win_rate decimal(5,2) default 0,
-  profit_loss decimal(10,2) default 0,
-  updated_at timestamptz default now()
-);
-
--- Função para recalcular estatísticas de um utilizador
-create or replace function update_tipster_stats(p_user_id uuid)
-returns void as $$
-declare
-  v_total integer;
-  v_wins integer;
-  v_win_rate decimal;
-  v_profit decimal;
-begin
-  select
-    count(*),
-    count(*) filter (where dp.result = 'win'),
-    coalesce(sum(
-      case dp.result
-        when 'win' then coalesce(ub.stake, 10) * (dp.odds - 1)
-        when 'loss' then -coalesce(ub.stake, 10)
-        else 0
-      end
-    ), 0)
-  into v_total, v_wins, v_profit
-  from user_bets ub
-  join daily_picks dp on dp.id = ub.pick_id
-  where ub.user_id = p_user_id
-    and dp.result != 'pending';
-
-  v_win_rate := case when v_total > 0 then round((v_wins::decimal / v_total) * 100, 2) else 0 end;
-
-  insert into tipster_stats (user_id, total_bets, wins, win_rate, profit_loss, updated_at)
-  values (p_user_id, v_total, v_wins, v_win_rate, v_profit, now())
-  on conflict (user_id) do update set
-    total_bets = excluded.total_bets,
-    wins = excluded.wins,
-    win_rate = excluded.win_rate,
-    profit_loss = excluded.profit_loss,
-    updated_at = excluded.updated_at;
-end;
-$$ language plpgsql security definer;
-
--- ============================================================
--- ROW LEVEL SECURITY (RLS)
--- ============================================================
-
--- Profiles: todos leem, apenas o próprio edita
-alter table profiles enable row level security;
-create policy "Perfis públicos" on profiles for select using (true);
-create policy "Utilizador edita o próprio perfil" on profiles for update using (auth.uid() = id);
-
--- Daily picks: todos os autenticados leem
-alter table daily_picks enable row level security;
-create policy "Apostas visíveis a autenticados" on daily_picks for select using (auth.role() = 'authenticated');
-create policy "Apenas service role insere/atualiza picks" on daily_picks for all using (auth.role() = 'service_role');
-
--- User bets: cada utilizador vê apenas as suas
-alter table user_bets enable row level security;
-create policy "Utilizador vê as suas apostas" on user_bets for select using (auth.uid() = user_id);
-create policy "Utilizador guarda apostas" on user_bets for insert with check (auth.uid() = user_id);
-create policy "Utilizador apaga as suas apostas" on user_bets for delete using (auth.uid() = user_id);
-
--- Tipster stats: todos leem (ranking público)
-alter table tipster_stats enable row level security;
-create policy "Stats públicas" on tipster_stats for select using (true);
-create policy "Apenas service role atualiza stats" on tipster_stats for all using (auth.role() = 'service_role');
+create trigger stands_updated_at before update on stands for each row execute function update_updated_at();
+create trigger vehicles_updated_at before update on vehicles for each row execute function update_updated_at();
+create trigger vehicle_images_updated_at before update on vehicle_images for each row execute function update_updated_at();

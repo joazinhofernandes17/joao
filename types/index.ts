@@ -1,72 +1,90 @@
-// Tipos globais da aplicação BetAnalytics
+export type SubscriptionTier = 'free' | 'starter' | 'pro' | 'enterprise'
+export type ProcessingStatus = 'pending' | 'processing' | 'done' | 'error'
+export type VehicleStatus = 'active' | 'sold' | 'hidden'
+export type FuelType = 'gasolina' | 'gasóleo' | 'híbrido' | 'elétrico' | 'gpl'
+export type TransmissionType = 'manual' | 'automático'
 
-export interface Profile {
-  id: string
-  username: string
-  avatar_url: string | null
-  created_at: string
-}
-
-export type PickResult = 'win' | 'loss' | 'void' | 'pending'
-
-export interface DailyPick {
-  id: string
-  date: string
-  match: string
-  league: string
-  pick_type: string
-  odds: number
-  confidence_pct: number
-  analysis: string
-  result: PickResult
-  created_at: string
-}
-
-export interface UserBet {
+export interface Stand {
   id: string
   user_id: string
-  pick_id: string
-  stake: number | null
-  saved_at: string
-  // joins
-  daily_picks?: DailyPick
-}
-
-export interface TipsterStats {
-  user_id: string
-  total_bets: number
-  wins: number
-  win_rate: number
-  profit_loss: number
+  name: string
+  logo_url: string | null
+  phone: string | null
+  email: string | null
+  address: string | null
+  website: string | null
+  subscription_tier: SubscriptionTier
+  subscription_status: string
+  images_used_this_month: number
+  images_limit: number
+  created_at: string
   updated_at: string
-  // joins
-  profiles?: Profile
 }
 
-// Resposta da IA ao gerar picks
-export interface AIPickResponse {
-  match: string
-  league: string
-  pick_type: string
-  odds: number
-  confidence_pct: number
-  analysis: string
+export interface ShowroomTemplate {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  background_url: string
+  thumbnail_url: string
+  is_active: boolean
+  tier_required: SubscriptionTier
+  sort_order: number
 }
 
-// Badge de nível do tipster
-export type TipsterLevel = 'Bronze' | 'Prata' | 'Ouro' | 'Platina'
-
-export function getTipsterLevel(totalBets: number): TipsterLevel {
-  if (totalBets >= 100) return 'Platina'
-  if (totalBets >= 50) return 'Ouro'
-  if (totalBets >= 20) return 'Prata'
-  return 'Bronze'
+export interface Vehicle {
+  id: string
+  stand_id: string
+  make: string
+  model: string
+  year: number | null
+  price: number | null
+  mileage: number | null
+  fuel_type: FuelType | null
+  transmission: TransmissionType | null
+  color: string | null
+  description: string | null
+  status: VehicleStatus
+  created_at: string
+  updated_at: string
+  vehicle_images?: VehicleImage[]
 }
 
-// Cores por nível
-export const LEVEL_COLORS: Record<TipsterLevel, string> = {
-  Bronze: 'text-amber-700 bg-amber-100',
-  Prata: 'text-slate-500 bg-slate-100',
-  Ouro: 'text-yellow-600 bg-yellow-100',
-  Platina: 'text-cyan-600 bg-cyan-100',
+export interface VehicleImage {
+  id: string
+  vehicle_id: string
+  stand_id: string
+  original_url: string
+  enhanced_url: string | null
+  nobg_url: string | null
+  showroom_url: string | null
+  showroom_template_id: string | null
+  view_angle: string | null
+  processing_status: ProcessingStatus
+  processing_error: string | null
+  is_primary: boolean
+  sort_order: number
+  original_width: number | null
+  original_height: number | null
+  final_width: number | null
+  final_height: number | null
+  file_size_kb: number | null
+  created_at: string
+  updated_at: string
+  showroom_templates?: ShowroomTemplate
+}
+
+export const TIER_LIMITS: Record<SubscriptionTier, number> = {
+  free: 10,
+  starter: 100,
+  pro: 500,
+  enterprise: -1,
+}
+
+export const TIER_LABELS: Record<SubscriptionTier, string> = {
+  free: 'Gratuito',
+  starter: 'Starter',
+  pro: 'Pro',
+  enterprise: 'Enterprise',
 }

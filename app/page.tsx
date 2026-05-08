@@ -1,86 +1,34 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { createAdminClient } from '@/lib/supabase/server'
-import { TrendingUp, Shield, Zap, Trophy, ChevronRight, Star } from 'lucide-react'
+import { Car, Zap, Download, ChevronRight, Star, Clock, TrendingUp, ImageIcon } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'BetAnalytics — As 3 melhores apostas de futebol, todos os dias',
+  title: 'AutoShowroom — Fotografia IA para Stands de Automóveis',
 }
 
-async function getGlobalStats() {
-  try {
-    const supabase = createAdminClient()
-
-    const { data: picks } = await supabase
-      .from('daily_picks')
-      .select('result, odds, confidence_pct')
-      .neq('result', 'pending')
-
-    if (!picks || picks.length === 0) {
-      return { total: 0, wins: 0, winRate: 77, avgOdds: 1.95, avgConfidence: 82 }
-    }
-
-    const resolved = picks.filter(p => p.result !== 'void')
-    const wins = resolved.filter(p => p.result === 'win').length
-    const winRate = resolved.length > 0 ? Math.round((wins / resolved.length) * 100) : 0
-    const avgOdds = picks.reduce((s, p) => s + Number(p.odds), 0) / picks.length
-    const avgConf = picks.reduce((s, p) => s + p.confidence_pct, 0) / picks.length
-
-    return {
-      total: resolved.length,
-      wins,
-      winRate,
-      avgOdds: Math.round(avgOdds * 100) / 100,
-      avgConfidence: Math.round(avgConf),
-    }
-  } catch {
-    return { total: 0, wins: 0, winRate: 77, avgOdds: 1.95, avgConfidence: 82 }
-  }
-}
-
-async function getTodayPicksPreview() {
-  try {
-    const supabase = createAdminClient()
-    const today = new Date().toISOString().split('T')[0]
-
-    const { data } = await supabase
-      .from('daily_picks')
-      .select('id, match, league, pick_type, odds, confidence_pct, result')
-      .eq('date', today)
-      .order('confidence_pct', { ascending: false })
-
-    return data ?? []
-  } catch {
-    return []
-  }
-}
-
-export default async function HomePage() {
-  const [stats, todayPicks] = await Promise.all([getGlobalStats(), getTodayPicksPreview()])
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-zinc-950">
-      {/* Header simples na landing */}
-      <header className="border-b border-zinc-800 bg-zinc-950/95 backdrop-blur">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500">
-                <TrendingUp className="h-5 w-5 text-white" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                <Car className="h-5 w-5 text-white" />
               </div>
-              <span className="font-bold text-lg text-zinc-100">
-                Bet<span className="text-green-400">Analytics</span>
+              <span className="font-bold text-lg">
+                Auto<span className="text-primary">Showroom</span>
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <Link href="/ranking" className="text-sm text-zinc-400 hover:text-zinc-100 transition-colors">
-                Ranking
+              <Link href="/auth" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block">
+                Entrar
               </Link>
               <Button asChild>
-                <Link href="/auth">Entrar</Link>
+                <Link href="/auth">Começar grátis <ChevronRight className="ml-1 h-4 w-4" /></Link>
               </Button>
             </div>
           </div>
@@ -88,156 +36,208 @@ export default async function HomePage() {
       </header>
 
       {/* Hero */}
-      <section className="relative overflow-hidden py-20 md:py-32">
-        {/* Fundo decorativo */}
-        <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-amber-500/5" />
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-green-500/10 blur-3xl" />
+      <section className="relative overflow-hidden py-24 md:py-36">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-primary/4" />
+        <div className="absolute top-32 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-primary/8 blur-3xl pointer-events-none" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <Badge variant="secondary" className="mb-6 text-xs">
-            <Star className="h-3 w-3 mr-1 text-amber-400" />
-            Powered by Claude AI · Análise Profissional
+          <Badge variant="secondary" className="mb-6 text-xs gap-1">
+            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+            Powered by IA · Real-ESRGAN + remove.bg
           </Badge>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-zinc-100 mb-6 leading-tight">
-            As{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">
-              3 melhores
-            </span>{' '}
-            apostas de futebol,{' '}
-            <span className="text-amber-400">todos os dias</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight">
+            Fotos de{' '}
+            <span className="text-primary">showroom profissional</span>
+            <br />
+            em minutos
           </h1>
 
-          <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10">
-            Inteligência artificial com análise profunda de estatísticas, forma recente e valor das odds.
-            Taxa de acerto superior a <strong className="text-green-400">75%</strong>.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            Tire uma foto simples do seu carro. A nossa IA melhora a qualidade para{' '}
+            <strong className="text-foreground">2K+</strong>, remove o fundo e coloca-o num{' '}
+            <strong className="text-foreground">showroom virtual profissional</strong> — pronto para o seu site em minutos.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="text-base">
+            <Button asChild size="lg" className="text-base px-8">
               <Link href="/auth">
-                Começar gratuitamente <ChevronRight className="ml-2 h-4 w-4" />
+                Experimentar grátis <ChevronRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-base">
-              <Link href="/ranking">Ver ranking de tipsters</Link>
+              <Link href="#como-funciona">Ver como funciona</Link>
             </Button>
           </div>
+
+          <p className="mt-4 text-sm text-muted-foreground">10 fotos grátis/mês · Sem cartão de crédito</p>
         </div>
       </section>
 
-      {/* Estatísticas */}
-      <section className="py-16 border-y border-zinc-800 bg-zinc-900/30">
+      {/* Métricas */}
+      <section className="py-14 border-y border-border bg-secondary/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { label: 'Taxa de Acerto', value: `${stats.winRate || 77}%`, color: 'text-green-400' },
-              { label: 'Apostas Analisadas', value: stats.total > 0 ? `${stats.total}+` : '500+', color: 'text-zinc-100' },
-              { label: 'Odds Médias', value: stats.avgOdds > 0 ? stats.avgOdds.toFixed(2) : '1.95', color: 'text-amber-400' },
-              { label: 'Confiança Média', value: `${stats.avgConfidence || 82}%`, color: 'text-zinc-100' },
+              { label: 'Poupança de tempo', value: '65%', color: 'text-primary' },
+              { label: 'Resolução mínima', value: '2K+', color: 'text-foreground' },
+              { label: 'Redução de custos', value: '55%', color: 'text-primary' },
+              { label: 'Minutos por viatura', value: '< 5', color: 'text-foreground' },
             ].map((s, i) => (
               <div key={i}>
                 <p className={`text-3xl md:text-4xl font-bold ${s.color}`}>{s.value}</p>
-                <p className="text-sm text-zinc-500 mt-1">{s.label}</p>
+                <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Preview das apostas do dia */}
-      {todayPicks.length > 0 && (
-        <section className="py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-zinc-100">Apostas de Hoje</h2>
-              <p className="text-zinc-400 mt-2">Faz login para ver a análise completa</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              {todayPicks.map(pick => (
-                <Card key={pick.id} className="relative overflow-hidden">
-                  {/* Blur overlay para análise */}
-                  <div className="absolute inset-0 flex items-end justify-center pb-6 z-10">
-                    <Button asChild size="sm" variant="gold">
-                      <Link href="/auth">
-                        <Shield className="h-4 w-4 mr-2" />
-                        Ver análise completa
-                      </Link>
-                    </Button>
-                  </div>
-
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="secondary" className="text-xs">{pick.league}</Badge>
-                      <span className="text-xl font-bold text-amber-400">{Number(pick.odds).toFixed(2)}</span>
-                    </div>
-                    <p className="font-semibold text-zinc-100 mb-1">{pick.match}</p>
-                    <p className="text-sm text-zinc-400 mb-4">{pick.pick_type}</p>
-
-                    {/* Barra de confiança (visível) */}
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-xs text-zinc-500">
-                        <span>Confiança</span>
-                        <span className="text-green-400 font-semibold">{pick.confidence_pct}%</span>
-                      </div>
-                      <div className="h-2 rounded-full bg-zinc-700">
-                        <div
-                          className="h-2 rounded-full bg-green-500"
-                          style={{ width: `${pick.confidence_pct}%` }}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Análise desfocada */}
-                    <div className="mt-4 rounded-lg bg-zinc-800/50 p-3 blur-sm select-none">
-                      <p className="text-xs text-zinc-400">
-                        Análise detalhada com estatísticas de forma recente, confrontos diretos e valor das odds disponível para membros...
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Features */}
-      <section className="py-16 bg-zinc-900/30">
+      {/* Pipeline visual */}
+      <section id="como-funciona" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-zinc-100 mb-12">
-            Como funciona
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="text-center mb-14">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Pipeline automático em 4 passos</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              Da foto tirada com o telemóvel à imagem de catálogo profissional, tudo automático.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-6">
             {[
               {
+                step: '01',
+                icon: ImageIcon,
+                title: 'Upload da foto',
+                desc: 'Carregue a foto original tirada com telemóvel ou câmara, em qualquer qualidade.',
+              },
+              {
+                step: '02',
+                icon: TrendingUp,
+                title: 'Melhoria com IA',
+                desc: 'Real-ESRGAN faz upscale para 2K+, corrige exposição, brilho, contraste e nitidez.',
+              },
+              {
+                step: '03',
                 icon: Zap,
-                title: 'IA Analisa os Dados',
-                desc: 'Claude AI processa estatísticas avançadas, forma recente, confrontos diretos, lesões e motivação das equipas todos os dias.',
-                color: 'bg-green-500/10 text-green-400',
+                title: 'Showroom virtual',
+                desc: 'Remove o fundo e coloca o carro num ambiente de showroom profissional à sua escolha.',
               },
               {
-                icon: Shield,
-                title: 'Apostas de Alto Valor',
-                desc: 'Apenas picks com confiança superior a 75% são selecionados, garantindo qualidade em detrimento de quantidade.',
-                color: 'bg-amber-500/10 text-amber-400',
+                step: '04',
+                icon: Download,
+                title: 'Exportação',
+                desc: 'Descarregue as fotos ou exporte automaticamente para o seu site ou DMS via API.',
+              },
+            ].map(({ step, icon: Icon, title, desc }, i) => (
+              <div key={i} className="relative">
+                {i < 3 && (
+                  <div className="hidden md:block absolute top-8 left-[calc(100%-0px)] w-full h-px bg-gradient-to-r from-border to-transparent z-0" />
+                )}
+                <div className="relative z-10 bg-card border border-border rounded-2xl p-6 h-full">
+                  <div className="flex items-start gap-3 mb-4">
+                    <span className="text-xs font-mono text-primary font-bold">{step}</span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                  </div>
+                  <h3 className="font-semibold mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Showrooms */}
+      <section className="py-20 bg-secondary/20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Ambientes de showroom</h2>
+            <p className="text-muted-foreground">Escolha entre vários ambientes profissionais para cada viatura</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {[
+              { name: 'Nova', desc: 'Branco minimalista', tier: 'Grátis', color: 'from-gray-100 to-gray-200' },
+              { name: 'Elise', desc: 'Cinzas premium', tier: 'Grátis', color: 'from-slate-200 to-slate-300' },
+              { name: 'Origin', desc: 'Mármore clássico', tier: 'Starter', color: 'from-stone-200 to-stone-300' },
+              { name: 'Eclipse', desc: 'Fundo escuro', tier: 'Pro', color: 'from-gray-700 to-gray-900' },
+              { name: 'Horizon', desc: 'Exterior pôr do sol', tier: 'Pro', color: 'from-orange-200 to-amber-300' },
+            ].map(({ name, desc, tier, color }, i) => (
+              <div key={i} className="rounded-xl overflow-hidden border border-border">
+                <div className={`h-28 bg-gradient-to-b ${color} flex items-center justify-center`}>
+                  <div className="w-16 h-8 bg-black/20 rounded-sm" />
+                </div>
+                <div className="p-3 bg-card">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="font-semibold text-sm">{name}</p>
+                    <Badge variant="secondary" className="text-xs">{tier}</Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Planos */}
+      <section className="py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Planos simples</h2>
+            <p className="text-muted-foreground">Comece grátis. Escale quando precisar.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                name: 'Gratuito',
+                price: '0€',
+                period: '/mês',
+                features: ['10 fotos/mês', '2 ambientes showroom', 'Download em 2K', 'Suporte email'],
+                cta: 'Começar grátis',
+                highlight: false,
               },
               {
-                icon: Trophy,
-                title: 'Acompanha o teu Histórico',
-                desc: 'Guarda as tuas apostas, monitoriza o teu desempenho e compara-te com outros tipsters no ranking público.',
-                color: 'bg-blue-500/10 text-blue-400',
+                name: 'Starter',
+                price: '29€',
+                period: '/mês',
+                features: ['100 fotos/mês', '3 ambientes showroom', 'Download em 4K', 'API de exportação', 'Branding do stand'],
+                cta: 'Começar Starter',
+                highlight: true,
               },
-            ].map(({ icon: Icon, title, desc, color }, i) => (
-              <div key={i} className="flex gap-4">
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${color}`}>
-                  <Icon className="h-6 w-6" />
+              {
+                name: 'Pro',
+                price: '79€',
+                period: '/mês',
+                features: ['500 fotos/mês', 'Todos os ambientes', 'Download em 4K+', 'API + FTP automático', 'Branding personalizado', 'Suporte prioritário'],
+                cta: 'Começar Pro',
+                highlight: false,
+              },
+            ].map(({ name, price, period, features, cta, highlight }, i) => (
+              <div key={i} className={`rounded-2xl border p-6 flex flex-col ${highlight ? 'border-primary bg-primary/5 relative' : 'border-border bg-card'}`}>
+                {highlight && (
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 text-xs">Mais popular</Badge>
+                )}
+                <div className="mb-6">
+                  <p className="font-semibold text-sm text-muted-foreground mb-2">{name}</p>
+                  <div className="flex items-end gap-1">
+                    <span className="text-4xl font-bold">{price}</span>
+                    <span className="text-muted-foreground mb-1">{period}</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-zinc-100 mb-2">{title}</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{desc}</p>
-                </div>
+                <ul className="space-y-2 flex-1 mb-6">
+                  {features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild variant={highlight ? 'default' : 'outline'} className="w-full">
+                  <Link href="/auth">{cta}</Link>
+                </Button>
               </div>
             ))}
           </div>
@@ -245,32 +245,33 @@ export default async function HomePage() {
       </section>
 
       {/* CTA Final */}
-      <section className="py-20">
+      <section className="py-20 border-t border-border bg-secondary/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">
-            Começa hoje, gratuitamente
+          <Clock className="h-12 w-12 text-primary mx-auto mb-4 opacity-80" />
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Pronto para transformar as suas fotos?
           </h2>
-          <p className="text-zinc-400 mb-8 max-w-xl mx-auto">
-            Junta-te aos tipsters que já usam análise de IA para tomar melhores decisões nas suas apostas.
+          <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
+            Configure o seu stand em menos de 2 minutos. Sem cartão de crédito.
           </p>
-          <Button asChild size="lg">
+          <Button asChild size="lg" className="text-base px-10">
             <Link href="/auth">Criar conta gratuita <ChevronRight className="ml-2 h-4 w-4" /></Link>
           </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 py-8">
+      <footer className="border-t border-border py-8">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded bg-green-500">
-                <TrendingUp className="h-3.5 w-3.5 text-white" />
+              <div className="flex h-6 w-6 items-center justify-center rounded bg-primary">
+                <Car className="h-3.5 w-3.5 text-white" />
               </div>
-              <span className="text-sm font-semibold text-zinc-400">BetAnalytics</span>
+              <span className="text-sm font-semibold text-muted-foreground">AutoShowroom</span>
             </div>
-            <p className="text-xs text-zinc-600">
-              Apostas responsáveis. Joga apenas o que podes perder. +18.
+            <p className="text-xs text-muted-foreground">
+              © 2026 AutoShowroom · Fotografia IA para stands automóvel
             </p>
           </div>
         </div>
