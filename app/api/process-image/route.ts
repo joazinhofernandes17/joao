@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
       showroomSlug,
       standLogoUrl: stand.logo_url,
       standName: stand.name,
-      useReplicate: !!process.env.REPLICATE_API_TOKEN,
     })
 
     // Incrementar contador de uso
