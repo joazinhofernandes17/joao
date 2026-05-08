@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { BeforeAfterSlider } from './BeforeAfterSlider'
-import { Badge } from './ui/badge'
 
 // Mesmo carro (BMW M3) — foto tirada na rua com fundo original
 const BEFORE_URL = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1400&h=875&q=85'
@@ -98,25 +97,17 @@ export function ShowroomShowcase() {
   )
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-12 bg-[#050505]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Header */}
-        <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4 text-xs tracking-wider uppercase">
-            Transformação real
-          </Badge>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            Da rua ao showroom
-            <br className="hidden sm:block" />
-            <span className="text-primary"> em segundos</span>
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Arraste o divisor — o carro é o mesmo, apenas o fundo muda. Escolha o ambiente à direita.
+        {/* Header removido — já vem da page.tsx */}
+        <div className="mb-10">
+          <p className="text-sm text-white/40">
+            Arraste o divisor — o carro é o mesmo, apenas o fundo muda.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
+        <div className="grid lg:grid-cols-[1fr_280px] gap-6 items-start">
 
           {/* Slider */}
           <div className="space-y-4">
@@ -130,21 +121,21 @@ export function ShowroomShowcase() {
 
             {/* Info ambiente activo */}
             <div className="flex items-center gap-3 px-1">
-              <div className="h-2 w-2 rounded-full bg-primary animate-pulse shrink-0" />
-              <p className="text-sm text-muted-foreground">
+              <div className="h-2 w-2 rounded-full bg-[#1e78ff] animate-pulse shrink-0" />
+              <p className="text-sm text-white/50">
                 Ambiente{' '}
-                <span className="font-semibold text-foreground">{env.name}</span>
+                <span className="font-semibold text-white">{env.name}</span>
                 {' '}— {env.desc}
               </p>
-              <Badge variant="secondary" className="ml-auto text-xs shrink-0">
+              <span className="ml-auto text-[10px] font-bold uppercase tracking-wider text-[#1e78ff] shrink-0 border border-[#1e78ff]/30 rounded-full px-2 py-0.5">
                 {env.tier}
-              </Badge>
+              </span>
             </div>
           </div>
 
           {/* Seletor */}
-          <div className="space-y-2.5">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+          <div className="space-y-2">
+            <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mb-4">
               Escolher ambiente
             </p>
 
@@ -153,52 +144,43 @@ export function ShowroomShowcase() {
                 key={e.slug}
                 onClick={() => setActive(e.slug)}
                 className={`
-                  w-full flex items-center gap-3 p-2.5 rounded-xl border-2 transition-all duration-200 text-left
+                  w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all duration-200 text-left
                   ${active === e.slug
-                    ? `${e.accent} bg-primary/5 shadow-sm`
-                    : 'border-border hover:border-muted-foreground/40 hover:bg-secondary/50'}
+                    ? 'border-[#1e78ff]/50 bg-[#0d0d1e]'
+                    : 'border-white/6 bg-[#0a0a0a] hover:border-white/14 hover:bg-[#0d0d0d]'}
                 `}
               >
-                {/* Thumbnail do fundo de showroom */}
-                <div className="relative h-14 w-20 rounded-lg overflow-hidden shrink-0 bg-secondary">
-                  <img
-                    src={e.thumb}
-                    alt={e.name}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
+                <div className="relative h-12 w-18 rounded-lg overflow-hidden shrink-0 bg-black">
+                  <img src={e.thumb} alt={e.name} className="w-full h-full object-cover" loading="lazy" />
                   {active === e.slug && (
-                    <div className="absolute inset-0 ring-2 ring-inset ring-primary/70 rounded-lg" />
+                    <div className="absolute inset-0 ring-2 ring-inset ring-[#1e78ff]/70 rounded-lg" />
                   )}
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className={`font-semibold text-sm ${active === e.slug ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    <span className={`font-bold text-sm ${active === e.slug ? 'text-white' : 'text-white/50'}`}>
                       {e.name}
                     </span>
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0 shrink-0">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#1e78ff]/70 border border-[#1e78ff]/25 rounded-full px-1.5 shrink-0">
                       {e.tier}
-                    </Badge>
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">{e.desc}</p>
+                  <p className="text-xs text-white/30 truncate">{e.desc}</p>
                 </div>
 
-                {/* Dot indicador */}
-                <div className={`h-2 w-2 rounded-full shrink-0 transition-all ${active === e.slug ? 'bg-primary' : 'bg-transparent'}`} />
+                <div className={`h-1.5 w-1.5 rounded-full shrink-0 transition-all ${active === e.slug ? 'bg-[#1e78ff]' : 'bg-transparent'}`} />
               </button>
             ))}
 
-            {/* CTA */}
-            <div className="pt-4 mt-2 border-t border-border">
+            <div className="pt-4 mt-2 border-t border-white/6">
               <a
                 href="/auth"
-                className="flex items-center justify-center w-full py-3 px-4 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors"
+                className="btn-glow flex items-center justify-center w-full py-3 px-4 rounded-xl bg-[#1e78ff] text-white text-sm font-bold hover:bg-[#3b8fff] transition-all"
               >
                 Experimentar grátis →
               </a>
-              <p className="text-center text-xs text-muted-foreground mt-2">
+              <p className="text-center text-xs text-white/25 mt-2">
                 10 fotos grátis · sem cartão de crédito
               </p>
             </div>
