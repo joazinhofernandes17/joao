@@ -74,7 +74,7 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
       .from('vehicle-images').getPublicUrl(enhancedPath)
 
     // ── 4. Remove background ──────────────────────────────
-    const nobgBuffer = await removeBackground(enhancedBuffer)
+    const nobgBuffer = await removeBackground(enhancedUrl)
     const nobgPath = `processed/${vehicleImageId}/nobg.png`
     const { error: nobgErr } = await supabase.storage
       .from('vehicle-images')

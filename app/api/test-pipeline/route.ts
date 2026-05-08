@@ -34,7 +34,6 @@ export async function POST(req: NextRequest) {
         const supabase = createAdminClient()
         const testId = `test-${Date.now()}`
         const hasReplicate = !!process.env.REPLICATE_API_TOKEN
-        const hasRemoveBg = !!process.env.REMOVE_BG_API_KEY
 
         // ── 1. Upload original ───────────────────────────────────
         emit('upload', 'running', 'A fazer upload da imagem original...')
@@ -95,12 +94,12 @@ export async function POST(req: NextRequest) {
 
         // ── 4. Remove background ─────────────────────────────────
         let nobgBuffer: Buffer
-        if (hasRemoveBg) {
-          emit('remove_bg', 'running', 'A remover fundo com remove.bg API...')
-          nobgBuffer = await removeBackground(enhancedBuffer)
+        if (hasReplicate) {
+          emit('remove_bg', 'running', 'A remover fundo com cjwbw/rembg (Replicate)...')
+          nobgBuffer = await removeBackground(enhancedUrl)
           emit('remove_bg', 'done', 'Fundo removido com sucesso')
         } else {
-          emit('remove_bg', 'skipped', 'REMOVE_BG_API_KEY não configurado — a usar imagem sem remoção')
+          emit('remove_bg', 'skipped', 'REPLICATE_API_TOKEN não configurado — fundo não removido')
           nobgBuffer = enhancedBuffer
         }
 
