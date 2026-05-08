@@ -5,6 +5,7 @@ import { enhanceImage, getImageMetadata } from '@/lib/image-processing/enhance'
 import { removeBackground } from '@/lib/image-processing/remove-bg'
 import { compositeOnShowroom } from '@/lib/image-processing/composite'
 import { upscaleImage } from '@/lib/image-processing/replicate'
+import sharp from 'sharp'
 
 const encoder = new TextEncoder()
 
@@ -54,8 +55,19 @@ export async function POST(req: NextRequest) {
         // ── 2. Real-ESRGAN upscale ───────────────────────────────
         let enhancedBuffer: Buffer
         if (hasReplicate) {
-          emit('upscale', 'running', 'A ampliar 4× com Real-ESRGAN (Replicate)...')
-          const upscaledUrl = await upscaleImage(originalUrl)
+          // Redimensionar para máx 1280×960 antes de enviar ao Real-ESRGAN (limite GPU)
+          emit('upscale', 'running', 'A redimensionar para 1280×960 e enviar ao Real-ESRGAN 4×...')
+          const resizedBuffer = await sharp(originalBuffer)
+            .resize(1280, 960, { fit: 'inside', withoutEnlargement: true })
+            .png()
+            .toBuffer()
+          const resizePath = `test/${testId}/pre-upscale.png`
+          await supabase.storage.from('vehicle-images')
+            .upload(resizePath, resizedBuffer, { contentType: 'image/png', upsert: true })
+          const { data: { publicUrl: resizeUrl } } = supabase.storage
+            .from('vehicle-images').getPublicUrl(resizePath)
+
+          const upscaledUrl = await upscaleImage(resizeUrl)
           const upscaledRes = await fetch(upscaledUrl)
           if (!upscaledRes.ok) throw new Error(`Download upscale: ${upscaledRes.status}`)
           const upscaledBuffer = Buffer.from(await upscaledRes.arrayBuffer())

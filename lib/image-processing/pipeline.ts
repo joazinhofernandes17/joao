@@ -1,3 +1,4 @@
+import sharp from 'sharp'
 import { enhanceImage, getImageMetadata } from './enhance'
 import { removeBackground } from './remove-bg'
 import { compositeOnShowroom } from './composite'
@@ -39,7 +40,20 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
     // ── 2. Upscale Real-ESRGAN (Replicate) + polish Sharp ─
     let enhancedBuffer: Buffer
     if (hasReplicate) {
-      const upscaledUrl = await upscaleImage(originalUrl)
+      // Real-ESRGAN falha com imagens grandes — limitar a 1280×960 antes de enviar
+      const resizedBuffer = await sharp(originalBuffer)
+        .resize(1280, 960, { fit: 'inside', withoutEnlargement: true })
+        .png()
+        .toBuffer()
+      const resizePath = `processed/${vehicleImageId}/pre-upscale.png`
+      const { error: resizeErr } = await supabase.storage
+        .from('vehicle-images')
+        .upload(resizePath, resizedBuffer, { contentType: 'image/png', upsert: true })
+      if (resizeErr) throw new Error(`Upload pre-upscale: ${resizeErr.message}`)
+      const { data: { publicUrl: resizeUrl } } = supabase.storage
+        .from('vehicle-images').getPublicUrl(resizePath)
+
+      const upscaledUrl = await upscaleImage(resizeUrl)
       const upscaledRes = await fetch(upscaledUrl)
       if (!upscaledRes.ok) throw new Error(`Falha ao descarregar upscale: ${upscaledRes.status}`)
       const upscaledBuffer = Buffer.from(await upscaledRes.arrayBuffer())
