@@ -6,28 +6,29 @@ const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 const ENVIRONMENT_PROMPTS: Record<string, string> = {
   nova: [
     'professional car dealership showroom interior, pure white infinity cove background,',
-    'seamless white floor, soft diffused overhead studio lighting, clean minimalist aesthetic,',
+    'seamless white floor, circular turntable platform on the floor, soft car shadow on floor,',
+    'soft diffused overhead studio lighting, clean minimalist aesthetic,',
     'automotive photography studio, no car, empty background only, photorealistic, 4k',
   ].join(' '),
   elise: [
     'luxury car showroom interior, dark navy blue studio background,',
-    'cold blue rim lighting, glossy dark concrete floor, dramatic shadows,',
-    'premium automotive photography studio background, no car, empty, photorealistic, 4k',
+    'cold blue rim lighting, circular platform on glossy dark concrete floor, car shadow on floor,',
+    'dramatic studio lighting, premium automotive photography background, no car, empty, photorealistic, 4k',
   ].join(' '),
   origin: [
     'classic elegant car showroom, warm cream and beige studio background,',
-    'warm tungsten lighting, polished travertine floor, sophisticated atmosphere,',
-    'automotive photography background, no car, empty, photorealistic, 4k',
+    'warm tungsten lighting, circular platform on polished travertine floor, soft car shadow on floor,',
+    'sophisticated atmosphere, automotive photography background, no car, empty, photorealistic, 4k',
   ].join(' '),
   eclipse: [
-    'dramatic car studio, pure black background, high contrast lighting,',
-    'deep violet and purple accent lights, reflective black marble floor,',
+    'dramatic car studio, pure black background, high contrast studio lighting,',
+    'deep violet and purple accent lights, circular platform on reflective black marble floor, car shadow on floor,',
     'cinematic automotive photography background, no car, empty, photorealistic, 4k',
   ].join(' '),
   horizon: [
     'outdoor car photography location, golden hour sunset sky, warm orange light,',
-    'clean asphalt surface, distant horizon, cinematic automotive backdrop,',
-    'no car, empty location, photorealistic, 4k',
+    'circular display platform on clean asphalt surface, car shadow on ground, distant horizon,',
+    'cinematic automotive backdrop, no car, empty location, photorealistic, 4k',
   ].join(' '),
 }
 

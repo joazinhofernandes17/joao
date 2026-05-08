@@ -57,19 +57,28 @@ export async function compositeOnShowroom(
   const carLeft = Math.round((bgWidth - carWidth) / 2)
   const carTop = Math.round(bgHeight * config.carTopRatio)
 
-  const shadowHeight = Math.round(carHeight * 0.08)
-  const shadowWidth = Math.round(carWidth * 0.85)
-  const shadowBuffer = await sharp({
-    create: {
-      width: shadowWidth,
-      height: shadowHeight,
-      channels: 4,
-      background: { r: 0, g: 0, b: 0, alpha: config.shadowOpacity },
-    },
-  }).blur(12).png().toBuffer()
+  // Sombra elíptica com gradiente radial — mais suave e realista que um rect blur
+  const shadowWidth  = Math.round(carWidth  * 0.90)
+  const shadowHeight = Math.round(carHeight * 0.14)
+  const cx = Math.round(shadowWidth  / 2)
+  const cy = Math.round(shadowHeight / 2)
+  const rx = Math.round(shadowWidth  * 0.48)
+  const ry = Math.round(shadowHeight * 0.46)
+  const alpha = Math.min(config.shadowOpacity * 1.8, 0.65).toFixed(2)
+
+  const shadowSvg = [
+    `<svg width="${shadowWidth}" height="${shadowHeight}" xmlns="http://www.w3.org/2000/svg">`,
+    `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="rgba(0,0,0,${alpha})"/>`,
+    `</svg>`,
+  ].join('')
+
+  const shadowBuffer = await sharp(Buffer.from(shadowSvg))
+    .blur(Math.max(10, Math.round(shadowHeight * 0.40)))
+    .png()
+    .toBuffer()
 
   const shadowLeft = carLeft + Math.round((carWidth - shadowWidth) / 2)
-  const shadowTop = carTop + carHeight - Math.round(shadowHeight / 2)
+  const shadowTop  = carTop + carHeight - Math.round(shadowHeight / 2)
 
   return sharp(bgBuffer)
     .composite([

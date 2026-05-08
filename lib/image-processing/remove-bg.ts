@@ -1,7 +1,8 @@
 import Replicate from 'replicate'
 
-// Alternativa: 'lucataco/remove-bg:95fcc2a26d3899cd6c2691c900465aaeff466285d65bf'
-const MODEL = 'cjwbw/rembg:fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003'
+// bria-ai/rembg usa BRIA RMBG 2.0 — melhor precisão em carros e objectos complexos
+// Alternativa: 'lucataco/remove-bg:95fcc2a26d3899cd6c2691c900465aaeff466285d65bf' (BRIA RMBG 1.4)
+const MODEL = 'bria-ai/rembg'
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 
