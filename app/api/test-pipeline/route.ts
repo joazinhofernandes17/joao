@@ -5,7 +5,7 @@ import { enhanceImage, getImageMetadata } from '@/lib/image-processing/enhance'
 import { removeBackground } from '@/lib/image-processing/remove-bg'
 import { compositeOnShowroom } from '@/lib/image-processing/composite'
 import { upscaleImage } from '@/lib/image-processing/replicate'
-import { processWithPhotoRoom } from '@/lib/image-processing/photoroom'
+import { removeBackgroundPhotoRoom } from '@/lib/image-processing/photoroom'
 import sharp from 'sharp'
 
 const encoder = new TextEncoder()
@@ -57,26 +57,37 @@ export async function POST(req: NextRequest) {
         // CAMINHO A — PhotoRoom
         // ══════════════════════════════════════════════════════════
         if (hasPhotoRoom) {
-          emit('upscale',   'skipped', 'PhotoRoom activo — upscale ignorado')
-          emit('enhance',   'skipped', 'PhotoRoom activo — polish ignorado')
-          emit('remove_bg', 'running', `A processar com PhotoRoom (remoção de fundo + fundo IA "${showroomSlug}" + sombra)...`)
+          emit('upscale', 'skipped', 'PhotoRoom activo — upscale ignorado')
+          emit('enhance', 'skipped', 'PhotoRoom activo — polish ignorado')
 
-          const showroomBuffer = await processWithPhotoRoom(originalBuffer, showroomSlug)
+          // PhotoRoom: remoção de fundo de alta precisão
+          emit('remove_bg', 'running', 'A remover fundo com PhotoRoom (alta precisão)...')
+          const nobgBuffer = await removeBackgroundPhotoRoom(originalBuffer)
+
+          const nobgPath = `test/${testId}/nobg.png`
+          await supabase.storage.from('vehicle-images')
+            .upload(nobgPath, nobgBuffer, { contentType: 'image/png', upsert: true })
+          const { data: { publicUrl: nobgUrl } } = supabase.storage
+            .from('vehicle-images').getPublicUrl(nobgPath)
+          emit('remove_bg', 'done', 'Fundo removido com PhotoRoom', { url: nobgUrl })
+
+          // FLUX (ou gradiente local) gera o fundo e compõe
+          const bgSource = hasReplicate ? 'FLUX-schnell (Replicate)' : 'gradiente SVG local'
+          emit('composite', 'running', `A gerar fundo "${showroomSlug}" com ${bgSource} e compor carro...`)
+          const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug)
 
           const showroomPath = `test/${testId}/showroom.png`
           await supabase.storage.from('vehicle-images')
             .upload(showroomPath, showroomBuffer, { contentType: 'image/png', upsert: true })
           const { data: { publicUrl: showroomUrl } } = supabase.storage
             .from('vehicle-images').getPublicUrl(showroomPath)
-
-          emit('remove_bg', 'done',  'PhotoRoom concluído', { url: showroomUrl })
-          emit('composite', 'skipped', 'PhotoRoom gerou o fundo — composição local ignorada')
+          emit('composite', 'done', 'Composição concluída', { url: showroomUrl })
 
           const meta = await getImageMetadata(showroomBuffer)
-          emit('done', 'done', 'Pipeline PhotoRoom concluído com sucesso!', {
+          emit('done', 'done', 'Pipeline concluído com sucesso!', {
             originalUrl,
             enhancedUrl: originalUrl,
-            nobgUrl: showroomUrl,
+            nobgUrl,
             showroomUrl,
             finalWidth: meta.width,
             finalHeight: meta.height,

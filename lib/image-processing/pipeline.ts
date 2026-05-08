@@ -3,7 +3,7 @@ import { enhanceImage, getImageMetadata } from './enhance'
 import { removeBackground } from './remove-bg'
 import { compositeOnShowroom } from './composite'
 import { upscaleImage } from './replicate'
-import { processWithPhotoRoom } from './photoroom'
+import { removeBackgroundPhotoRoom } from './photoroom'
 import { createAdminClient } from '@/lib/supabase/server'
 
 export interface PipelineOptions {
@@ -40,11 +40,22 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
     const originalBuffer = Buffer.from(await originalRes.arrayBuffer())
 
     // ══════════════════════════════════════════════════════
-    // CAMINHO A — PhotoRoom (primário)
-    // Remoção de fundo + fundo IA + sombra numa só chamada
+    // CAMINHO A — PhotoRoom (bg removal) + FLUX (bg gerado)
     // ══════════════════════════════════════════════════════
     if (hasPhotoRoom) {
-      const showroomBuffer = await processWithPhotoRoom(originalBuffer, showroomSlug)
+      // PhotoRoom remove o fundo com alta precisão
+      const nobgBuffer = await removeBackgroundPhotoRoom(originalBuffer)
+
+      const nobgPath = `processed/${vehicleImageId}/nobg.png`
+      const { error: nobgErr } = await supabase.storage
+        .from('vehicle-images')
+        .upload(nobgPath, nobgBuffer, { contentType: 'image/png', upsert: true })
+      if (nobgErr) throw new Error(`Upload nobg: ${nobgErr.message}`)
+      const { data: { publicUrl: nobgUrl } } = supabase.storage
+        .from('vehicle-images').getPublicUrl(nobgPath)
+
+      // FLUX (ou gradiente local) gera o fundo e compõe
+      const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName)
 
       const showroomPath = `processed/${vehicleImageId}/showroom.png`
       const { error: showErr } = await supabase.storage
@@ -56,26 +67,20 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
 
       const meta = await getImageMetadata(showroomBuffer)
       await supabase.from('vehicle_images').update({
-        enhanced_url: originalUrl,   // PhotoRoom trata tudo — original serve de enhanced
-        nobg_url: showroomUrl,       // não há etapa nobg separada no caminho PhotoRoom
+        enhanced_url: originalUrl,
+        nobg_url: nobgUrl,
         showroom_url: showroomUrl,
         processing_status: 'done',
         final_width: meta.width,
         final_height: meta.height,
       }).eq('id', vehicleImageId)
 
-      return {
-        enhancedUrl: originalUrl,
-        nobgUrl: showroomUrl,
-        showroomUrl,
-        finalWidth: meta.width,
-        finalHeight: meta.height,
-      }
+      return { enhancedUrl: originalUrl, nobgUrl, showroomUrl, finalWidth: meta.width, finalHeight: meta.height }
     }
 
     // ══════════════════════════════════════════════════════
     // CAMINHO B — Replicate (fallback)
-    // Real-ESRGAN → Sharp → rembg → FLUX + composite
+    // Real-ESRGAN → Sharp → bria-ai/rembg → FLUX + composite
     // ══════════════════════════════════════════════════════
 
     // ── 2. Upscale Real-ESRGAN + polish Sharp ─────────────
