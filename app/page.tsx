@@ -159,15 +159,19 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {[
-              { name: 'Nova', desc: 'Branco minimalista', tier: 'Grátis', color: 'from-gray-100 to-gray-200' },
-              { name: 'Elise', desc: 'Cinzas premium', tier: 'Grátis', color: 'from-slate-200 to-slate-300' },
-              { name: 'Origin', desc: 'Mármore clássico', tier: 'Starter', color: 'from-stone-200 to-stone-300' },
-              { name: 'Eclipse', desc: 'Fundo escuro', tier: 'Pro', color: 'from-gray-700 to-gray-900' },
-              { name: 'Horizon', desc: 'Exterior pôr do sol', tier: 'Pro', color: 'from-orange-200 to-amber-300' },
-            ].map(({ name, desc, tier, color }, i) => (
-              <div key={i} className="rounded-xl overflow-hidden border border-border">
-                <div className={`h-28 bg-gradient-to-b ${color} flex items-center justify-center`}>
-                  <div className="w-16 h-8 bg-black/20 rounded-sm" />
+              { name: 'Nova',    slug: 'nova',    desc: 'Branco minimalista',    tier: 'Grátis'  },
+              { name: 'Elise',   slug: 'elise',   desc: 'Cinzas premium',        tier: 'Grátis'  },
+              { name: 'Origin',  slug: 'origin',  desc: 'Clássico aquecido',     tier: 'Starter' },
+              { name: 'Eclipse', slug: 'eclipse', desc: 'Fundo escuro dramático', tier: 'Pro'    },
+              { name: 'Horizon', slug: 'horizon', desc: 'Exterior pôr do sol',   tier: 'Pro'     },
+            ].map(({ name, slug, desc, tier }, i) => (
+              <div key={i} className="rounded-xl overflow-hidden border border-border group">
+                <div className="h-28 overflow-hidden bg-secondary relative">
+                  <img
+                    src={`/showrooms/${slug}-thumb.png`}
+                    alt={`Showroom ${name}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
                 <div className="p-3 bg-card">
                   <div className="flex items-center justify-between mb-1">

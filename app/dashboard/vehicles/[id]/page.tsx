@@ -187,7 +187,9 @@ export default function VehiclePage() {
                   onClick={() => setSelectedShowroom(s.slug)}
                   className={`w-full flex items-center gap-3 p-2 rounded-lg border transition-all ${selectedShowroom === s.slug ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
                 >
-                  <div className={`h-10 w-16 rounded bg-gradient-to-b ${s.gradient} shrink-0`} />
+                  <div className="h-10 w-16 rounded overflow-hidden shrink-0 bg-secondary">
+                    <img src={`/showrooms/${s.slug}-thumb.png`} alt={s.name} className="w-full h-full object-cover" />
+                  </div>
                   <div className="text-left">
                     <p className="text-sm font-medium">{s.name}</p>
                     <Badge variant="secondary" className="text-xs capitalize">{s.tier}</Badge>
