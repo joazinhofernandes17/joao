@@ -3,11 +3,32 @@
 import { useState } from 'react'
 import { BeforeAfterSlider } from './BeforeAfterSlider'
 
-// Mesmo carro (BMW M3) — foto tirada na rua com fundo original
-const BEFORE_URL = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1400&h=875&q=85'
+// UMA ÚNICA imagem de carro — usada nos dois lados do slider
+const CAR_URL = 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&h=875&q=90'
 
-// Mesmo carro em estúdio branco — será composto sobre cada fundo de showroom via CSS
-const CAR_STUDIO_URL = 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&h=875&q=90'
+// Lado ANTES: mesma imagem com filtro dessaturado + overlay cinzento
+// simula foto tirada com telemóvel num parque de estacionamento
+const beforeContent = (
+  <div className="relative w-full h-full">
+    <img
+      src={CAR_URL}
+      alt="Foto original"
+      className="w-full h-full object-cover block"
+      style={{ filter: 'grayscale(55%) brightness(0.72) contrast(1.18) saturate(0.35)' }}
+      draggable={false}
+    />
+    {/* Overlay que simula ambiente exterior / dia nublado */}
+    <div
+      className="absolute inset-0"
+      style={{ background: 'linear-gradient(160deg, rgba(80,90,105,0.38) 0%, rgba(50,60,70,0.18) 100%)' }}
+    />
+    {/* Grão subtil */}
+    <div
+      className="absolute inset-0 opacity-[0.06]"
+      style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")', backgroundSize: '180px' }}
+    />
+  </div>
+)
 
 const ENVIRONMENTS = [
   {
@@ -15,56 +36,51 @@ const ENVIRONMENTS = [
     name: 'Nova',
     tier: 'Grátis',
     desc: 'Estúdio branco imaculado',
-    accent: 'border-slate-400',
-    bg: '/showrooms/nova-bg.png',
     thumb: '/showrooms/nova-thumb.png',
-    // blend multiply funciona bem em fundos claros
+    // Fundo branco de estúdio — multiply remove o bg branco da foto e funde o carro
+    bgStyle: 'radial-gradient(ellipse 130% 90% at 48% 42%, #ffffff 0%, #ececf2 55%, #d8d8e0 100%)',
     blend: 'multiply' as const,
-    carOpacity: 1,
+    carBrightness: 1.05,
   },
   {
     slug: 'elise',
     name: 'Elise',
     tier: 'Grátis',
     desc: 'Escuro premium, luz fria',
-    accent: 'border-blue-500',
-    bg: '/showrooms/elise-bg.png',
     thumb: '/showrooms/elise-thumb.png',
+    bgStyle: 'radial-gradient(ellipse 130% 90% at 48% 38%, #2a2d3e 0%, #1a1c2e 45%, #0e101c 100%)',
     blend: 'screen' as const,
-    carOpacity: 0.88,
+    carBrightness: 0.78,
   },
   {
     slug: 'origin',
     name: 'Origin',
     tier: 'Starter',
     desc: 'Clássico, tons aquecidos',
-    accent: 'border-amber-500',
-    bg: '/showrooms/origin-bg.png',
     thumb: '/showrooms/origin-thumb.png',
+    bgStyle: 'radial-gradient(ellipse 130% 90% at 48% 42%, #f5efe4 0%, #e8dfc8 50%, #d0c8b0 100%)',
     blend: 'multiply' as const,
-    carOpacity: 0.95,
+    carBrightness: 1.02,
   },
   {
     slug: 'eclipse',
     name: 'Eclipse',
     tier: 'Pro',
     desc: 'Preto dramático, alto contraste',
-    accent: 'border-violet-500',
-    bg: '/showrooms/eclipse-bg.png',
     thumb: '/showrooms/eclipse-thumb.png',
+    bgStyle: 'radial-gradient(ellipse 130% 90% at 48% 35%, #16182a 0%, #0a0c16 50%, #050508 100%)',
     blend: 'screen' as const,
-    carOpacity: 0.82,
+    carBrightness: 0.72,
   },
   {
     slug: 'horizon',
     name: 'Horizon',
     tier: 'Pro',
     desc: 'Exterior, pôr do sol',
-    accent: 'border-orange-500',
-    bg: '/showrooms/horizon-bg.png',
     thumb: '/showrooms/horizon-thumb.png',
-    blend: 'screen' as const,
-    carOpacity: 0.85,
+    bgStyle: 'radial-gradient(ellipse 130% 90% at 48% 38%, #ffe0b0 0%, #ffb060 45%, #e07030 100%)',
+    blend: 'multiply' as const,
+    carBrightness: 1.08,
   },
 ]
 
@@ -72,24 +88,20 @@ export function ShowroomShowcase() {
   const [active, setActive] = useState('nova')
   const env = ENVIRONMENTS.find(e => e.slug === active)!
 
-  // Composite: fundo de showroom + carro estúdio com blend mode CSS
+  // Lado DEPOIS: mesma URL de carro mas sobre gradiente de estúdio + blend mode
+  // O blend mode remove o fundo branco da foto e funde com o gradiente
   const afterContent = (
     <div className="relative w-full h-full isolate">
-      {/* Fundo de showroom gerado */}
+      {/* Fundo de estúdio — gradiente por ambiente */}
+      <div className="absolute inset-0" style={{ background: env.bgStyle }} />
+      {/* Mesma imagem de carro (idêntica URL) com blend mode */}
       <img
-        src={env.bg}
+        src={CAR_URL}
         alt={`Showroom ${env.name}`}
-        className="absolute inset-0 w-full h-full object-cover"
-        draggable={false}
-      />
-      {/* Mesmo carro (estúdio branco) sobreposto com blend mode */}
-      <img
-        src={CAR_STUDIO_URL}
-        alt="Carro"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover block"
         style={{
           mixBlendMode: env.blend,
-          opacity: env.carOpacity,
+          filter: `brightness(${env.carBrightness})`,
         }}
         draggable={false}
       />
@@ -100,10 +112,9 @@ export function ShowroomShowcase() {
     <section className="py-12 bg-[#050505]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-        {/* Header removido — já vem da page.tsx */}
         <div className="mb-10">
           <p className="text-sm text-white/40">
-            Arraste o divisor — o carro é o mesmo, apenas o fundo muda.
+            Mesma foto, fundo substituído por IA. Arraste o divisor.
           </p>
         </div>
 
@@ -112,14 +123,13 @@ export function ShowroomShowcase() {
           {/* Slider */}
           <div className="space-y-4">
             <BeforeAfterSlider
-              before={BEFORE_URL}
+              beforeContent={beforeContent}
               afterContent={afterContent}
               beforeLabel="Foto original"
               afterLabel={`Showroom ${env.name}`}
               className="aspect-[16/10] w-full"
             />
 
-            {/* Info ambiente activo */}
             <div className="flex items-center gap-3 px-1">
               <div className="h-2 w-2 rounded-full bg-[#1e78ff] animate-pulse shrink-0" />
               <p className="text-sm text-white/50">
@@ -150,8 +160,9 @@ export function ShowroomShowcase() {
                     : 'border-white/6 bg-[#0a0a0a] hover:border-white/14 hover:bg-[#0d0d0d]'}
                 `}
               >
-                <div className="relative h-12 w-18 rounded-lg overflow-hidden shrink-0 bg-black">
-                  <img src={e.thumb} alt={e.name} className="w-full h-full object-cover" loading="lazy" />
+                <div className="relative h-12 w-[72px] rounded-lg overflow-hidden shrink-0">
+                  {/* Thumbnail mostra o gradiente do ambiente */}
+                  <div className="absolute inset-0" style={{ background: e.bgStyle }} />
                   {active === e.slug && (
                     <div className="absolute inset-0 ring-2 ring-inset ring-[#1e78ff]/70 rounded-lg" />
                   )}

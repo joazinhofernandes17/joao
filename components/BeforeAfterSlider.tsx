@@ -3,7 +3,8 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react'
 
 interface Props {
-  before: string
+  before?: string
+  beforeContent?: React.ReactNode
   after?: string
   afterContent?: React.ReactNode
   beforeLabel?: string
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export function BeforeAfterSlider({
-  before, after, afterContent,
+  before, beforeContent, after, afterContent,
   beforeLabel = 'Antes',
   afterLabel = 'Depois',
   className = '',
@@ -68,7 +69,10 @@ export function BeforeAfterSlider({
         className="absolute inset-0 overflow-hidden"
         style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
       >
-        <img src={before} alt={beforeLabel} className="w-full h-full object-cover block" draggable={false} />
+        {beforeContent
+          ? <div className="w-full h-full">{beforeContent}</div>
+          : <img src={before} alt={beforeLabel} className="w-full h-full object-cover block" draggable={false} />
+        }
       </div>
 
       {/* Handle (linha + círculo central) */}
