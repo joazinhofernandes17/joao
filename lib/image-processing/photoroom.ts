@@ -1,10 +1,10 @@
-// PhotoRoom API — remoção de fundo + fundo IA + sombra numa só chamada
-// Documentação: https://www.photoroom.com/api/docs
+// PhotoRoom Image Editing API v2 — remoção de fundo + fundo IA + sombra numa só chamada
+// Docs: https://docs.photoroom.com/image-editing-api-plus-plan/ai-backgrounds
 // Configurar: PHOTOROOM_API_KEY no Vercel
 
-const ENDPOINT = 'https://sdk.photoroom.com/v1/segment'
+const ENDPOINT = 'https://image-api.photoroom.com/v2/edit'
 
-// Prompts por ambiente — PhotoRoom usa bg_prompt para gerar o fundo IA
+// Prompts por ambiente — parâmetro correcto: background.prompt
 const BG_PROMPTS: Record<string, string> = {
   nova: [
     'professional car showroom, pure white infinity cove studio background,',
@@ -43,11 +43,10 @@ export async function processWithPhotoRoom(
   const bgPrompt = BG_PROMPTS[showroomSlug] ?? BG_PROMPTS.nova
 
   const form = new FormData()
-  form.append('image_file', new Blob([imageBuffer.buffer as ArrayBuffer], { type: 'image/png' }), 'car.png')
-  form.append('bg_prompt', bgPrompt)
-  form.append('shadow_mode', 'ai.soft')   // sombra IA suave no chão
-  form.append('format', 'png')
-  form.append('size', 'full')              // resolução máxima
+  // Parâmetros correctos para a API v2
+  form.append('imageFile', new Blob([imageBuffer.buffer as ArrayBuffer], { type: 'image/png' }), 'car.png')
+  form.append('background.prompt', bgPrompt)
+  form.append('shadow.mode', 'ai.soft')   // ai.soft | ai.hard | ai.floating
 
   const res = await fetch(ENDPOINT, {
     method: 'POST',
