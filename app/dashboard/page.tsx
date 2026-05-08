@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, ImageIcon, CheckCircle, Clock, AlertCircle, Car, TrendingUp } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
 export const metadata: Metadata = { title: 'Painel — AutoShowroom' }
 
 export default async function DashboardPage() {
