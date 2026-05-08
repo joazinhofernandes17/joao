@@ -5,6 +5,7 @@ import { enhanceImage, getImageMetadata } from '@/lib/image-processing/enhance'
 import { removeBackground } from '@/lib/image-processing/remove-bg'
 import { compositeOnShowroom } from '@/lib/image-processing/composite'
 import { upscaleImage } from '@/lib/image-processing/replicate'
+import { processWithPhotoRoom } from '@/lib/image-processing/photoroom'
 import sharp from 'sharp'
 
 const encoder = new TextEncoder()
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
 
         const supabase = createAdminClient()
         const testId = `test-${Date.now()}`
+        const hasPhotoRoom = !!process.env.PHOTOROOM_API_KEY
         const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
         // ── 1. Upload original ───────────────────────────────────
@@ -51,8 +53,44 @@ export async function POST(req: NextRequest) {
           .from('vehicle-images').getPublicUrl(originalPath)
         emit('upload', 'done', 'Upload concluído', { url: originalUrl })
 
-        // ── 2. Real-ESRGAN upscale ───────────────────────────────
+        // ══════════════════════════════════════════════════════════
+        // CAMINHO A — PhotoRoom
+        // ══════════════════════════════════════════════════════════
+        if (hasPhotoRoom) {
+          emit('upscale',   'skipped', 'PhotoRoom activo — upscale ignorado')
+          emit('enhance',   'skipped', 'PhotoRoom activo — polish ignorado')
+          emit('remove_bg', 'running', `A processar com PhotoRoom (remoção de fundo + fundo IA "${showroomSlug}" + sombra)...`)
+
+          const showroomBuffer = await processWithPhotoRoom(originalBuffer, showroomSlug)
+
+          const showroomPath = `test/${testId}/showroom.png`
+          await supabase.storage.from('vehicle-images')
+            .upload(showroomPath, showroomBuffer, { contentType: 'image/png', upsert: true })
+          const { data: { publicUrl: showroomUrl } } = supabase.storage
+            .from('vehicle-images').getPublicUrl(showroomPath)
+
+          emit('remove_bg', 'done',  'PhotoRoom concluído', { url: showroomUrl })
+          emit('composite', 'skipped', 'PhotoRoom gerou o fundo — composição local ignorada')
+
+          const meta = await getImageMetadata(showroomBuffer)
+          emit('done', 'done', 'Pipeline PhotoRoom concluído com sucesso!', {
+            originalUrl,
+            enhancedUrl: originalUrl,
+            nobgUrl: showroomUrl,
+            showroomUrl,
+            finalWidth: meta.width,
+            finalHeight: meta.height,
+          })
+
+          controller.close()
+          return
+        }
+
+        // ══════════════════════════════════════════════════════════
+        // CAMINHO B — Replicate
+        // ══════════════════════════════════════════════════════════
         let enhancedBuffer: Buffer
+
         if (hasReplicate) {
           // Redimensionar para máx 1280×960 antes de enviar ao Real-ESRGAN (limite GPU)
           emit('upscale', 'running', 'A redimensionar para 1280×960 e enviar ao Real-ESRGAN 4×...')
@@ -72,13 +110,13 @@ export async function POST(req: NextRequest) {
           const upscaledBuffer = Buffer.from(await upscaledRes.arrayBuffer())
           emit('upscale', 'done', 'Real-ESRGAN concluído — imagem 4× maior')
 
-          // ── 3. Sharp polish ──────────────────────────────────────
           emit('enhance', 'running', 'A polir com Sharp (nitidez, contraste, saturação)...')
           enhancedBuffer = await enhanceImage(upscaledBuffer, {
             sharpen: true, brightness: 1.03, contrast: 1.05, saturation: 1.08,
           })
           emit('enhance', 'done', 'Polish concluído')
         } else {
+          // CAMINHO C — Sharp local
           emit('upscale', 'skipped', 'REPLICATE_API_TOKEN não configurado — upscale ignorado')
           emit('enhance', 'running', 'A ampliar e melhorar com Sharp local...')
           enhancedBuffer = await enhanceImage(originalBuffer, { targetWidthPx: 2048 })
@@ -92,10 +130,10 @@ export async function POST(req: NextRequest) {
           .from('vehicle-images').getPublicUrl(enhancedPath)
         emit('enhance', 'done', 'Imagem melhorada guardada', { url: enhancedUrl })
 
-        // ── 4. Remove background ─────────────────────────────────
+        // ── Remove background ─────────────────────────────────────
         let nobgBuffer: Buffer
         if (hasReplicate) {
-          emit('remove_bg', 'running', 'A remover fundo com cjwbw/rembg (Replicate)...')
+          emit('remove_bg', 'running', 'A remover fundo com bria-ai/rembg (Replicate)...')
           nobgBuffer = await removeBackground(enhancedUrl)
           emit('remove_bg', 'done', 'Fundo removido com sucesso')
         } else {
@@ -110,7 +148,7 @@ export async function POST(req: NextRequest) {
           .from('vehicle-images').getPublicUrl(nobgPath)
         emit('remove_bg', 'done', 'Imagem sem fundo guardada', { url: nobgUrl })
 
-        // ── 5. Composite on showroom ─────────────────────────────
+        // ── Composite ─────────────────────────────────────────────
         const bgSource = hasReplicate ? 'FLUX-schnell (Replicate)' : 'gradiente SVG local'
         emit('composite', 'running', `A gerar fundo "${showroomSlug}" com ${bgSource} e compor carro...`)
         const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug)
@@ -122,7 +160,7 @@ export async function POST(req: NextRequest) {
           .from('vehicle-images').getPublicUrl(showroomPath)
         emit('composite', 'done', 'Composição concluída', { url: showroomUrl })
 
-        // ── 6. Done ──────────────────────────────────────────────
+        // ── Done ──────────────────────────────────────────────────
         const meta = await getImageMetadata(showroomBuffer)
         emit('done', 'done', 'Pipeline concluído com sucesso!', {
           originalUrl,

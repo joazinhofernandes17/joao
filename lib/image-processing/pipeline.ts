@@ -3,6 +3,7 @@ import { enhanceImage, getImageMetadata } from './enhance'
 import { removeBackground } from './remove-bg'
 import { compositeOnShowroom } from './composite'
 import { upscaleImage } from './replicate'
+import { processWithPhotoRoom } from './photoroom'
 import { createAdminClient } from '@/lib/supabase/server'
 
 export interface PipelineOptions {
@@ -24,6 +25,7 @@ export interface PipelineResult {
 export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineResult> {
   const supabase = createAdminClient()
   const { vehicleImageId, originalUrl, showroomSlug, standLogoUrl, standName } = opts
+  const hasPhotoRoom = !!process.env.PHOTOROOM_API_KEY
   const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
   await supabase
@@ -37,7 +39,46 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
     if (!originalRes.ok) throw new Error(`Falha ao descarregar imagem: ${originalRes.status}`)
     const originalBuffer = Buffer.from(await originalRes.arrayBuffer())
 
-    // ── 2. Upscale Real-ESRGAN (Replicate) + polish Sharp ─
+    // ══════════════════════════════════════════════════════
+    // CAMINHO A — PhotoRoom (primário)
+    // Remoção de fundo + fundo IA + sombra numa só chamada
+    // ══════════════════════════════════════════════════════
+    if (hasPhotoRoom) {
+      const showroomBuffer = await processWithPhotoRoom(originalBuffer, showroomSlug)
+
+      const showroomPath = `processed/${vehicleImageId}/showroom.png`
+      const { error: showErr } = await supabase.storage
+        .from('vehicle-images')
+        .upload(showroomPath, showroomBuffer, { contentType: 'image/png', upsert: true })
+      if (showErr) throw new Error(`Upload showroom: ${showErr.message}`)
+      const { data: { publicUrl: showroomUrl } } = supabase.storage
+        .from('vehicle-images').getPublicUrl(showroomPath)
+
+      const meta = await getImageMetadata(showroomBuffer)
+      await supabase.from('vehicle_images').update({
+        enhanced_url: originalUrl,   // PhotoRoom trata tudo — original serve de enhanced
+        nobg_url: showroomUrl,       // não há etapa nobg separada no caminho PhotoRoom
+        showroom_url: showroomUrl,
+        processing_status: 'done',
+        final_width: meta.width,
+        final_height: meta.height,
+      }).eq('id', vehicleImageId)
+
+      return {
+        enhancedUrl: originalUrl,
+        nobgUrl: showroomUrl,
+        showroomUrl,
+        finalWidth: meta.width,
+        finalHeight: meta.height,
+      }
+    }
+
+    // ══════════════════════════════════════════════════════
+    // CAMINHO B — Replicate (fallback)
+    // Real-ESRGAN → Sharp → rembg → FLUX + composite
+    // ══════════════════════════════════════════════════════
+
+    // ── 2. Upscale Real-ESRGAN + polish Sharp ─────────────
     let enhancedBuffer: Buffer
     if (hasReplicate) {
       // Real-ESRGAN falha com imagens grandes — limitar a 1280×960 antes de enviar
@@ -61,6 +102,7 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
         sharpen: true, brightness: 1.03, contrast: 1.05, saturation: 1.08,
       })
     } else {
+      // ── CAMINHO C — Sharp local (último recurso) ─────────
       enhancedBuffer = await enhanceImage(originalBuffer, { targetWidthPx: 2048 })
     }
 
@@ -84,7 +126,6 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
       .from('vehicle-images').getPublicUrl(nobgPath)
 
     // ── 5. Composite no showroom ──────────────────────────
-    // composite.ts usa PNG local → FLUX (Replicate) → gradiente SVG
     const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName)
     const showroomPath = `processed/${vehicleImageId}/showroom.png`
     const { error: showErr } = await supabase.storage
