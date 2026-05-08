@@ -1,17 +1,18 @@
 'use client'
 
-import { useRef, useState, useCallback, useEffect } from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react'
 
 interface Props {
   before: string
-  after: string
+  after?: string
+  afterContent?: React.ReactNode
   beforeLabel?: string
   afterLabel?: string
   className?: string
 }
 
 export function BeforeAfterSlider({
-  before, after,
+  before, after, afterContent,
   beforeLabel = 'Antes',
   afterLabel = 'Depois',
   className = '',
@@ -57,7 +58,10 @@ export function BeforeAfterSlider({
       style={{ cursor: dragging ? 'grabbing' : 'grab' }}
     >
       {/* Imagem DEPOIS (base, largura total) */}
-      <img src={after} alt={afterLabel} className="w-full h-full object-cover block" draggable={false} />
+      {afterContent
+        ? <div className="w-full h-full">{afterContent}</div>
+        : <img src={after} alt={afterLabel} className="w-full h-full object-cover block" draggable={false} />
+      }
 
       {/* Imagem ANTES (clipped à esquerda) */}
       <div

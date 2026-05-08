@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { BeforeAfterSlider } from './BeforeAfterSlider'
 import { Badge } from './ui/badge'
 
-const BASE = 'https://images.unsplash.com'
+// Mesmo carro (BMW M3) — foto tirada na rua com fundo original
+const BEFORE_URL = 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1400&h=875&q=85'
 
-// Foto "antes" — BMW numa rua comum, foto tirada com telemóvel
-const BEFORE_URL = `${BASE}/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1400&h=875&q=85`
+// Mesmo carro em estúdio branco — será composto sobre cada fundo de showroom via CSS
+const CAR_STUDIO_URL = 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&h=875&q=90'
 
 const ENVIRONMENTS = [
   {
@@ -16,9 +17,11 @@ const ENVIRONMENTS = [
     tier: 'Grátis',
     desc: 'Estúdio branco imaculado',
     accent: 'border-slate-400',
-    // BMW em fundo branco limpo, luz suave de estúdio
-    photo: `${BASE}/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1400&h=875&q=85`,
-    thumb: `${BASE}/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=400&h=250&q=80`,
+    bg: '/showrooms/nova-bg.png',
+    thumb: '/showrooms/nova-thumb.png',
+    // blend multiply funciona bem em fundos claros
+    blend: 'multiply' as const,
+    carOpacity: 1,
   },
   {
     slug: 'elise',
@@ -26,9 +29,10 @@ const ENVIRONMENTS = [
     tier: 'Grátis',
     desc: 'Escuro premium, luz fria',
     accent: 'border-blue-500',
-    // Porsche 911 em ambiente escuro com tonalidades frias
-    photo: `${BASE}/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1400&h=875&q=85`,
-    thumb: `${BASE}/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=400&h=250&q=80`,
+    bg: '/showrooms/elise-bg.png',
+    thumb: '/showrooms/elise-thumb.png',
+    blend: 'screen' as const,
+    carOpacity: 0.88,
   },
   {
     slug: 'origin',
@@ -36,9 +40,10 @@ const ENVIRONMENTS = [
     tier: 'Starter',
     desc: 'Clássico, tons aquecidos',
     accent: 'border-amber-500',
-    // Ferrari em ambiente quente com tons âmbar
-    photo: `${BASE}/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=1400&h=875&q=85`,
-    thumb: `${BASE}/photo-1544636331-e26879cd4d9b?auto=format&fit=crop&w=400&h=250&q=80`,
+    bg: '/showrooms/origin-bg.png',
+    thumb: '/showrooms/origin-thumb.png',
+    blend: 'multiply' as const,
+    carOpacity: 0.95,
   },
   {
     slug: 'eclipse',
@@ -46,9 +51,10 @@ const ENVIRONMENTS = [
     tier: 'Pro',
     desc: 'Preto dramático, alto contraste',
     accent: 'border-violet-500',
-    // McLaren em fundo escuro com máximo contraste
-    photo: `${BASE}/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1400&h=875&q=85`,
-    thumb: `${BASE}/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=400&h=250&q=80`,
+    bg: '/showrooms/eclipse-bg.png',
+    thumb: '/showrooms/eclipse-thumb.png',
+    blend: 'screen' as const,
+    carOpacity: 0.82,
   },
   {
     slug: 'horizon',
@@ -56,15 +62,40 @@ const ENVIRONMENTS = [
     tier: 'Pro',
     desc: 'Exterior, pôr do sol',
     accent: 'border-orange-500',
-    // BMW em exterior com luz dourada de fim do dia
-    photo: `${BASE}/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1400&h=875&q=85`,
-    thumb: `${BASE}/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=400&h=250&q=80`,
+    bg: '/showrooms/horizon-bg.png',
+    thumb: '/showrooms/horizon-thumb.png',
+    blend: 'screen' as const,
+    carOpacity: 0.85,
   },
 ]
 
 export function ShowroomShowcase() {
   const [active, setActive] = useState('nova')
   const env = ENVIRONMENTS.find(e => e.slug === active)!
+
+  // Composite: fundo de showroom + carro estúdio com blend mode CSS
+  const afterContent = (
+    <div className="relative w-full h-full isolate">
+      {/* Fundo de showroom gerado */}
+      <img
+        src={env.bg}
+        alt={`Showroom ${env.name}`}
+        className="absolute inset-0 w-full h-full object-cover"
+        draggable={false}
+      />
+      {/* Mesmo carro (estúdio branco) sobreposto com blend mode */}
+      <img
+        src={CAR_STUDIO_URL}
+        alt="Carro"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          mixBlendMode: env.blend,
+          opacity: env.carOpacity,
+        }}
+        draggable={false}
+      />
+    </div>
+  )
 
   return (
     <section className="py-24 bg-background">
@@ -81,7 +112,7 @@ export function ShowroomShowcase() {
             <span className="text-primary"> em segundos</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Arraste o divisor para ver a diferença. Escolha o ambiente à direita.
+            Arraste o divisor — o carro é o mesmo, apenas o fundo muda. Escolha o ambiente à direita.
           </p>
         </div>
 
@@ -91,7 +122,7 @@ export function ShowroomShowcase() {
           <div className="space-y-4">
             <BeforeAfterSlider
               before={BEFORE_URL}
-              after={env.photo}
+              afterContent={afterContent}
               beforeLabel="Foto original"
               afterLabel={`Showroom ${env.name}`}
               className="aspect-[16/10] w-full"
@@ -128,7 +159,7 @@ export function ShowroomShowcase() {
                     : 'border-border hover:border-muted-foreground/40 hover:bg-secondary/50'}
                 `}
               >
-                {/* Thumbnail foto real */}
+                {/* Thumbnail do fundo de showroom */}
                 <div className="relative h-14 w-20 rounded-lg overflow-hidden shrink-0 bg-secondary">
                   <img
                     src={e.thumb}
