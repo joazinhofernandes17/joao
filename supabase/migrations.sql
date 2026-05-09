@@ -11,10 +11,17 @@ create table if not exists stands (
   email text,
   address text,
   website text,
+  primary_color text,
   subscription_tier text not null default 'free',
   subscription_status text not null default 'active',
   images_used_this_month int not null default 0,
   images_limit int not null default 10,
+  -- LoRA: treino personalizado por stand (ostris/flux-dev-lora-trainer)
+  -- lora_training_status: 'none' | 'processing' | 'succeeded' | 'failed' | 'canceled'
+  lora_training_id text,
+  lora_training_status text not null default 'none',
+  lora_model_version text,
+  lora_trigger_word text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -109,13 +116,3 @@ create trigger stands_updated_at before update on stands for each row execute fu
 create trigger vehicles_updated_at before update on vehicles for each row execute function update_updated_at();
 create trigger vehicle_images_updated_at before update on vehicle_images for each row execute function update_updated_at();
 
--- ── LoRA training columns (migration) ────────────────────────────────────────
--- Run after initial schema if stands table already exists
-alter table stands
-  add column if not exists lora_training_id     text,
-  add column if not exists lora_training_status text not null default 'none',
-  add column if not exists lora_model_version   text,
-  add column if not exists lora_trigger_word    text,
-  add column if not exists primary_color        text;
-
--- lora_training_status values: 'none' | 'processing' | 'succeeded' | 'failed' | 'canceled'
