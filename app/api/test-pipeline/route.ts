@@ -6,6 +6,7 @@ import { removeBackground } from '@/lib/image-processing/remove-bg'
 import { compositeOnShowroom } from '@/lib/image-processing/composite'
 import { upscaleImage } from '@/lib/image-processing/replicate'
 import { removeBackgroundPhotoRoom } from '@/lib/image-processing/photoroom'
+import { generateShowroomSpyne } from '@/lib/image-processing/spyne'
 import sharp from 'sharp'
 
 const encoder = new TextEncoder()
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
 
         const supabase = createAdminClient()
         const testId = `test-${Date.now()}`
+        const hasSpyne     = !!process.env.SPYNE_API_KEY
         const hasPhotoRoom = !!process.env.PHOTOROOM_API_KEY
         const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
@@ -55,6 +57,40 @@ export async function POST(req: NextRequest) {
 
         // ══════════════════════════════════════════════════════════
         // CAMINHO A — PhotoRoom
+        // ══════════════════════════════════════════════════════════
+        // ══════════════════════════════════════════════════════════
+        // CAMINHO A — Spyne.ai (primário)
+        // ══════════════════════════════════════════════════════════
+        if (hasSpyne) {
+          emit('upscale',   'skipped', 'Spyne activo — upscale ignorado')
+          emit('enhance',   'skipped', 'Spyne activo — polish ignorado')
+          emit('remove_bg', 'skipped', 'Spyne activo — remoção de fundo integrada')
+          emit('composite', 'running', `A gerar showroom "${showroomSlug}" com Spyne.ai Automotive AI...`)
+
+          const showroomBuffer = await generateShowroomSpyne(originalUrl, showroomSlug)
+
+          const showroomPath = `test/${testId}/showroom.png`
+          await supabase.storage.from('vehicle-images')
+            .upload(showroomPath, showroomBuffer, { contentType: 'image/png', upsert: true })
+          const { data: { publicUrl: showroomUrl } } = supabase.storage
+            .from('vehicle-images').getPublicUrl(showroomPath)
+          emit('composite', 'done', 'Spyne.ai concluído', { url: showroomUrl })
+
+          const meta = await getImageMetadata(showroomBuffer)
+          emit('done', 'done', 'Pipeline Spyne concluído com sucesso!', {
+            originalUrl,
+            enhancedUrl: originalUrl,
+            nobgUrl: originalUrl,
+            showroomUrl,
+            finalWidth: meta.width,
+            finalHeight: meta.height,
+          })
+          controller.close()
+          return
+        }
+
+        // ══════════════════════════════════════════════════════════
+        // CAMINHO B — PhotoRoom (bg removal) + FLUX/composite
         // ══════════════════════════════════════════════════════════
         if (hasPhotoRoom) {
           emit('upscale', 'skipped', 'PhotoRoom activo — upscale ignorado')

@@ -4,6 +4,7 @@ import { removeBackground } from './remove-bg'
 import { compositeOnShowroom } from './composite'
 import { upscaleImage } from './replicate'
 import { removeBackgroundPhotoRoom } from './photoroom'
+import { generateShowroomSpyne } from './spyne'
 import { createAdminClient } from '@/lib/supabase/server'
 
 export interface PipelineOptions {
@@ -25,6 +26,7 @@ export interface PipelineResult {
 export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineResult> {
   const supabase = createAdminClient()
   const { vehicleImageId, originalUrl, showroomSlug, standLogoUrl, standName } = opts
+  const hasSpyne     = !!process.env.SPYNE_API_KEY
   const hasPhotoRoom = !!process.env.PHOTOROOM_API_KEY
   const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
@@ -40,7 +42,35 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
     const originalBuffer = Buffer.from(await originalRes.arrayBuffer())
 
     // ══════════════════════════════════════════════════════
-    // CAMINHO A — PhotoRoom (bg removal) + FLUX (bg gerado)
+    // CAMINHO A — Spyne.ai (primário)
+    // Automotive AI: original → showroom numa só chamada
+    // ══════════════════════════════════════════════════════
+    if (hasSpyne) {
+      const showroomBuffer = await generateShowroomSpyne(originalUrl, showroomSlug)
+
+      const showroomPath = `processed/${vehicleImageId}/showroom.png`
+      const { error: showErr } = await supabase.storage
+        .from('vehicle-images')
+        .upload(showroomPath, showroomBuffer, { contentType: 'image/png', upsert: true })
+      if (showErr) throw new Error(`Upload showroom: ${showErr.message}`)
+      const { data: { publicUrl: showroomUrl } } = supabase.storage
+        .from('vehicle-images').getPublicUrl(showroomPath)
+
+      const meta = await getImageMetadata(showroomBuffer)
+      await supabase.from('vehicle_images').update({
+        enhanced_url: originalUrl,
+        nobg_url: originalUrl,
+        showroom_url: showroomUrl,
+        processing_status: 'done',
+        final_width: meta.width,
+        final_height: meta.height,
+      }).eq('id', vehicleImageId)
+
+      return { enhancedUrl: originalUrl, nobgUrl: originalUrl, showroomUrl, finalWidth: meta.width, finalHeight: meta.height }
+    }
+
+    // ══════════════════════════════════════════════════════
+    // CAMINHO B — PhotoRoom (bg removal) + FLUX (bg gerado)
     // ══════════════════════════════════════════════════════
     if (hasPhotoRoom) {
       // PhotoRoom remove o fundo com alta precisão
