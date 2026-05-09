@@ -33,6 +33,7 @@ export default function VehiclePage() {
   const [vehicle, setVehicle] = useState<Vehicle | null>(null)
   const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState<VehicleImage | null>(null)
+  const [selectedImageId, setSelectedImageId] = useState<string | null>(null)
   const [selectedShowroom, setSelectedShowroom] = useState('nova')
   const [processing, setProcessing] = useState<string | null>(null)
 
@@ -41,10 +42,17 @@ export default function VehiclePage() {
     if (!res.ok) return
     const data = await res.json()
     setVehicle(data)
-    if (data.vehicle_images?.length > 0) {
-      const primary = data.vehicle_images.find((i: VehicleImage) => i.is_primary) ?? data.vehicle_images[0]
-      setSelectedImage(primary)
-    }
+
+    const images: VehicleImage[] = data.vehicle_images ?? []
+    if (images.length === 0) return
+
+    // Sincroniza selectedImage com dados frescos, preservando a seleção actual
+    setSelectedImageId(prev => {
+      const targetId = prev ?? (images.find(i => i.is_primary) ?? images[0]).id
+      const fresh = images.find(i => i.id === targetId) ?? images[0]
+      setSelectedImage(fresh)
+      return fresh.id
+    })
   }
 
   useEffect(() => {
@@ -152,7 +160,7 @@ export default function VehiclePage() {
                 return (
                   <button
                     key={img.id}
-                    onClick={() => setSelectedImage(img)}
+                    onClick={() => { setSelectedImage(img); setSelectedImageId(img.id) }}
                     className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${isSelected ? 'border-primary' : 'border-border hover:border-primary/50'}`}
                   >
                     {img.showroom_url || img.original_url ? (
@@ -311,7 +319,7 @@ export default function VehiclePage() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                      <button onClick={() => setSelectedImage(img)} title="Ver">
+                      <button onClick={() => { setSelectedImage(img); setSelectedImageId(img.id) }} title="Ver">
                         <Eye className="h-4 w-4 text-white" />
                       </button>
                       <button onClick={() => handleDownload(img.showroom_url!)} title="Download">
