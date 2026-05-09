@@ -1,23 +1,13 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
-async function getStandId(supabase: ReturnType<typeof createClient>, userId: string) {
-  const { data } = await supabase.from('stands').select('id').eq('user_id', userId).single()
-  return data?.id ?? null
-}
-
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createAdminClient()
 
   const { data, error } = await supabase
     .from('vehicles')
-    .select(`
-      *,
-      vehicle_images(*, showroom_templates(name, slug, thumbnail_url))
-    `)
+    .select('*, vehicle_images(*, showroom_templates(name, slug, thumbnail_url))')
     .eq('id', params.id)
     .single()
 
@@ -26,19 +16,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
-
-  const standId = await getStandId(supabase, user.id)
-  if (!standId) return NextResponse.json({ error: 'Stand não encontrado' }, { status: 404 })
-
+  const supabase = createAdminClient()
   const body = await req.json()
+
   const { data, error } = await supabase
     .from('vehicles')
     .update(body)
     .eq('id', params.id)
-    .eq('stand_id', standId)
     .select()
     .single()
 
@@ -46,19 +30,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   return NextResponse.json(data)
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
-
-  const standId = await getStandId(supabase, user.id)
-  if (!standId) return NextResponse.json({ error: 'Stand não encontrado' }, { status: 404 })
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createAdminClient()
 
   const { error } = await supabase
     .from('vehicles')
     .delete()
     .eq('id', params.id)
-    .eq('stand_id', standId)
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ success: true })

@@ -39,8 +39,19 @@ export default function VehiclePage() {
 
   async function fetchVehicle() {
     const res = await fetch(`/api/vehicles/${id}`)
-    if (!res.ok) return
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      console.error('[fetchVehicle] erro HTTP', res.status, body)
+      return
+    }
     const data = await res.json()
+    console.log('[fetchVehicle] vehicle_images recebidas:', data.vehicle_images?.map((i: VehicleImage) => ({
+      id: i.id.slice(0, 8),
+      status: i.processing_status,
+      enhanced_url: i.enhanced_url ? '✓' : null,
+      nobg_url: i.nobg_url ? '✓' : null,
+      showroom_url: i.showroom_url ? '✓' : null,
+    })))
     setVehicle(data)
 
     const images: VehicleImage[] = data.vehicle_images ?? []
@@ -50,6 +61,13 @@ export default function VehiclePage() {
     setSelectedImageId(prev => {
       const targetId = prev ?? (images.find(i => i.is_primary) ?? images[0]).id
       const fresh = images.find(i => i.id === targetId) ?? images[0]
+      console.log('[fetchVehicle] selectedImage atualizado:', {
+        id: fresh.id.slice(0, 8),
+        status: fresh.processing_status,
+        enhanced_url: fresh.enhanced_url ? '✓' : null,
+        nobg_url: fresh.nobg_url ? '✓' : null,
+        showroom_url: fresh.showroom_url ? '✓' : null,
+      })
       setSelectedImage(fresh)
       return fresh.id
     })
@@ -70,20 +88,22 @@ export default function VehiclePage() {
   async function processImage(imageId: string) {
     setProcessing(imageId)
     try {
+      console.log('[processImage] a iniciar para imageId:', imageId, 'showroom:', selectedShowroom)
       const res = await fetch('/api/process-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ vehicleImageId: imageId, showroomSlug: selectedShowroom }),
       })
 
-      if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error)
-      }
+      const body = await res.json()
+      console.log('[processImage] resposta HTTP', res.status, body)
+
+      if (!res.ok) throw new Error(body.error ?? `HTTP ${res.status}`)
 
       toast.success('Imagem processada com sucesso!')
       await fetchVehicle()
     } catch (err: any) {
+      console.error('[processImage] erro:', err)
       toast.error(err?.message ?? 'Erro no processamento')
     } finally {
       setProcessing(null)

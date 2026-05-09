@@ -1,12 +1,10 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { runImagePipeline } from '@/lib/image-processing/pipeline'
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+  const supabase = createAdminClient()
 
   const { vehicleImageId, showroomSlug = 'nova' } = await req.json()
   if (!vehicleImageId) return NextResponse.json({ error: 'vehicleImageId obrigatório' }, { status: 400 })

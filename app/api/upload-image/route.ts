@@ -1,24 +1,10 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { getImageMetadata } from '@/lib/image-processing/enhance'
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
-
-  const { data: stand } = await supabase
-    .from('stands')
-    .select('id, images_used_this_month, images_limit')
-    .eq('user_id', user.id)
-    .single()
-
-  if (!stand) return NextResponse.json({ error: 'Stand não encontrado' }, { status: 404 })
-
-  if (stand.images_limit !== -1 && stand.images_used_this_month >= stand.images_limit) {
-    return NextResponse.json({ error: 'Limite mensal atingido. Faça upgrade do plano.' }, { status: 429 })
-  }
+  const supabase = createAdminClient()
 
   const formData = await req.formData()
   const file = formData.get('file') as File | null
@@ -30,13 +16,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'file e vehicleId obrigatórios' }, { status: 400 })
   }
 
+  // Derive stand from vehicle
+  const { data: vehicle } = await supabase
+    .from('vehicles')
+    .select('stand_id, stands(images_used_this_month, images_limit)')
+    .eq('id', vehicleId)
+    .single()
+
+  if (!vehicle) return NextResponse.json({ error: 'Viatura não encontrada' }, { status: 404 })
+
+  const stand = (vehicle as any).stands
+  if (stand?.images_limit !== -1 && stand?.images_used_this_month >= stand?.images_limit) {
+    return NextResponse.json({ error: 'Limite mensal atingido. Faça upgrade do plano.' }, { status: 429 })
+  }
+
   const bytes = await file.arrayBuffer()
   const buffer = Buffer.from(bytes)
   const meta = await getImageMetadata(buffer)
 
-  // Upload do ficheiro original para Supabase Storage
   const ext = file.name.split('.').pop() ?? 'jpg'
-  const storagePath = `originals/${stand.id}/${vehicleId}/${Date.now()}.${ext}`
+  const storagePath = `originals/${vehicle.stand_id}/${vehicleId}/${Date.now()}.${ext}`
 
   const { error: uploadError } = await supabase.storage
     .from('vehicle-images')
@@ -46,17 +45,15 @@ export async function POST(req: NextRequest) {
 
   const { data: { publicUrl } } = supabase.storage.from('vehicle-images').getPublicUrl(storagePath)
 
-  // Se for a imagem primária, desmarcar as outras
   if (isPrimary) {
     await supabase.from('vehicle_images').update({ is_primary: false }).eq('vehicle_id', vehicleId)
   }
 
-  // Criar registo na BD
   const { data: imageRecord, error: dbError } = await supabase
     .from('vehicle_images')
     .insert({
       vehicle_id: vehicleId,
-      stand_id: stand.id,
+      stand_id: vehicle.stand_id,
       original_url: publicUrl,
       view_angle: viewAngle,
       is_primary: isPrimary,
@@ -69,6 +66,5 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
-
   return NextResponse.json(imageRecord, { status: 201 })
 }
