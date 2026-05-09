@@ -1,12 +1,10 @@
 export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
 // GET /api/export?vehicleId=xxx  — devolve URLs de todas as imagens processadas
 export async function GET(req: NextRequest) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Não autenticado' }, { status: 401 })
+  const supabase = createAdminClient()
 
   const vehicleId = req.nextUrl.searchParams.get('vehicleId')
   if (!vehicleId) return NextResponse.json({ error: 'vehicleId obrigatório' }, { status: 400 })
