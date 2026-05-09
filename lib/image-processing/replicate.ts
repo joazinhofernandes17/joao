@@ -2,33 +2,48 @@ import Replicate from 'replicate'
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 
-// Prompts optimizados para fundos de showroom por ambiente
+// FLUX.1 [dev] — 28 inference steps, muito melhor que schnell (4 steps) em cenas
+// arquitectónicas e de estúdio. Mesma API key, sem custo adicional de licença.
+// Para qualidade máxima usar flux-1.1-pro (pago ~$0.04/img).
+const FLUX_MODEL = 'black-forest-labs/flux-dev'
+
+// Prompts detalhados para fotografia automóvel profissional
+// Incluem: tipo de iluminação, material do chão, plataforma circular, perspectiva
 const ENVIRONMENT_PROMPTS: Record<string, string> = {
   nova: [
-    'professional car dealership showroom interior, pure white infinity cove background,',
-    'seamless white floor, circular turntable platform on the floor, soft car shadow on floor,',
-    'soft diffused overhead studio lighting, clean minimalist aesthetic,',
-    'automotive photography studio, no car, empty background only, photorealistic, 4k',
+    'professional automotive photography studio, pure white seamless infinity cove backdrop,',
+    'circular car turntable platform centred on polished white epoxy floor,',
+    'subtle car shadow on floor, large overhead softbox diffused lighting,',
+    'secondary fill lights eliminating harsh shadows, slight vignette at edges,',
+    'empty studio with no car, commercial product photography, photorealistic, 8k',
   ].join(' '),
   elise: [
-    'luxury car showroom interior, dark navy blue studio background,',
-    'cold blue rim lighting, circular platform on glossy dark concrete floor, car shadow on floor,',
-    'dramatic studio lighting, premium automotive photography background, no car, empty, photorealistic, 4k',
+    'premium luxury car photography studio, deep navy blue seamless backdrop,',
+    'circular platform centred on high-gloss dark concrete floor with specular reflections,',
+    'cold blue LED rim lighting from both sides, dramatic low-key studio setup,',
+    'single key light from above-left creating sharp shadows, empty studio no car,',
+    'cinematic commercial automotive photography, photorealistic, 8k',
   ].join(' '),
   origin: [
-    'classic elegant car showroom, warm cream and beige studio background,',
-    'warm tungsten lighting, circular platform on polished travertine floor, soft car shadow on floor,',
-    'sophisticated atmosphere, automotive photography background, no car, empty, photorealistic, 4k',
+    'classic elegant car showroom interior, warm cream and ivory infinity cove backdrop,',
+    'circular platform on polished travertine marble floor, warm tungsten key light,',
+    'amber fill light on opposite side, soft Renaissance-style dramatic chiaroscuro,',
+    'delicate floor reflection beneath platform, empty showroom no car,',
+    'high-end commercial automotive photography, photorealistic, 8k',
   ].join(' '),
   eclipse: [
-    'dramatic car studio, pure black background, high contrast studio lighting,',
-    'deep violet and purple accent lights, circular platform on reflective black marble floor, car shadow on floor,',
-    'cinematic automotive photography background, no car, empty, photorealistic, 4k',
+    'cinematic dark automotive studio, pure black background with deep vignette,',
+    'circular platform on mirror-polished black marble floor,',
+    'deep violet and indigo LED accent rim lights from rear, single hard key light from above,',
+    'high-contrast dramatic shadows, subtle floor reflections, empty studio no car,',
+    'IMAX-quality cinematic automotive photography, photorealistic, 8k',
   ].join(' '),
   horizon: [
-    'outdoor car photography location, golden hour sunset sky, warm orange light,',
-    'circular display platform on clean asphalt surface, car shadow on ground, distant horizon,',
-    'cinematic automotive backdrop, no car, empty location, photorealistic, 4k',
+    'outdoor premium automotive photography location, golden hour sunset sky,',
+    'warm orange and amber gradient above the horizon, raised circular display platform,',
+    'premium dark asphalt surface with tyre marks, warm golden rim light on platform edges,',
+    'lens flare from low sun at camera left, blurred distant horizon, empty location no car,',
+    'commercial outdoor car photography, photorealistic, 8k',
   ].join(' '),
 }
 
@@ -58,24 +73,21 @@ export async function upscaleImage(imageUrl: string): Promise<string> {
   return resolveUrl(output)
 }
 
-// Gera fundo de showroom com FLUX-schnell
+// Gera fundo de showroom com FLUX.1 [dev] — 28 steps, resultado fotorrealista
 export async function generateShowroomBackground(slug: string): Promise<Buffer> {
   const prompt = ENVIRONMENT_PROMPTS[slug] ?? ENVIRONMENT_PROMPTS.nova
 
-  const output = await replicate.run(
-    'black-forest-labs/flux-schnell',
-    {
-      input: {
-        prompt,
-        num_outputs: 1,
-        aspect_ratio: '3:2',
-        output_format: 'png',
-        output_quality: 95,
-        num_inference_steps: 4,
-        go_fast: true,
-      },
-    }
-  )
+  const output = await replicate.run(FLUX_MODEL, {
+    input: {
+      prompt,
+      num_outputs: 1,
+      aspect_ratio: '3:2',
+      output_format: 'png',
+      output_quality: 95,
+      num_inference_steps: 28,
+      guidance: 3.5,
+    },
+  })
 
   const url = await resolveUrl(output)
   const res = await fetch(url)
