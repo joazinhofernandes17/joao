@@ -1,9 +1,25 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED_ROUTES = ['/dashboard']
+// Rotas que nunca redirecionam — acessíveis sem sessão
+const PUBLIC_PREFIXES = [
+  '/auth',
+  '/test-pipeline',
+  '/train-lora',
+  '/api/',
+  '/_next/',
+]
+
+const PROTECTED_PREFIXES = ['/dashboard']
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // Rotas públicas — passa directamente sem verificar sessão
+  if (PUBLIC_PREFIXES.some(p => pathname.startsWith(p)) || pathname === '/') {
+    return NextResponse.next({ request })
+  }
+
   // Se as variáveis Supabase não estiverem configuradas, deixar passar
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return NextResponse.next({ request })
@@ -29,19 +45,12 @@ export async function middleware(request: NextRequest) {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
-  const pathname = request.nextUrl.pathname
 
-  const isProtected = PROTECTED_ROUTES.some(r => pathname.startsWith(r))
+  const isProtected = PROTECTED_PREFIXES.some(p => pathname.startsWith(p))
   if (isProtected && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/auth'
     url.searchParams.set('redirect', pathname)
-    return NextResponse.redirect(url)
-  }
-
-  if (pathname === '/auth' && user) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 
