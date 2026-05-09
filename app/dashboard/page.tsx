@@ -1,45 +1,104 @@
-import type { Metadata } from 'next'
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, ImageIcon, CheckCircle, Clock, AlertCircle, Car, TrendingUp } from 'lucide-react'
 
-export const dynamic = 'force-dynamic'
-export const metadata: Metadata = { title: 'Painel — AutoShowroom' }
+interface Stand {
+  id: string
+  name: string
+  images_used_this_month: number
+  images_limit: number
+}
 
-export default async function DashboardPage() {
+interface VehicleImage {
+  id: string
+  showroom_url: string | null
+  is_primary: boolean
+  processing_status: string
+}
+
+interface Vehicle {
+  id: string
+  make: string
+  model: string
+  year: number | null
+  price: number | null
+  status: string
+  created_at: string
+  vehicle_images: VehicleImage[]
+}
+
+export default function DashboardPage() {
+  const router = useRouter()
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth')
 
-  const { data: stand } = await supabase
-    .from('stands')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
+  const [stand, setStand] = useState<Stand | null>(null)
+  const [vehicles, setVehicles] = useState<Vehicle[]>([])
+  const [loading, setLoading] = useState(true)
 
-  if (!stand) redirect('/auth')
+  useEffect(() => {
+    async function load() {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) {
+        router.replace('/auth')
+        return
+      }
 
-  const { data: vehicles } = await supabase
-    .from('vehicles')
-    .select(`
-      id, make, model, year, price, status, created_at,
-      vehicle_images(id, showroom_url, is_primary, processing_status)
-    `)
-    .eq('stand_id', stand.id)
-    .order('created_at', { ascending: false })
-    .limit(20)
+      const { data: standData } = await supabase
+        .from('stands')
+        .select('id, name, images_used_this_month, images_limit')
+        .eq('user_id', session.user.id)
+        .single()
 
-  const totalVehicles = vehicles?.length ?? 0
-  const doneImages = vehicles?.reduce((acc, v) => {
-    return acc + ((v.vehicle_images as any[])?.filter((i: any) => i.processing_status === 'done').length ?? 0)
-  }, 0) ?? 0
-  const pendingImages = vehicles?.reduce((acc, v) => {
-    return acc + ((v.vehicle_images as any[])?.filter((i: any) => i.processing_status === 'pending' || i.processing_status === 'processing').length ?? 0)
-  }, 0) ?? 0
+      if (!standData) {
+        router.replace('/auth')
+        return
+      }
+
+      const { data: vehiclesData } = await supabase
+        .from('vehicles')
+        .select('id, make, model, year, price, status, created_at, vehicle_images(id, showroom_url, is_primary, processing_status)')
+        .eq('stand_id', standData.id)
+        .order('created_at', { ascending: false })
+        .limit(20)
+
+      setStand(standData)
+      setVehicles((vehiclesData as Vehicle[]) ?? [])
+      setLoading(false)
+    }
+
+    load()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="p-8">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-secondary rounded w-48" />
+          <div className="grid grid-cols-4 gap-4">
+            {[1,2,3,4].map(i => <div key={i} className="h-24 bg-secondary rounded-xl" />)}
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[1,2,3].map(i => <div key={i} className="h-48 bg-secondary rounded-xl" />)}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!stand) return null
+
+  const totalVehicles = vehicles.length
+  const doneImages = vehicles.reduce((acc, v) =>
+    acc + v.vehicle_images.filter(i => i.processing_status === 'done').length, 0)
+  const pendingImages = vehicles.reduce((acc, v) =>
+    acc + v.vehicle_images.filter(i => i.processing_status === 'pending' || i.processing_status === 'processing').length, 0)
 
   return (
     <div className="p-8">
@@ -81,7 +140,7 @@ export default async function DashboardPage() {
       <div>
         <h2 className="text-base font-semibold mb-4">As suas viaturas</h2>
 
-        {!vehicles || vehicles.length === 0 ? (
+        {vehicles.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="py-16 text-center">
               <Car className="h-12 w-12 mx-auto mb-4 text-muted-foreground/30" />
@@ -96,16 +155,15 @@ export default async function DashboardPage() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {vehicles.map(vehicle => {
-              const images = (vehicle.vehicle_images as any[]) ?? []
-              const primaryImage = images.find((i: any) => i.is_primary) ?? images[0]
-              const doneCount = images.filter((i: any) => i.processing_status === 'done').length
-              const hasProcessing = images.some((i: any) => i.processing_status === 'processing')
-              const hasError = images.some((i: any) => i.processing_status === 'error')
+              const images = vehicle.vehicle_images ?? []
+              const primaryImage = images.find(i => i.is_primary) ?? images[0]
+              const doneCount = images.filter(i => i.processing_status === 'done').length
+              const hasProcessing = images.some(i => i.processing_status === 'processing')
+              const hasError = images.some(i => i.processing_status === 'error')
 
               return (
                 <Link key={vehicle.id} href={`/dashboard/vehicles/${vehicle.id}`}>
                   <Card className="overflow-hidden hover:border-primary/50 transition-colors cursor-pointer group">
-                    {/* Preview */}
                     <div className="aspect-[16/9] bg-secondary flex items-center justify-center relative overflow-hidden">
                       {primaryImage?.showroom_url ? (
                         <img
@@ -116,8 +174,6 @@ export default async function DashboardPage() {
                       ) : (
                         <ImageIcon className="h-10 w-10 text-muted-foreground/30" />
                       )}
-
-                      {/* Status badge */}
                       <div className="absolute top-2 right-2">
                         {hasError ? (
                           <Badge variant="destructive" className="text-xs gap-1">
@@ -134,7 +190,6 @@ export default async function DashboardPage() {
                         ) : null}
                       </div>
                     </div>
-
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between">
                         <div>
