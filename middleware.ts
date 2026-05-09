@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
 
   // Se as variáveis Supabase não estiverem configuradas, deixar passar
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.warn('[middleware] Supabase env vars em falta — a deixar passar sem auth')
     return NextResponse.next({ request })
   }
 
@@ -44,10 +45,19 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const allCookies = request.cookies.getAll()
+  const authCookies = allCookies.filter(c => c.name.includes('auth') || c.name.includes('sb-'))
+  console.log(`[middleware] ${pathname} | cookies auth: ${authCookies.length} | todos: ${allCookies.length}`)
+  if (authCookies.length > 0) {
+    console.log('[middleware] auth cookies:', authCookies.map(c => c.name).join(', '))
+  }
+
+  const { data: { user }, error } = await supabase.auth.getUser()
+  console.log(`[middleware] getUser → user: ${user?.email ?? 'null'} | error: ${error?.message ?? 'none'}`)
 
   const isProtected = PROTECTED_PREFIXES.some(p => pathname.startsWith(p))
   if (isProtected && !user) {
+    console.log(`[middleware] bloqueado — a redirecionar para /auth`)
     const url = request.nextUrl.clone()
     url.pathname = '/auth'
     url.searchParams.set('redirect', pathname)
