@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,7 +21,6 @@ function AuthForm() {
   const [standName, setStandName] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/dashboard'
   const supabase = createClient()
@@ -53,13 +52,18 @@ function AuthForm() {
           })
         }
 
-        toast.success('Conta criada! Verifique o seu email para confirmar o registo.')
+        if (data.session) {
+          // Confirmação de email desactivada — sessão imediata
+          toast.success('Conta criada com sucesso!')
+          window.location.href = redirect
+        } else {
+          toast.success('Conta criada! Verifique o seu email para confirmar o registo.')
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password })
         if (error) throw error
         toast.success('Bem-vindo de volta!')
-        router.push(redirect)
-        router.refresh()
+        window.location.href = redirect
       }
     } catch (err: any) {
       const msg = err?.message || 'Ocorreu um erro'
