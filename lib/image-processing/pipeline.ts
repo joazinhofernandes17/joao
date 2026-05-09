@@ -13,6 +13,8 @@ export interface PipelineOptions {
   showroomSlug: string
   standLogoUrl?: string | null
   standName?: string
+  standId?: string
+  standPrimaryColor?: string
 }
 
 export interface PipelineResult {
@@ -25,10 +27,23 @@ export interface PipelineResult {
 
 export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineResult> {
   const supabase = createAdminClient()
-  const { vehicleImageId, originalUrl, showroomSlug, standLogoUrl, standName } = opts
+  const { vehicleImageId, originalUrl, showroomSlug, standLogoUrl, standName, standId, standPrimaryColor } = opts
   const hasSpyne     = !!process.env.SPYNE_API_KEY
   const hasPhotoRoom = !!process.env.PHOTOROOM_API_KEY
   const hasReplicate = !!process.env.REPLICATE_API_TOKEN
+
+  // Load stand's custom LoRA model version if available
+  let loraModelVersion: string | undefined
+  if (standId && hasReplicate) {
+    const { data: stand } = await supabase
+      .from('stands')
+      .select('lora_model_version, lora_training_status')
+      .eq('id', standId)
+      .single()
+    if (stand?.lora_training_status === 'succeeded' && stand?.lora_model_version) {
+      loraModelVersion = stand.lora_model_version
+    }
+  }
 
   await supabase
     .from('vehicle_images')
@@ -84,8 +99,8 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
       const { data: { publicUrl: nobgUrl } } = supabase.storage
         .from('vehicle-images').getPublicUrl(nobgPath)
 
-      // FLUX (ou gradiente local) gera o fundo e compõe
-      const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName)
+      // FLUX (LoRA personalizado ou base) gera o fundo e compõe
+      const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName, undefined, loraModelVersion, standPrimaryColor)
 
       const showroomPath = `processed/${vehicleImageId}/showroom.png`
       const { error: showErr } = await supabase.storage
@@ -161,7 +176,7 @@ export async function runImagePipeline(opts: PipelineOptions): Promise<PipelineR
       .from('vehicle-images').getPublicUrl(nobgPath)
 
     // ── 5. Composite no showroom ──────────────────────────
-    const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName)
+    const showroomBuffer = await compositeOnShowroom(nobgBuffer, showroomSlug, standLogoUrl, standName, undefined, loraModelVersion, standPrimaryColor)
     const showroomPath = `processed/${vehicleImageId}/showroom.png`
     const { error: showErr } = await supabase.storage
       .from('vehicle-images')

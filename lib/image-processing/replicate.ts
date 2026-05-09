@@ -1,4 +1,5 @@
 import Replicate from 'replicate'
+import { generateBackgroundWithLora, LORA_TRIGGER_WORD } from './lora-trainer'
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
 
@@ -74,7 +75,17 @@ export async function upscaleImage(imageUrl: string): Promise<string> {
 }
 
 // Gera fundo de showroom com FLUX.1 [dev] — 28 steps, resultado fotorrealista
-export async function generateShowroomBackground(slug: string): Promise<Buffer> {
+// Se loraModelVersion fornecido, usa LoRA personalizado do stand em vez do modelo base
+export async function generateShowroomBackground(
+  slug: string,
+  loraModelVersion?: string,
+  standName?: string,
+  primaryColor?: string,
+): Promise<Buffer> {
+  if (loraModelVersion && standName) {
+    return generateBackgroundWithLora(slug, loraModelVersion, standName, primaryColor)
+  }
+
   const prompt = ENVIRONMENT_PROMPTS[slug] ?? ENVIRONMENT_PROMPTS.nova
 
   const output = await replicate.run(FLUX_MODEL, {

@@ -108,3 +108,14 @@ $$ language plpgsql;
 create trigger stands_updated_at before update on stands for each row execute function update_updated_at();
 create trigger vehicles_updated_at before update on vehicles for each row execute function update_updated_at();
 create trigger vehicle_images_updated_at before update on vehicle_images for each row execute function update_updated_at();
+
+-- ── LoRA training columns (migration) ────────────────────────────────────────
+-- Run after initial schema if stands table already exists
+alter table stands
+  add column if not exists lora_training_id     text,
+  add column if not exists lora_training_status text not null default 'none',
+  add column if not exists lora_model_version   text,
+  add column if not exists lora_trigger_word    text,
+  add column if not exists primary_color        text;
+
+-- lora_training_status values: 'none' | 'processing' | 'succeeded' | 'failed' | 'canceled'

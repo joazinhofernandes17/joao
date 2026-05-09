@@ -22,10 +22,12 @@ export async function compositeOnShowroom(
   standLogoUrl?: string | null,
   standName?: string,
   preGeneratedBg?: Buffer,
+  loraModelVersion?: string,
+  standPrimaryColor?: string,
 ): Promise<Buffer> {
   const config = SHOWROOM_CONFIG[showroomSlug] ?? SHOWROOM_CONFIG['nova']
 
-  // Prioridade: buffer pré-gerado → PNG local → FLUX → gradiente SVG
+  // Prioridade: buffer pré-gerado → PNG local → FLUX (LoRA ou base) → gradiente SVG
   let bgBuffer: Buffer
   if (preGeneratedBg) {
     bgBuffer = preGeneratedBg
@@ -34,7 +36,7 @@ export async function compositeOnShowroom(
     if (fs.existsSync(bgPath)) {
       bgBuffer = fs.readFileSync(bgPath)
     } else if (process.env.REPLICATE_API_TOKEN) {
-      bgBuffer = await generateShowroomBackground(showroomSlug)
+      bgBuffer = await generateShowroomBackground(showroomSlug, loraModelVersion, standName, standPrimaryColor)
     } else {
       bgBuffer = await generateGradientBackground(showroomSlug)
     }
