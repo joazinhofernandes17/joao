@@ -75,8 +75,9 @@ body{
   font-weight:400;
   font-size:16px;
   line-height:1.65;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  /* sem -webkit-font-smoothing:antialiased nem text-rendering:optimizeLegibility:
+     afinavam o traço e faziam o texto ler-se esbatido. O padrão do sistema é
+     mais nítido. */
   overflow-x:hidden;
 }
 img{max-width:100%;display:block}
@@ -153,10 +154,11 @@ section{position:relative}
   max-width:1340px;margin-inline:auto;
   display:flex;align-items:center;justify-content:space-between;gap:20px;
   padding:11px 12px 11px 22px;border-radius:999px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(16px) saturate(1.4);
-  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  /* sem backdrop-filter: o vidro fosco punha esta barra numa camada composta,
+     e o texto lá dentro perdia o alisamento por subpíxel — lia-se esbatido.
+     Um véu sólido dá o mesmo contraste e mantém as letras nítidas. */
+  background:rgba(12,14,17,.58);
+  border:1px solid rgba(255,255,255,.13);
   transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
 }
 /* logótipo: onda encostada ao topo direito da assinatura, como na marca.
@@ -185,7 +187,7 @@ section{position:relative}
 /* scrolled state */
 .nav.is-stuck{padding-top:10px}
 .nav.is-stuck .nav__inner{
-  background:rgba(244,241,235,.82);
+  background:var(--sand);
   border-color:var(--line);
   box-shadow:0 14px 44px -26px rgba(16,18,21,.5);
 }
@@ -290,7 +292,7 @@ section{position:relative}
 /* a duração é calculada em JS a partir da largura, para a velocidade ser
    sempre a mesma (~78 px/s) independentemente do número de marcas */
 .marquee__track{display:flex;gap:clamp(40px,4vw,68px);width:max-content;
-  animation:slide var(--dur,18s) linear infinite;will-change:transform}
+  animation:slide var(--dur,18s) linear infinite}
 .marquee span{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.75rem);
   color:var(--ink);opacity:.58;white-space:nowrap;transition:opacity .3s var(--ease)}
 .marquee span:hover{opacity:1}
@@ -483,6 +485,10 @@ section{position:relative}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
   .reveal{opacity:1;transform:none}
+  /* o desfile das marcas é um pedido explícito e mantém-se a andar mesmo com
+     a redução de movimento ativa no sistema */
+  .marquee__track{animation-duration:var(--dur,18s)!important;
+    animation-iteration-count:infinite!important}
 }
 </style>
 </head>
@@ -546,7 +552,6 @@ section{position:relative}
     </figure>
   </div>
   <div class="hero__veil"></div>
-  <div class="hero__grain"></div>
 
   <div class="hero__content">
     <div class="wrap">
