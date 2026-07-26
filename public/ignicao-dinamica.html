@@ -229,12 +229,6 @@ section{position:relative}
 .hero__bg{position:absolute;inset:0;z-index:0}
 .hero__bg .ph{width:100%;height:100%}
 .hero__bg img{transform:scale(1.06)}
-/* vídeo de fundo — sobrepõe-se à fotografia só quando consegue reproduzir */
-.hero__video{
-  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
-  opacity:0;transition:opacity 1.4s var(--ease);pointer-events:none
-}
-.hero__video.on{opacity:1}
 .hero__veil{
   position:absolute;inset:0;z-index:1;
   background:
@@ -470,13 +464,17 @@ section{position:relative}
 <section class="hero" id="topo">
   <div class="hero__bg">
     <figure class="ph">
-      <img src="https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=3840"
-           srcset="https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=1280 1280w,
-                   https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=2400 2400w,
-                   https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=3840 3840w"
-           sizes="100vw" alt="Automóvel desportivo de luxo estacionado à entrada de um edifício clássico" fetchpriority="high">
+      <!-- showroom de automóveis de luxo. data-fallback = fotografias alternativas,
+           tentadas por ordem caso a principal não carregue -->
+      <img id="heroImg"
+           src="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=3840"
+           srcset="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=1280 1280w,
+                   https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=2400 2400w,
+                   https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=3840 3840w"
+           sizes="100vw"
+           data-fallback="VMPdo-jftBg,OZPoquurg68,mDyEVrc4uqw"
+           alt="Automóveis desportivos de luxo expostos num showroom" fetchpriority="high">
     </figure>
-    <video class="hero__video" id="heroVideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   </div>
   <div class="hero__veil"></div>
   <div class="hero__grain"></div>
@@ -963,13 +961,28 @@ section{position:relative}
   "use strict";
 
   /* ---- imagens: marcar carregadas / falhadas (fallback CSS assume o lugar) ---- */
+  // fotografias alternativas (data-fallback), tentadas por ordem antes de desistir
+  function nextSource(img){
+    var rest = (img.dataset.fallback || '').split(',').filter(Boolean);
+    if(!rest.length){ img.classList.add('failed'); return; }
+    var id = rest.shift();
+    img.dataset.fallback = rest.join(',');
+    img.removeAttribute('srcset');                // senão o srcset continua a mandar
+    img.src = 'https://unsplash.com/photos/' + id + '/download?force=true&w=2400';
+  }
+
   function markImages(){
     document.querySelectorAll('.ph img').forEach(function(img){
       if(img.dataset.bound) return;
       img.dataset.bound = '1';
-      if(img.complete && img.naturalWidth > 0){ img.classList.add('loaded'); return; }
       img.addEventListener('load',  function(){ img.classList.add('loaded'); });
-      img.addEventListener('error', function(){ img.classList.add('failed'); });
+      img.addEventListener('error', function(){ nextSource(img); });
+      // a imagem do hero carrega antes deste script correr, por isso pode já
+      // ter terminado — com ou sem sucesso — sem nunca disparar os eventos
+      if(img.complete){
+        if(img.naturalWidth > 0) img.classList.add('loaded');
+        else nextSource(img);
+      }
     });
   }
   markImages();
@@ -1116,56 +1129,6 @@ section{position:relative}
       + '?subject=' + encodeURIComponent('Pedido — ' + d.tipo + ' — ' + d.nome)
       + '&body='    + encodeURIComponent(body(d));
   });
-
-  /* ------------------------------------------------------------------
-     VÍDEO DO HERO — showroom de automóveis de luxo
-     Para usar um vídeo próprio: coloque o ficheiro em  public/video/showroom.mp4
-     (ou mude o primeiro endereço da lista). A lista é tentada por ordem;
-     o primeiro que conseguir reproduzir é o que fica. Se nenhum funcionar,
-     o hero mantém a fotografia — nunca fica um espaço vazio.
-     ------------------------------------------------------------------ */
-  var HERO_VIDEO = [
-    'video/showroom.mp4',
-    'https://videos.pexels.com/video-files/6813515/6813515-hd_1920_1080_24fps.mp4',
-    'https://videos.pexels.com/video-files/9997960/9997960-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/30225108/30225108-hd_1920_1080_30fps.mp4',
-    'https://videos.pexels.com/video-files/5309351/5309351-hd_1920_1080_25fps.mp4',
-    'https://videos.pexels.com/video-files/7154208/7154208-hd_1920_1080_25fps.mp4'
-  ];
-
-  (function(){
-    var v = document.getElementById('heroVideo');
-    if(!v) return;
-
-    // respeitar quem pediu menos movimento ou está a poupar dados
-    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''))) return;
-
-    var idx = 0, settled = false, timer = null;
-
-    function next(){
-      if(settled || idx >= HERO_VIDEO.length) return;
-      clearTimeout(timer);
-      v.src = HERO_VIDEO[idx++];
-      v.load();
-      timer = setTimeout(next, 7000);   // fonte demasiado lenta → passa à seguinte
-    }
-
-    v.addEventListener('error', next);
-    v.addEventListener('canplay', function(){
-      if(settled) return;
-      settled = true;
-      clearTimeout(timer);
-      var played = v.play();
-      if(played && played.catch){
-        played.catch(function(){ v.classList.remove('on'); });   // autoplay recusado → fica a fotografia
-      }
-      v.classList.add('on');
-    });
-
-    next();
-  })();
 
   /* ---- ano no rodapé ---- */
   document.getElementById('ano').textContent = new Date().getFullYear();
