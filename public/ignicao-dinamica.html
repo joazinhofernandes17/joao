@@ -248,13 +248,18 @@ section{position:relative}
 .hero__bg #heroImg{object-fit:cover;object-position:center 48%}
 .hero__veil{
   position:absolute;inset:0;z-index:1;
-  /* painel escuro à esquerda: assenta o texto e absorve o logótipo da parede,
-     deixando os automóveis à direita visíveis */
+  /* A fotografia é clara. Em vez de a escurecer toda — que a deixava baça — o
+     escurecimento concentra-se num painel à esquerda, onde assenta o texto, e
+     desaparece antes do meio para o showroom se manter limpo e luminoso.
+     A segunda camada só segura a barra no topo e a linha de números em baixo. */
   background:
-    linear-gradient(102deg, rgba(8,10,12,.93) 0%, rgba(8,10,12,.80) 26%, rgba(8,10,12,.34) 58%, rgba(8,10,12,.16) 100%),
-    linear-gradient(180deg, rgba(8,10,12,.66) 0%, rgba(8,10,12,.10) 32%, rgba(8,10,12,.40) 68%, rgba(8,10,12,.93) 100%);
+    linear-gradient(96deg,  rgba(6,9,12,.93) 0%,  rgba(6,9,12,.85) 22%,
+                            rgba(6,9,12,.52) 42%, rgba(6,9,12,.14) 64%,
+                            rgba(6,9,12,0)  100%),
+    linear-gradient(180deg, rgba(6,9,12,.42) 0%,  rgba(6,9,12,0)    20%,
+                            rgba(6,9,12,0)   54%, rgba(6,9,12,.64) 100%);
 }
-.hero__grain{position:absolute;inset:0;z-index:2;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
+.hero__grain{position:absolute;inset:0;z-index:2;opacity:.10;mix-blend-mode:overlay;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E")}
 .hero__content{position:relative;z-index:3;width:100%;padding-block:clamp(120px,16vh,180px) clamp(40px,7vh,72px)}
 .hero__title{color:#fff;max-width:16ch}
@@ -408,9 +413,10 @@ section{position:relative}
   .hero{min-height:0}
   .hero__bg,.hero__veil,.hero__grain{height:66.7vw;bottom:auto}
   .hero__bg #heroImg{object-fit:contain}   /* a faixa é 3:2, mostra tudo */
+  /* só o suficiente para a barra assentar no topo; o resto da faixa fica limpo
+     e termina a direito contra o fundo escuro, sem esbatido */
   .hero__veil{background:linear-gradient(180deg,
-    rgba(8,10,12,.58) 0%, rgba(8,10,12,.10) 30%,
-    rgba(8,10,12,.52) 72%, var(--ink) 100%)}
+    rgba(6,9,12,.62) 0%, rgba(6,9,12,.10) 30%, rgba(6,9,12,0) 58%)}
   .hero__content{padding-top:calc(66.7vw + 30px);padding-bottom:46px}
 }
 
