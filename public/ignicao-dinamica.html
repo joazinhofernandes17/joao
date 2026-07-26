@@ -236,15 +236,18 @@ section{position:relative}
 .r-xl{border-radius:var(--r-xl)}
 
 /* ---------- hero ---------- */
-/* o hero acompanha a proporção da fotografia (3:2), para que ela apareça
-   inteira em vez de cortada em cima e em baixo */
-.hero{position:relative;width:100%;aspect-ratio:1536/1024;
+/* o hero cabe no ecrã; a fotografia aparece inteira lá dentro */
+.hero{position:relative;width:100%;min-height:100vh;min-height:100svh;
   display:flex;align-items:flex-end;overflow:hidden;background:var(--ink)}
 .hero__bg{position:absolute;inset:0;z-index:0}
-.hero__bg .ph{width:100%;height:100%}
-/* contain garante que nada é cortado quando a altura mínima entra em ação
-   (ecrãs estreitos); em ecrãs largos coincide com a proporção do hero */
-.hero__bg img{object-fit:contain;object-position:center top}
+.hero__bg .ph{width:100%;height:100%;background:transparent}
+.hero__bg img{position:absolute;inset:0;width:100%;height:100%}
+/* a fotografia inteira, sem cortes */
+.hero__bg #heroImg{object-fit:contain;object-position:center}
+/* cópia desfocada e escurecida por trás, a preencher o que sobra dos lados —
+   evita barras vazias sem cortar nada da fotografia */
+.hero__fill{object-fit:cover;transform:scale(1.14);
+  filter:blur(38px) brightness(.42) saturate(.85)}
 .hero__veil{
   position:absolute;inset:0;z-index:1;
   /* painel escuro à esquerda: assenta o texto e absorve o logótipo da parede,
@@ -400,11 +403,12 @@ section{position:relative}
 
 /* ---------- responsive ---------- */
 
-/* Abaixo de ~1180px o texto do hero deixa de caber dentro da proporção 3:2 da
-   fotografia. Em vez de a cortar, ela passa a ocupar uma faixa completa no topo
-   e o texto assenta por baixo — a altura volta a ser ditada pelo conteúdo. */
-@media (max-width:1180px){
-  .hero{aspect-ratio:auto}
+/* Em ecrãs estreitos a fotografia centrada ficaria uma tira minúscula no meio
+   do hero. Passa a ocupar uma faixa completa no topo, na sua proporção, com o
+   texto por baixo — a altura volta a ser ditada pelo conteúdo. */
+@media (max-width:860px){
+  .hero{min-height:0}
+  .hero__fill{display:none}
   .hero__bg,.hero__veil,.hero__grain{height:66.7vw;bottom:auto}
   .hero__veil{background:linear-gradient(180deg,
     rgba(8,10,12,.58) 0%, rgba(8,10,12,.10) 30%,
@@ -508,6 +512,7 @@ section{position:relative}
       <!-- Fotografia do showroom da Ignição Dinâmica.
            Coloque o ficheiro em  public/img/hero-showroom.jpg  (ver img/README.md).
            Enquanto não existir, entram por ordem as alternativas de data-fallback. -->
+      <img class="hero__fill" src="img/hero-showroom.jpg" alt="" aria-hidden="true">
       <img id="heroImg"
            src="img/hero-showroom.jpg"
            data-fallback="_fTHxOafgoM,VMPdo-jftBg,OZPoquurg68"
