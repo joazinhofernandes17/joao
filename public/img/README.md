@@ -1,30 +1,33 @@
-# Imagens próprias
+# Imagens
 
-## Fotografia do hero (primeira página)
+## `hero-showroom.jpg`
 
-Coloque aqui o ficheiro com o nome exato:
+Fotografia do showroom usada a toda a largura na primeira página.
 
-    hero-showroom.jpg
+Está em 1536×1024, que é a resolução do original — ampliar não acrescentaria
+detalhe, só peso. Em ecrãs muito grandes nota-se ligeiramente suave; se um dia
+houver uma versão em maior resolução, basta substituir o ficheiro pelo mesmo
+nome.
 
-É o primeiro endereço que a página tenta, por isso basta pousar o ficheiro nesta
-pasta — não é preciso mexer no código.
+Para trocar por outra fotografia: guarde-a com este nome exato. Se o ficheiro
+faltar, a página passa sozinha para fotografias de showroom de reserva, pela
+ordem indicada em `data-fallback` no `<img id="heroImg">` de
+`../ignicao-dinamica.html`. O hero nunca fica vazio.
 
-Se o ficheiro não existir, a página passa automaticamente para as fotografias de
-reserva (showrooms de stock), pela ordem indicada em `data-fallback` no `<img
-id="heroImg">` de `public/ignicao-dinamica.html`. O hero nunca fica vazio.
+Recomendações para uma substituição: JPG, 2000–3000 px de largura, até ~600 KB.
+O texto do hero assenta em baixo à esquerda sobre um painel escurecido, por isso
+convém que essa zona da fotografia não tenha detalhe importante.
 
-### Recomendações
+## `logo-original.jpg`
 
-- **Formato:** JPG (ou WebP, mudando a extensão no `src`).
-- **Resolução:** 2400–3840 px de largura. A imagem ocupa o ecrã todo, por isso
-  vale a pena ser generoso — mas comprima bem.
-- **Peso:** até ~600 KB. É a primeira coisa que carrega na página.
-- **Enquadramento:** o texto do hero fica em baixo à esquerda, sobre um
-  gradiente escuro. Convém que a zona inferior esquerda da fotografia não tenha
-  detalhe importante, ou fique naturalmente mais escura.
+O logótipo da marca tal como foi fornecido (150×150, fundo branco). **Não é
+usado no site** — fica como referência.
 
-## Outras imagens
+O logótipo que aparece nas páginas é desenhado em SVG, dentro do próprio HTML:
+a onda azul encostada ao topo direito da assinatura. Foi feito assim por duas
+razões: o original tem resolução baixa de mais para os tamanhos em que aparece,
+e tem fundo branco, que não assentaria sobre o hero escuro nem sobre o rodapé.
 
-As restantes fotografias do site vêm de endereços externos (Unsplash). Para usar
-fotografias próprias, coloque-as aqui e troque o `src` do `<img>` respetivo por
-`img/nome-do-ficheiro.jpg`.
+As cores do site foram medidas a partir deste ficheiro e estão nas variáveis CSS
+`--brand` (azul da onda), `--brand-2` (azul sobre fundo escuro) e `--brand-ink`
+(verde-azulado da assinatura).

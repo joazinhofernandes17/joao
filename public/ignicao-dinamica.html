@@ -12,7 +12,7 @@
 <meta property="og:title" content="Ignição Dinâmica — Automóveis, Peças, Barcos">
 <meta property="og:description" content="Automóveis de luxo, viaturas blindadas, peças e embarcações. De Portugal e para o mundo, com entrega rápida.">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23101215'/%3E%3Cg%20transform='translate(4,21)%20scale(1.08)'%3E%3Cpath%20d='M3%2016C8%202.5%2020%202%2026%2011S44%2020.5%2049%207'%20stroke='%233FB3D6'%20stroke-width='7'%20stroke-linecap='round'%20fill='none'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23101215'/%3E%3Cg%20transform='translate(3,22)%20scale(0.5)'%3E%3Cpath%20d='M10%2033C16%2012%2040%203%2057%2016C71%2027%2083%2032%2096%2018L107%203'%20stroke='%232E9BD4'%20stroke-width='10.5'%20fill='none'/%3E%3C/g%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,10 +39,10 @@
   --ember-2:   #E2762E;
   --white:     #FFFFFF;
 
-  /* cores da marca (logótipo Ignição Dinâmica) */
-  --brand:     #1E7BB0;
-  --brand-2:   #3FB3D6;
-  --brand-ink: #2D5468;
+  /* cores da marca, medidas no logótipo original (public/img/logo-original.jpg) */
+  --brand:     #0A6A9C;   /* azul da onda */
+  --brand-2:   #2E9BD4;   /* azul da onda sobre fundo escuro */
+  --brand-ink: #1E757F;   /* verde-azulado da assinatura */
 
   --r-sm: 10px;
   --r-md: 18px;
@@ -153,12 +153,14 @@ section{position:relative}
   -webkit-backdrop-filter:blur(16px) saturate(1.4);
   transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
 }
-/* logótipo: onda por cima da assinatura, como na marca */
-.nav__brand{display:inline-flex;flex-direction:column;align-items:center;gap:3px;
-  line-height:1;color:#fff;transition:color .45s var(--ease)}
-.nav__brand .wave{width:44px;height:auto;display:block;flex:none}
-.nav__brand .name{font-family:var(--sans);font-size:.94rem;font-weight:500;
-  letter-spacing:.055em;white-space:nowrap}
+/* logótipo: onda encostada ao topo direito da assinatura, como na marca.
+   Tudo escala a partir do font-size do conjunto. */
+.nav__brand{display:inline-flex;flex-direction:column;align-items:flex-end;gap:1px;
+  font-size:.86rem;line-height:1;color:#fff;transition:color .45s var(--ease)}
+.nav__brand .wave{width:2.75em;height:auto;display:block;flex:none;color:var(--brand-2)}
+.nav__brand .wave path{stroke:currentColor}
+.nav__brand .name{font-family:var(--sans);font-size:1em;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
 .nav__menu{display:flex;align-items:center;gap:4px}
 .nav__menu a{
   position:relative;padding:8px 15px;border-radius:999px;font-size:.83rem;font-weight:400;
@@ -240,9 +242,11 @@ section{position:relative}
 .hero__bg img{transform:scale(1.06)}
 .hero__veil{
   position:absolute;inset:0;z-index:1;
+  /* painel escuro à esquerda: assenta o texto e absorve o logótipo da parede,
+     deixando os automóveis à direita visíveis */
   background:
-    linear-gradient(180deg, rgba(10,12,14,.72) 0%, rgba(10,12,14,.20) 30%, rgba(10,12,14,.35) 62%, rgba(10,12,14,.90) 100%),
-    radial-gradient(80% 60% at 50% 0%, rgba(196,69,29,.20), transparent 70%);
+    linear-gradient(102deg, rgba(8,10,12,.93) 0%, rgba(8,10,12,.80) 26%, rgba(8,10,12,.34) 58%, rgba(8,10,12,.16) 100%),
+    linear-gradient(180deg, rgba(8,10,12,.66) 0%, rgba(8,10,12,.10) 32%, rgba(8,10,12,.40) 68%, rgba(8,10,12,.93) 100%);
 }
 .hero__grain{position:absolute;inset:0;z-index:2;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E")}
@@ -252,10 +256,8 @@ section{position:relative}
 .hero__row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:34px}
 .hero__sub{max-width:46ch}
 .hero__actions{display:flex;flex-wrap:wrap;gap:12px}
-.brand-defs{position:absolute;width:0;height:0;overflow:hidden}
-.nav__brand--foot{align-items:flex-start}
-.nav__brand--foot .wave{width:48px}
-.nav__brand--foot .name{font-size:1.06rem}
+.nav.is-stuck .nav__brand .wave{color:var(--brand)}
+.nav__brand--foot{font-size:1.04rem}
 
 /* stats ribbon */
 .ribbon{border-top:1px solid rgba(255,255,255,.14);margin-top:clamp(34px,6vh,60px);padding-top:26px;
@@ -376,7 +378,8 @@ section{position:relative}
 .foot li a:hover{color:var(--ember-2)}
 .foot__bottom{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;padding-block:26px;font-size:.78rem;color:rgba(255,255,255,.42);font-weight:300}
 .wordmark{
-  font-family:var(--serif);font-size:clamp(1.7rem,10.4vw,9.5rem);line-height:.9;letter-spacing:-.04em;
+  font-family:var(--sans);font-weight:600;text-transform:uppercase;
+  font-size:clamp(1.2rem,7.6vw,7rem);line-height:.9;letter-spacing:.02em;
   color:rgba(255,255,255,.055);-webkit-text-stroke:1px rgba(255,255,255,.14);
   text-align:center;padding-bottom:clamp(12px,2vw,26px);user-select:none;white-space:nowrap
 }
@@ -432,22 +435,12 @@ section{position:relative}
 
 <body>
 
-<!-- gradiente da onda do logótipo, partilhado pelas várias instâncias -->
-<svg class="brand-defs" aria-hidden="true" focusable="false">
-  <defs>
-    <linearGradient id="idWave" x1="0" y1="0" x2="52" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#3FB3D6"/>
-      <stop offset="1" stop-color="#15619E"/>
-    </linearGradient>
-  </defs>
-</svg>
-
 <!-- ══════════════ NAV ══════════════ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
     <a class="nav__brand" href="#topo" aria-label="Ignição Dinâmica — início">
-      <svg class="wave" viewBox="0 0 52 22" fill="none" aria-hidden="true">
-        <path d="M3 16C8 2.5 20 2 26 11S44 20.5 49 7" stroke="url(#idWave)" stroke-width="7" stroke-linecap="round"/>
+      <svg class="wave" viewBox="0 0 116 40" fill="none" aria-hidden="true">
+        <path d="M10 33C16 12 40 3 57 16C71 27 83 32 96 18L107 3" stroke-width="10.5"/>
       </svg>
       <span class="name">Ignição Dinâmica</span>
     </a>
@@ -935,8 +928,8 @@ section{position:relative}
     <div class="foot__top">
       <div>
         <a class="nav__brand nav__brand--foot" href="#topo" style="color:#fff">
-          <svg class="wave" viewBox="0 0 52 22" fill="none" aria-hidden="true">
-            <path d="M3 16C8 2.5 20 2 26 11S44 20.5 49 7" stroke="url(#idWave)" stroke-width="7" stroke-linecap="round"/>
+          <svg class="wave" viewBox="0 0 116 40" fill="none" aria-hidden="true">
+            <path d="M10 33C16 12 40 3 57 16C71 27 83 32 96 18L107 3" stroke-width="10.5"/>
           </svg>
           <span class="name">Ignição Dinâmica</span>
         </a>
