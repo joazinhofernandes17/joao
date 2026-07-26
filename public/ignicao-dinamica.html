@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ignição Dinâmica® — Automóveis, Peças, Barcos | Portugal &amp; Angola</title>
+<meta name="description" content="25 anos no sector dos automóveis de luxo, em Portugal e Angola. Importação e exportação de viaturas, viaturas blindadas, peças, acessórios e pneus para todas as marcas, barcos e motas de água.">
+<meta name="theme-color" content="#101215">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_PT">
+<meta property="og:title" content="Ignição Dinâmica® — Automóveis, Peças, Barcos">
+<meta property="og:description" content="Automóveis de luxo, viaturas blindadas, peças e embarcações. De Portugal e para o mundo, com entrega rápida.">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101215'/%3E%3Cpath d='M36 8 20 36h10l-4 20 22-30H37l45-18z' fill='%23C4451D' transform='scale(0.86) translate(6 5)'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   IGNIÇÃO DINÂMICA® — site institucional
+   Secções: Automóveis · Peças · Barcos · Sobre nós · Contacto
+   ============================================================ */
+
+/* ---------- tokens ---------- */
+:root{
+  --sand:      #F4F1EB;
+  --sand-2:    #EBE6DD;
+  --sand-3:    #DFD8CC;
+  --ink:       #101215;
+  --ink-2:     #191C21;
+  --ink-soft:  #55595F;
+  --ink-mute:  #83878E;
+  --line:      rgba(16,18,21,.13);
+  --line-soft: rgba(16,18,21,.07);
+  --ember:     #C4451D;
+  --ember-2:   #E2762E;
+  --white:     #FFFFFF;
+
+  --r-sm: 10px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
+
+  --pad: clamp(20px, 5vw, 64px);
+  --sec: clamp(72px, 11vw, 150px);
+
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+
+  --ease: cubic-bezier(.22,.7,.28,1);
+}
+
+/* ---------- reset ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--sand);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-weight:400;
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+img{max-width:100%;display:block}
+figure{margin:0}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3,h4{margin:0;font-weight:400;line-height:1.06;letter-spacing:-.018em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+::selection{background:var(--ember);color:#fff}
+
+/* ---------- layout ---------- */
+.wrap{width:100%;max-width:1340px;margin-inline:auto;padding-inline:var(--pad)}
+.wrap-narrow{max-width:920px}
+section{position:relative}
+.sec{padding-block:var(--sec)}
+
+/* ---------- typography ---------- */
+.eyebrow{
+  font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-mute);display:inline-flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);opacity:.85}
+.eyebrow.center{justify-content:center}
+.eyebrow.on-dark{color:rgba(255,255,255,.62)}
+
+.h-display{font-family:var(--serif);font-size:clamp(2.6rem,7.4vw,5.6rem);line-height:1.02;letter-spacing:-.03em}
+.h1{font-family:var(--serif);font-size:clamp(2.2rem,5.6vw,4.1rem);line-height:1.05;letter-spacing:-.028em}
+.h2{font-family:var(--serif);font-size:clamp(1.75rem,3.4vw,2.7rem);line-height:1.1;letter-spacing:-.024em}
+.h3{font-size:clamp(1.05rem,1.5vw,1.28rem);font-weight:500;letter-spacing:-.012em;line-height:1.3}
+.lead{font-size:clamp(1rem,1.35vw,1.12rem);font-weight:300;color:var(--ink-soft);line-height:1.72}
+.lead.on-dark{color:rgba(255,255,255,.74)}
+.small{font-size:.875rem;color:var(--ink-soft);font-weight:300;line-height:1.7}
+.italic{font-family:var(--serif);font-style:italic}
+
+.sec-head{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;max-width:760px;margin-inline:auto}
+.sec-head p{max-width:60ch}
+.sec-head.left{align-items:flex-start;text-align:left;margin-inline:0}
+.d-br{display:inline}
+
+/* ---------- buttons ---------- */
+.btn{
+  --bg:var(--ink); --fg:#fff; --bd:var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px 26px;border-radius:999px;border:1px solid var(--bd);
+  background:var(--bg);color:var(--fg);
+  font-size:.82rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;
+  cursor:pointer;white-space:nowrap;
+  transition:transform .4s var(--ease), background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(16,18,21,.55)}
+.btn:active{transform:translateY(0)}
+.btn--ember{--bg:var(--ember);--bd:var(--ember)}
+.btn--ember:hover{--bg:#A93916;--bd:#A93916}
+.btn--ghost{--bg:transparent;--fg:var(--ink);--bd:var(--line)}
+.btn--ghost:hover{--bg:var(--ink);--fg:#fff;--bd:var(--ink)}
+.btn--light{--bg:#fff;--fg:var(--ink);--bd:#fff}
+.btn--outline-light{--bg:transparent;--fg:#fff;--bd:rgba(255,255,255,.35)}
+.btn--outline-light:hover{--bg:#fff;--fg:var(--ink);--bd:#fff}
+.btn--sm{padding:10px 20px;font-size:.74rem}
+.btn .ico{width:15px;height:15px;flex:none;transition:transform .4s var(--ease)}
+.btn:hover .ico{transform:translateX(3px)}
+
+.link-u{
+  display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;padding-bottom:3px;
+  border-bottom:1px solid var(--line);transition:border-color .3s var(--ease),color .3s var(--ease)
+}
+.link-u:hover{border-color:var(--ember);color:var(--ember)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:90;padding:14px var(--pad);transition:padding .45s var(--ease)}
+.nav__inner{
+  max-width:1340px;margin-inline:auto;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:11px 12px 11px 22px;border-radius:999px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(16px) saturate(1.4);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);
+  transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
+}
+.nav__brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.02rem;letter-spacing:-.01em;color:#fff;transition:color .45s var(--ease)}
+.nav__brand .spark{width:16px;height:16px;flex:none;color:var(--ember)}
+.nav__menu{display:flex;align-items:center;gap:4px}
+.nav__menu a{
+  position:relative;padding:8px 15px;border-radius:999px;font-size:.83rem;font-weight:400;
+  color:rgba(255,255,255,.82);transition:color .3s var(--ease),background .3s var(--ease)
+}
+.nav__menu a::after{
+  content:"";position:absolute;left:15px;right:15px;bottom:5px;height:1px;
+  background:var(--ember);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)
+}
+.nav__menu a:hover::after,.nav__menu a.active::after{transform:scaleX(1)}
+.nav__menu a:hover{color:#fff}
+.nav__cta{display:flex;align-items:center;gap:10px}
+.nav__tel{font-size:.83rem;color:rgba(255,255,255,.8);padding:8px 10px;transition:color .3s var(--ease)}
+.nav__tel:hover{color:#fff}
+
+/* scrolled state */
+.nav.is-stuck{padding-top:10px}
+.nav.is-stuck .nav__inner{
+  background:rgba(244,241,235,.82);
+  border-color:var(--line);
+  box-shadow:0 14px 44px -26px rgba(16,18,21,.5);
+}
+.nav.is-stuck .nav__brand{color:var(--ink)}
+.nav.is-stuck .nav__menu a{color:var(--ink-soft)}
+.nav.is-stuck .nav__menu a:hover,.nav.is-stuck .nav__menu a.active{color:var(--ink)}
+.nav.is-stuck .nav__tel{color:var(--ink-soft)}
+.nav.is-stuck .nav__tel:hover{color:var(--ink)}
+.nav.is-stuck .btn--light{--bg:var(--ink);--fg:#fff;--bd:var(--ink)}
+
+/* burger */
+.burger{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;place-items:center;cursor:pointer}
+.burger span{display:block;width:16px;height:1.5px;background:#fff;border-radius:2px;transition:transform .35s var(--ease),opacity .25s var(--ease)}
+.burger span+span{margin-top:4px}
+.nav.is-stuck .burger{border-color:var(--line)}
+.nav.is-stuck .burger span{background:var(--ink)}
+
+/* mobile sheet */
+.sheet{
+  position:fixed;inset:0;z-index:95;background:var(--ink);
+  display:flex;flex-direction:column;justify-content:center;gap:6px;padding:96px var(--pad) 40px;
+  opacity:0;visibility:hidden;transition:opacity .4s var(--ease),visibility .4s var(--ease)
+}
+.sheet.open{opacity:1;visibility:visible}
+.sheet a{
+  font-family:var(--serif);font-size:clamp(2rem,9vw,3rem);color:#fff;padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.09);
+  opacity:0;transform:translateY(18px);transition:opacity .5s var(--ease),transform .5s var(--ease),color .3s var(--ease)
+}
+.sheet.open a{opacity:1;transform:none}
+.sheet a:hover{color:var(--ember-2)}
+.sheet__foot{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
+.sheet__close{position:absolute;top:26px;right:var(--pad);width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;font-size:20px;cursor:pointer;line-height:1}
+
+/* ---------- media / figures ---------- */
+.ph{position:relative;overflow:hidden;background:var(--ink-2);isolation:isolate}
+.ph::after{ /* fallback scene, visible only if the photo fails */
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(120% 90% at 22% 12%, rgba(226,118,46,.35), transparent 58%),
+    radial-gradient(90% 80% at 82% 88%, rgba(196,69,29,.30), transparent 62%),
+    linear-gradient(148deg, #23262B 0%, #14171B 46%, #0B0D10 100%);
+}
+.ph img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 1.1s var(--ease),opacity .7s var(--ease);
+  opacity:0;
+}
+.ph img.loaded{opacity:1}
+.ph img.failed{opacity:0}
+.ph--zoom:hover img{transform:scale(1.055)}
+.r-md{border-radius:var(--r-md)}
+.r-lg{border-radius:var(--r-lg)}
+.r-xl{border-radius:var(--r-xl)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;background:var(--ink)}
+.hero__bg{position:absolute;inset:0;z-index:0}
+.hero__bg .ph{width:100%;height:100%}
+.hero__bg img{transform:scale(1.06)}
+.hero__veil{
+  position:absolute;inset:0;z-index:1;
+  background:
+    linear-gradient(180deg, rgba(10,12,14,.72) 0%, rgba(10,12,14,.20) 30%, rgba(10,12,14,.35) 62%, rgba(10,12,14,.90) 100%),
+    radial-gradient(80% 60% at 50% 0%, rgba(196,69,29,.20), transparent 70%);
+}
+.hero__grain{position:absolute;inset:0;z-index:2;opacity:.22;mix-blend-mode:overlay;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E")}
+.hero__content{position:relative;z-index:3;width:100%;padding-block:clamp(120px,16vh,180px) clamp(40px,7vh,72px)}
+.hero__title{color:#fff;max-width:16ch}
+.hero__title em{font-style:italic;color:var(--ember-2)}
+.hero__row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:34px}
+.hero__sub{max-width:46ch}
+.hero__actions{display:flex;flex-wrap:wrap;gap:12px}
+.nav__brand sup{font-size:.46em;vertical-align:baseline;position:relative;top:-.72em;margin-left:-1px;letter-spacing:0}
+
+/* stats ribbon */
+.ribbon{border-top:1px solid rgba(255,255,255,.14);margin-top:clamp(34px,6vh,60px);padding-top:26px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.ribbon div{display:grid;gap:4px}
+.ribbon b{font-family:var(--serif);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:400;color:#fff;line-height:1}
+.ribbon span{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+
+/* ---------- brands ---------- */
+.brands{padding-block:clamp(56px,8vw,92px);border-bottom:1px solid var(--line-soft)}
+.marquee{margin-top:40px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.marquee__track{display:flex;gap:56px;width:max-content;animation:slide 42s linear infinite}
+.marquee:hover .marquee__track{animation-play-state:paused}
+.marquee span{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.75rem);color:var(--ink);opacity:.42;white-space:nowrap;transition:opacity .3s var(--ease)}
+.marquee span:hover{opacity:1}
+@keyframes slide{to{transform:translateX(-50%)}}
+.tuners{margin-top:44px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);transition:border-color .3s var(--ease),color .3s var(--ease),background .3s var(--ease)}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip--solid{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ---------- grids / cards ---------- */
+.grid{display:grid;gap:clamp(16px,1.9vw,26px)}
+.g-2{grid-template-columns:repeat(2,1fr)}
+.g-3{grid-template-columns:repeat(3,1fr)}
+.g-4{grid-template-columns:repeat(4,1fr)}
+
+.card{display:flex;flex-direction:column;gap:16px}
+.card .ph{aspect-ratio:4/3;border-radius:var(--r-md)}
+.card__meta{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.card__tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);white-space:nowrap;padding-top:4px}
+.card p{color:var(--ink-soft);font-weight:300;font-size:.92rem;line-height:1.65}
+
+.feature{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--ink);min-height:clamp(300px,34vw,420px);display:flex;align-items:flex-end}
+.feature .ph{position:absolute;inset:0}
+.feature__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,.05) 30%,rgba(10,12,14,.86) 100%)}
+.feature__body{position:relative;z-index:2;padding:clamp(22px,3vw,36px);color:#fff;display:grid;gap:8px}
+.feature__body p{color:rgba(255,255,255,.72);font-weight:300;font-size:.92rem;max-width:44ch}
+
+/* list with rules */
+.ruled{border-top:1px solid var(--line)}
+.ruled li{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:start;padding:22px 0;border-bottom:1px solid var(--line)}
+.ruled .n{font-family:var(--serif);font-size:.95rem;color:var(--ember);padding-top:2px}
+.ruled h4{font-size:1.02rem;font-weight:500;margin-bottom:6px}
+.ruled p{color:var(--ink-soft);font-weight:300;font-size:.92rem}
+
+/* ---------- dark band ---------- */
+.band{background:var(--ink);color:#fff}
+.band .lead{color:rgba(255,255,255,.72)}
+.band .h2,.band .h1{color:#fff}
+
+/* ---------- editorial gallery (sobre nós) ---------- */
+.editorial{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(48px,7vw,86px)}
+.editorial .ph{border-radius:var(--r-md)}
+.e1{grid-column:1 / span 6;grid-row:1;aspect-ratio:4/3}
+.e2{grid-column:8 / span 5;grid-row:1;aspect-ratio:3/4;align-self:end}
+.e-note{grid-column:1 / span 5;grid-row:2;align-self:center;display:grid;gap:12px}
+.e3{grid-column:2 / span 5;grid-row:3;aspect-ratio:3/4}
+.e4{grid-column:7 / span 6;grid-row:3;aspect-ratio:4/3;align-self:center}
+
+/* ---------- split ---------- */
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:center}
+.split--rev .split__media{order:2}
+.split__media .ph{aspect-ratio:5/6;border-radius:var(--r-lg)}
+.split__body{display:grid;gap:20px;align-content:center}
+
+/* ---------- contact ---------- */
+.cta-band{position:relative;overflow:hidden;border-radius:var(--r-xl);background:var(--ink);isolation:isolate}
+.cta-band .ph{position:absolute;inset:0;z-index:-2}
+.cta-band__veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,rgba(10,12,14,.94) 12%,rgba(10,12,14,.62) 55%,rgba(10,12,14,.34) 100%)}
+.cta-band__body{padding:clamp(34px,5vw,72px);max-width:640px;color:#fff;display:grid;gap:18px}
+
+.contact-grid{display:grid;grid-template-columns:1fr .95fr;gap:clamp(28px,4vw,64px);align-items:start;margin-top:clamp(40px,6vw,72px)}
+.form{display:grid;gap:16px}
+.field{display:grid;gap:7px}
+.field label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
+.field input,.field select,.field textarea{
+  width:100%;padding:13px 16px;border-radius:var(--r-sm);
+  border:1px solid var(--line);background:rgba(255,255,255,.7);
+  font-size:.95rem;font-weight:300;transition:border-color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease)
+}
+.field textarea{min-height:128px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--ember);background:#fff;box-shadow:0 0 0 3px rgba(196,69,29,.12)
+}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form__note{font-size:.78rem;color:var(--ink-mute);font-weight:300}
+
+.info{display:grid;gap:4px;border-top:1px solid var(--line)}
+.info a,.info div{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.info dt,.info .k{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
+.info .v{font-size:1rem;font-weight:400}
+.info a .v{transition:color .3s var(--ease)}
+.info a:hover .v{color:var(--ember)}
+
+/* ---------- footer ---------- */
+.foot{background:var(--ink);color:#fff;padding-top:clamp(64px,9vw,110px);overflow:hidden}
+.foot__top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:clamp(28px,4vw,60px);padding-bottom:clamp(48px,7vw,80px);border-bottom:1px solid rgba(255,255,255,.12)}
+.foot h5{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.45);font-weight:500;margin:0 0 16px}
+.foot li a,.foot p{color:rgba(255,255,255,.72);font-weight:300;font-size:.93rem;line-height:2}
+.foot li a{transition:color .3s var(--ease)}
+.foot li a:hover{color:var(--ember-2)}
+.foot__bottom{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;padding-block:26px;font-size:.78rem;color:rgba(255,255,255,.42);font-weight:300}
+.wordmark{
+  font-family:var(--serif);font-size:clamp(1.7rem,10.4vw,9.5rem);line-height:.9;letter-spacing:-.04em;
+  color:rgba(255,255,255,.055);-webkit-text-stroke:1px rgba(255,255,255,.14);
+  text-align:center;padding-bottom:clamp(12px,2vw,26px);user-select:none;white-space:nowrap
+}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .95s var(--ease),transform .95s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:.08s}
+.reveal[data-d="2"]{transition-delay:.16s}
+.reveal[data-d="3"]{transition-delay:.24s}
+.reveal[data-d="4"]{transition-delay:.32s}
+.reveal[data-d="5"]{transition-delay:.4s}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .nav__menu{display:none}
+  .nav__tel{display:none}
+  .burger{display:grid}
+  .g-4{grid-template-columns:repeat(2,1fr)}
+  .contact-grid{grid-template-columns:1fr}
+  .foot__top{grid-template-columns:1fr 1fr}
+}
+@media (max-width:860px){
+  .g-3{grid-template-columns:repeat(2,1fr)}
+  .split{grid-template-columns:1fr}
+  .split--rev .split__media{order:0}
+  .split__media .ph{aspect-ratio:4/3}
+  .ribbon{grid-template-columns:repeat(2,1fr);gap:20px}
+  .editorial{grid-template-columns:repeat(6,1fr)}
+  .e1,.e2,.e3,.e4,.e-note{grid-row:auto}
+  .e1{grid-column:1 / span 6}
+  .e2{grid-column:1 / span 4}
+  .e3{grid-column:3 / span 4}
+  .e4{grid-column:1 / span 6}
+  .e-note{grid-column:1 / span 6}
+}
+@media (max-width:640px){
+  .g-2,.g-3,.g-4{grid-template-columns:1fr}
+  .field-row{grid-template-columns:1fr}
+  .foot__top{grid-template-columns:1fr}
+  .info a,.info div{grid-template-columns:1fr;gap:4px;padding:14px 0}
+  .hero__row{flex-direction:column;align-items:flex-start}
+  .btn{padding:12px 22px}
+  .d-br{display:none}
+  .wordmark{-webkit-text-stroke-width:.6px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="nav__brand" href="#topo" aria-label="Ignição Dinâmica — início">
+      <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4 14h6.2L9 22l9.8-12.4H12L13.5 2z"/></svg>
+      Ignição Dinâmica<sup>®</sup>
+    </a>
+
+    <nav class="nav__menu" id="menu" aria-label="Navegação principal">
+      <a href="#automoveis">Automóveis</a>
+      <a href="#pecas">Peças</a>
+      <a href="#barcos">Barcos</a>
+      <a href="#sobre">Sobre nós</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+
+    <div class="nav__cta">
+      <a class="nav__tel" href="tel:+351925770004">+351 925 770 004</a>
+      <a class="btn btn--light btn--sm" href="#contacto">Pedir orçamento</a>
+      <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="sheet">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- mobile sheet -->
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Menu">
+  <button class="sheet__close" id="sheetClose" aria-label="Fechar menu">&times;</button>
+  <a href="#automoveis">Automóveis</a>
+  <a href="#pecas">Peças</a>
+  <a href="#barcos">Barcos</a>
+  <a href="#sobre">Sobre nós</a>
+  <a href="#contacto">Contacto</a>
+  <div class="sheet__foot">
+    <a class="btn btn--ember btn--sm" href="tel:+351925770004">Ligar agora</a>
+    <a class="btn btn--outline-light btn--sm" href="https://wa.me/351925770004" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section class="hero" id="topo">
+  <div class="hero__bg">
+    <figure class="ph">
+      <img src="https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=3840"
+           srcset="https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=1280 1280w,
+                   https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=2400 2400w,
+                   https://unsplash.com/photos/mDyEVrc4uqw/download?force=true&amp;w=3840 3840w"
+           sizes="100vw" alt="Automóvel desportivo de luxo estacionado à entrada de um edifício clássico" fetchpriority="high">
+    </figure>
+  </div>
+  <div class="hero__veil"></div>
+  <div class="hero__grain"></div>
+
+  <div class="hero__content">
+    <div class="wrap">
+      <span class="eyebrow on-dark reveal">Portugal · Angola · Exportação global</span>
+
+      <h1 class="h-display hero__title reveal" data-d="1" style="margin-top:20px">
+        Automóveis, peças e embarcações <em>de exceção.</em>
+      </h1>
+
+      <div class="hero__row">
+        <p class="lead on-dark hero__sub reveal" data-d="2">
+          Há 25 anos a colocar viaturas de marcas de luxo, peças originais e embarcações
+          onde os nossos clientes estiverem — com canais diretos aos fabricantes e prazos
+          de entrega que poucos conseguem acompanhar.
+        </p>
+        <div class="hero__actions reveal" data-d="3">
+          <a class="btn btn--ember" href="#automoveis">
+            Ver automóveis
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--outline-light" href="#contacto">Fazer um pedido</a>
+        </div>
+      </div>
+
+      <div class="ribbon reveal" data-d="4">
+        <div><b data-count="25" data-suffix="">0</b><span>Anos de experiência</span></div>
+        <div><b data-count="2" data-suffix="">0</b><span>Continentes</span></div>
+        <div><b data-count="9" data-suffix="+">0</b><span>Marcas de luxo</span></div>
+        <div><b>24/48h</b><span>Resposta a pedidos</span></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══════════════ MARCAS ══════════════ -->
+<section class="brands">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">O nosso universo</span>
+      <h2 class="h2">Trabalhamos com as marcas mais<br class="d-br"> icónicas do mundo</h2>
+      <p class="lead">
+        Assessoria e aconselhamento no diagnóstico de avarias mecânicas e eletrónicas,
+        fornecimento de viaturas e exportação de peças para as marcas premium do mercado.
+      </p>
+    </div>
+
+    <div class="marquee reveal" data-d="1" aria-hidden="true">
+      <div class="marquee__track" id="track">
+        <span>Mercedes-Benz</span><span>BMW</span><span>Audi</span><span>Porsche</span>
+        <span>Land Rover</span><span>Lexus</span><span>Ferrari</span><span>Bentley</span><span>Aston Martin</span>
+      </div>
+    </div>
+
+    <div class="tuners reveal" data-d="2">
+      <span class="chip chip--solid">Preparadores oficiais</span>
+      <span class="chip">BRABUS</span>
+      <span class="chip">STARTECH</span>
+      <span class="chip">MANSORY</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ AUTOMÓVEIS ══════════════ -->
+<section class="sec" id="automoveis">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">01 — Automóveis</span>
+      <h2 class="h1">Viaturas novas, semi-novas<br class="d-br"> e blindadas</h2>
+      <p class="lead">
+        Servimos consumidores exigentes que procuram viaturas de marcas de luxo com prazos
+        de entrega rápidos. Dispomos ainda de uma vasta gama de viaturas blindadas,
+        para entrega imediata ou por encomenda.
+      </p>
+    </div>
+
+    <div class="grid g-3" style="margin-top:clamp(40px,6vw,68px)">
+      <article class="card reveal">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/1rCDLJoAmNk/download?force=true&amp;w=2000" alt="Berlina Mercedes-Benz preta estacionada">
+        </figure>
+        <div class="card__meta"><h3 class="h3">Berlinas &amp; Coupés</h3><span class="card__tag">Sob consulta</span></div>
+        <p>Classe executiva das marcas alemãs e britânicas, em versões novas ou semi-novas com histórico completo.</p>
+      </article>
+
+      <article class="card reveal" data-d="1">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/Ho98UeVC_nQ/download?force=true&amp;w=2000" alt="Range Rover preto num caminho de gravilha">
+        </figure>
+        <div class="card__meta"><h3 class="h3">SUV Premium</h3><span class="card__tag">Sob consulta</span></div>
+        <p>Land Rover, Mercedes-Benz, BMW, Audi, Porsche e Lexus — preparados para qualquer tipo de piso e clima.</p>
+      </article>
+
+      <article class="card reveal" data-d="2">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=2000" alt="Dois desportivos de luxo num showroom escuro">
+        </figure>
+        <div class="card__meta"><h3 class="h3">Desportivos &amp; Supercarros</h3><span class="card__tag">Sob consulta</span></div>
+        <p>Ferrari, Bentley, Aston Martin e Porsche. Unidades limitadas, procuradas por encomenda dirigida.</p>
+      </article>
+
+      <article class="card reveal">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/vr9e_sGANOg/download?force=true&amp;w=2000" alt="SUV preto estacionado em piso pavimentado">
+        </figure>
+        <div class="card__meta"><h3 class="h3">Viaturas Blindadas</h3><span class="card__tag">Entrega imediata</span></div>
+        <p>Vasta gama de viaturas blindadas disponíveis para entrega imediata ou construídas por encomenda.</p>
+      </article>
+
+      <article class="card reveal" data-d="1">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/OZPoquurg68/download?force=true&amp;w=2000" alt="Audi branco num showroom">
+        </figure>
+        <div class="card__meta"><h3 class="h3">Semi-novos selecionados</h3><span class="card__tag">Stock rotativo</span></div>
+        <p>Viaturas verificadas ponto a ponto antes do embarque, com relatório mecânico e eletrónico entregue ao cliente.</p>
+      </article>
+
+      <article class="card reveal" data-d="2">
+        <figure class="ph ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/VMPdo-jftBg/download?force=true&amp;w=2000" alt="Desportivos pretos alinhados num espaço interior">
+        </figure>
+        <div class="card__meta"><h3 class="h3">Preparações exclusivas</h3><span class="card__tag">BRABUS · MANSORY</span></div>
+        <p>Trabalhamos diretamente com BRABUS, STARTECH e MANSORY para preparações à medida de cada cliente.</p>
+      </article>
+    </div>
+
+    <!-- como trabalhamos -->
+    <div class="grid g-3" style="margin-top:clamp(48px,7vw,84px)">
+      <article class="feature reveal">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/mugRWvFwOnU/download?force=true&amp;w=2400" alt="Pormenor de um automóvel no piso de um showroom"></figure>
+        <div class="feature__veil"></div>
+        <div class="feature__body">
+          <span class="eyebrow on-dark">Origem</span>
+          <h3 class="h3" style="color:#fff">Canais diretos com os fabricantes</h3>
+          <p>Relação direta com os grandes construtores mundiais — sem intermediários a acrescentar tempo e custo.</p>
+        </div>
+      </article>
+
+      <article class="feature reveal" data-d="1">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/NXF9MI3zby0/download?force=true&amp;w=2400" alt="Contentores empilhados num navio de carga"></figure>
+        <div class="feature__veil"></div>
+        <div class="feature__body">
+          <span class="eyebrow on-dark">Transporte</span>
+          <h3 class="h3" style="color:#fff">Contentor fechado ou via aérea</h3>
+          <p>Todas as viaturas seguem por via marítima em contentor fechado ou por avião, com seguro e rastreio.</p>
+        </div>
+      </article>
+
+      <article class="feature reveal" data-d="2">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/vWVd3T3QzhY/download?force=true&amp;w=2400" alt="Traseira de um SUV preto numa rua"></figure>
+        <div class="feature__veil"></div>
+        <div class="feature__body">
+          <span class="eyebrow on-dark">Entrega</span>
+          <h3 class="h3" style="color:#fff">Prazos que se cumprem</h3>
+          <p>Documentação, despacho e entrega tratados de ponta a ponta, com acompanhamento em cada etapa.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ PEÇAS ══════════════ -->
+<section class="sec band" id="pecas">
+  <div class="wrap">
+    <div class="split">
+      <div class="split__media reveal">
+        <figure class="ph r-lg ph--zoom">
+          <img loading="lazy" src="https://unsplash.com/photos/k0HQnRcyEW0/download?force=true&amp;w=2400" alt="Compartimento do motor de um automóvel em pormenor">
+        </figure>
+      </div>
+
+      <div class="split__body">
+        <span class="eyebrow on-dark reveal">02 — Peças</span>
+        <h2 class="h1 reveal" data-d="1">Peças, acessórios<br> e pneus para<br> todas as marcas</h2>
+        <p class="lead on-dark reveal" data-d="2">
+          A exportação de peças, acessórios e pneus é uma das nossas áreas mais fortes —
+          para todas as marcas de automóveis, motos e camiões, aliada à rapidez de entrega
+          que os nossos clientes esperam.
+        </p>
+
+        <ul class="ruled reveal" data-d="3" style="border-color:rgba(255,255,255,.16)">
+          <li style="border-color:rgba(255,255,255,.16)">
+            <span class="n">01</span>
+            <div><h4 style="color:#fff">Automóveis</h4><p style="color:rgba(255,255,255,.66)">Peças de origem e equivalentes, de mecânica a eletrónica, para todas as marcas premium.</p></div>
+          </li>
+          <li style="border-color:rgba(255,255,255,.16)">
+            <span class="n">02</span>
+            <div><h4 style="color:#fff">Motos e moto 4</h4><p style="color:rgba(255,255,255,.66)">Componentes, consumíveis e acessórios para motociclos e quads de todas as cilindradas.</p></div>
+          </li>
+          <li style="border-color:rgba(255,255,255,.16)">
+            <span class="n">03</span>
+            <div><h4 style="color:#fff">Camiões e viaturas especiais</h4><p style="color:rgba(255,255,255,.66)">Pesados, viaturas de obra e equipamentos especiais — incluindo referências de difícil acesso.</p></div>
+          </li>
+        </ul>
+
+        <div class="reveal" data-d="4" style="margin-top:6px">
+          <a class="btn btn--light" href="#contacto">Pedir peça
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g-4" style="margin-top:clamp(52px,8vw,96px)">
+      <article class="card reveal">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/dYlVT5Ktj6U/download?force=true&amp;w=1600" alt="Pormenor de pneu e jante de liga leve"></figure>
+        <h3 class="h3" style="color:#fff">Pneus &amp; jantes</h3>
+        <p style="color:rgba(255,255,255,.62)">Todas as medidas e marcas, para uso urbano, todo-o-terreno ou desportivo.</p>
+      </article>
+      <article class="card reveal" data-d="1">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/e28chgiPyoo/download?force=true&amp;w=1600" alt="Pormenor detalhado de um motor de automóvel"></figure>
+        <h3 class="h3" style="color:#fff">Mecânica &amp; motor</h3>
+        <p style="color:rgba(255,255,255,.62)">Componentes de motor, transmissão, travagem e suspensão em origem ou equivalente.</p>
+      </article>
+      <article class="card reveal" data-d="2">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/xXmAAf5tmSY/download?force=true&amp;w=1600" alt="Compartimento do motor de um superdesportivo"></figure>
+        <h3 class="h3" style="color:#fff">Acessórios &amp; performance</h3>
+        <p style="color:rgba(255,255,255,.62)">Equipamento de série e preparações, incluindo referências BRABUS, STARTECH e MANSORY.</p>
+      </article>
+      <article class="card reveal" data-d="3">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/VurHDpO4VYI/download?force=true&amp;w=1600" alt="Vão do motor aberto numa oficina"></figure>
+        <h3 class="h3" style="color:#fff">Diagnóstico &amp; assessoria</h3>
+        <p style="color:rgba(255,255,255,.62)">Aconselhamento no diagnóstico de avarias mecânicas e eletrónicas antes de encomendar.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ BARCOS ══════════════ -->
+<section class="sec" id="barcos">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">03 — Barcos</span>
+      <h2 class="h1">Barcos e motas de água<br class="d-br"> das principais marcas</h2>
+      <p class="lead">
+        Da lancha de recreio ao iate, da mota de água ao semi-rígido: tratamos do pedido,
+        da aquisição e do transporte com o mesmo rigor que aplicamos às viaturas.
+      </p>
+    </div>
+
+    <div class="feature reveal" style="margin-top:clamp(40px,6vw,68px);min-height:clamp(340px,44vw,560px)">
+      <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/7wpIvUM9_oI/download?force=true&amp;w=3200" alt="Grande iate branco ancorado ao largo"></figure>
+      <div class="feature__veil"></div>
+      <div class="feature__body" style="max-width:620px">
+        <span class="eyebrow on-dark">Embarcações</span>
+        <h3 class="h2" style="color:#fff">Encomendas dirigidas,<br> entrega no porto que indicar</h3>
+        <p style="max-width:52ch">Selecionamos a embarcação, negociamos a compra e organizamos toda a logística marítima — incluindo documentação e seguro de transporte.</p>
+      </div>
+    </div>
+
+    <div class="grid g-3" style="margin-top:clamp(24px,3vw,34px)">
+      <article class="card reveal">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/EAa8xASFq8I/download?force=true&amp;w=2000" alt="Iate branco em mar aberto"></figure>
+        <div class="card__meta"><h3 class="h3">Iates &amp; cruzadores</h3><span class="card__tag">Por encomenda</span></div>
+        <p>Embarcações de recreio de média e grande dimensão, novas ou seminovas, das principais marcas do mercado.</p>
+      </article>
+      <article class="card reveal" data-d="1">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/f3HmMWkzHzo/download?force=true&amp;w=2000" alt="Lancha rápida em navegação"></figure>
+        <div class="card__meta"><h3 class="h3">Lanchas &amp; semi-rígidos</h3><span class="card__tag">Stock rotativo</span></div>
+        <p>Soluções ágeis para uso costeiro e desportivo, com motorização à escolha do cliente.</p>
+      </article>
+      <article class="card reveal" data-d="2">
+        <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/xrT7OLlDm5g/download?force=true&amp;w=2000" alt="Piloto numa mota de água em velocidade"></figure>
+        <div class="card__meta"><h3 class="h3">Motas de água</h3><span class="card__tag">Entrega rápida</span></div>
+        <p>Modelos das principais marcas do mercado, com peças e acessórios disponíveis em contínuo.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ SOBRE NÓS ══════════════ -->
+<section class="sec" id="sobre" style="background:var(--sand-2)">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow center">04 — Sobre nós</span>
+      <h2 class="h1">Desde há 25 anos a ligar<br class="d-br"> Portugal, Angola e o mundo</h2>
+      <p class="lead">
+        A Ignição Dinâmica nasce da vasta experiência dos seus quadros no sector dos
+        automóveis de luxo, em Portugal e em Angola. Servimos em exclusivo os mercados
+        africanos — em especial o mercado angolano — junto de clientes que exigem
+        marcas de topo, viaturas novas ou semi-novas e prazos de entrega curtos.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <a class="btn btn--ghost" href="#contacto">Falar connosco</a>
+      </div>
+    </div>
+
+    <div class="editorial">
+      <figure class="ph e1 reveal"><img loading="lazy" src="https://unsplash.com/photos/6zYQ4Fuvc1s/download?force=true&amp;w=2400" alt="Motor de um automóvel desportivo em pormenor"></figure>
+      <figure class="ph e2 reveal" data-d="1"><img loading="lazy" src="https://unsplash.com/photos/6qSgfIAmkYU/download?force=true&amp;w=2000" alt="Embarcação de recreio num clube náutico"></figure>
+
+      <div class="e-note reveal" data-d="2">
+        <span class="eyebrow">O que nos distingue</span>
+        <p class="small">
+          Uma estrutura pequena e direta, com acesso aos fabricantes e aos preparadores
+          oficiais. Cada pedido é acompanhado por uma só pessoa, do primeiro contacto
+          até à entrega.
+        </p>
+      </div>
+      <figure class="ph e3 reveal" data-d="1"><img loading="lazy" src="https://unsplash.com/photos/ukZvpBzz8RY/download?force=true&amp;w=2000" alt="Mota de água em navegação"></figure>
+      <figure class="ph e4 reveal" data-d="2"><img loading="lazy" src="https://unsplash.com/photos/VRbd6ss_LJI/download?force=true&amp;w=2400" alt="Grande embarcação branca em mar calmo"></figure>
+    </div>
+
+    <ul class="ruled reveal" style="margin-top:clamp(48px,7vw,80px)">
+      <li><span class="n">01</span><div><h4>Experiência acumulada</h4><p>Vinte e cinco anos de sector, com quadros vindos da distribuição e da assistência a marcas premium.</p></div></li>
+      <li><span class="n">02</span><div><h4>Dois mercados, uma operação</h4><p>Base em Portugal e ligação permanente a Angola, com conhecimento das exigências aduaneiras de ambos.</p></div></li>
+      <li><span class="n">03</span><div><h4>Do pedido à entrega</h4><p>Peças, automóveis, motos e moto 4, camiões e viaturas especiais, barcos e motas de água — num só interlocutor.</p></div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════ CONTACTO ══════════════ -->
+<section class="sec" id="contacto">
+  <div class="wrap">
+
+    <div class="cta-band reveal">
+      <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/JwWYrpS2ho4/download?force=true&amp;w=3200" alt="Interior de um automóvel desportivo de luxo"></figure>
+      <div class="cta-band__veil"></div>
+      <div class="cta-band__body">
+        <span class="eyebrow on-dark">05 — Contacto</span>
+        <h2 class="h1" style="color:#fff">Diga-nos o que procura.<br> Nós tratamos do resto.</h2>
+        <p class="lead on-dark">
+          Peças, automóveis, motos e moto 4, camiões e viaturas especiais, barcos e motas
+          de água. Envie o seu pedido e responderemos com disponibilidade, prazo e condições.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:6px">
+          <a class="btn btn--ember" href="https://wa.me/351925770004" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn btn--outline-light" href="tel:+351925770004">+351 925 770 004</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-grid">
+      <!-- formulário -->
+      <form class="form reveal" id="pedido" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="nome">Nome</label>
+            <input id="nome" name="nome" type="text" autocomplete="name" placeholder="O seu nome" required>
+          </div>
+          <div class="field">
+            <label for="tel">Telefone</label>
+            <input id="tel" name="tel" type="tel" autocomplete="tel" placeholder="+351 ...">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="nome@email.com" required>
+          </div>
+          <div class="field">
+            <label for="tipo">Tipo de pedido</label>
+            <select id="tipo" name="tipo">
+              <option>Peças</option>
+              <option>Automóveis</option>
+              <option>Motos e moto 4</option>
+              <option>Camiões e viaturas especiais</option>
+              <option>Barcos e motas de água</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="msg">Descrição do pedido</label>
+          <textarea id="msg" name="msg" placeholder="Marca, modelo, ano, referência da peça, destino de entrega…" required></textarea>
+        </div>
+
+        <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <button class="btn btn--ember" type="submit">
+            Enviar pedido
+            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <button class="btn btn--ghost" type="button" id="viaEmail">Enviar por e-mail</button>
+        </div>
+        <p class="form__note" id="formNote">O botão principal abre o WhatsApp com o pedido já preenchido.</p>
+      </form>
+
+      <!-- dados -->
+      <div class="reveal" data-d="1">
+        <span class="eyebrow">Onde estamos</span>
+        <div class="info" style="margin-top:20px">
+          <div>
+            <span class="k">Morada</span>
+            <span class="v">Rua da Cruz Vermelha, n.º 4 A<br>1600-053 Lisboa, Portugal</span>
+          </div>
+          <a href="tel:+351925770004">
+            <span class="k">Telefone</span>
+            <span class="v">+351 925 770 004</span>
+          </a>
+          <a href="https://wa.me/351925770004" target="_blank" rel="noopener">
+            <span class="k">WhatsApp</span>
+            <span class="v">+351 925 770 004</span>
+          </a>
+          <a href="mailto:ignicaodinamica@gmail.com">
+            <span class="k">E-mail</span>
+            <span class="v">ignicaodinamica@gmail.com</span>
+          </a>
+          <div>
+            <span class="k">Mercados</span>
+            <span class="v">Portugal · Angola · exportação global</span>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:22px">
+          Chamada para a rede móvel nacional. Pedidos internacionais são respondidos
+          em português, inglês ou francês.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot__top">
+      <div>
+        <a class="nav__brand" href="#topo" style="color:#fff;font-size:1.15rem">
+          <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4 14h6.2L9 22l9.8-12.4H12L13.5 2z"/></svg>
+          Ignição Dinâmica<sup>®</sup>
+        </a>
+        <p style="margin-top:16px;max-width:38ch">
+          Importação e exportação de automóveis, peças e embarcações.
+          Portugal e Angola, há 25 anos.
+        </p>
+        <div style="display:flex;gap:10px;margin-top:22px;flex-wrap:wrap">
+          <a class="btn btn--ember btn--sm" href="#contacto">Fazer um pedido</a>
+          <a class="btn btn--outline-light btn--sm" href="https://wa.me/351925770004" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+
+      <div>
+        <h5>Secções</h5>
+        <ul>
+          <li><a href="#automoveis">Automóveis</a></li>
+          <li><a href="#pecas">Peças</a></li>
+          <li><a href="#barcos">Barcos</a></li>
+          <li><a href="#sobre">Sobre nós</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h5>Contactos</h5>
+        <ul>
+          <li><a href="tel:+351925770004">+351 925 770 004</a></li>
+          <li><a href="mailto:ignicaodinamica@gmail.com">ignicaodinamica@gmail.com</a></li>
+          <li><a href="https://maps.google.com/?q=Rua+da+Cruz+Vermelha+4A+1600-053+Lisboa" target="_blank" rel="noopener">Rua da Cruz Vermelha, 4 A<br>1600-053 Lisboa</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot__bottom">
+      <span>© <span id="ano">2026</span> Ignição Dinâmica — Importação e Exportação de Automóveis, Lda.</span>
+      <span>Todos os direitos reservados.</span>
+    </div>
+  </div>
+
+  <div class="wordmark" aria-hidden="true">Ignição Dinâmica®</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- imagens: marcar carregadas / falhadas (fallback CSS assume o lugar) ---- */
+  function markImages(){
+    document.querySelectorAll('.ph img').forEach(function(img){
+      if(img.dataset.bound) return;
+      img.dataset.bound = '1';
+      if(img.complete && img.naturalWidth > 0){ img.classList.add('loaded'); return; }
+      img.addEventListener('load',  function(){ img.classList.add('loaded'); });
+      img.addEventListener('error', function(){ img.classList.add('failed'); });
+    });
+  }
+  markImages();
+  window.addEventListener('load', markImages);
+
+  /* ---- nav sticky ---- */
+  var nav = document.getElementById('nav');
+  function onScroll(){
+    if(window.scrollY > 40) nav.classList.add('is-stuck');
+    else nav.classList.remove('is-stuck');
+  }
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+
+  /* ---- menu mobile ---- */
+  var sheet  = document.getElementById('sheet'),
+      burger = document.getElementById('burger'),
+      close  = document.getElementById('sheetClose');
+
+  function setSheet(open){
+    sheet.classList.toggle('open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if(open){
+      sheet.querySelectorAll('a').forEach(function(a,i){ a.style.transitionDelay = (0.06*i + 0.05) + 's'; });
+    }
+  }
+  burger.addEventListener('click', function(){ setSheet(!sheet.classList.contains('open')); });
+  close.addEventListener('click', function(){ setSheet(false); });
+  sheet.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ setSheet(false); }); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setSheet(false); });
+
+  /* ---- reveal on scroll ---- */
+  var revealables = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.08});
+    revealables.forEach(function(el){ io.observe(el); });
+  } else {
+    revealables.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* ---- contadores ---- */
+  var counters = document.querySelectorAll('[data-count]');
+  function runCounter(el){
+    var target = parseFloat(el.dataset.count),
+        suffix = el.dataset.suffix || '',
+        start  = performance.now(),
+        dur    = 1400;
+    function step(now){
+      var t = Math.min(1, (now - start)/dur),
+          e = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(target * e) + suffix;
+      if(t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  if('IntersectionObserver' in window){
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ runCounter(en.target); cio.unobserve(en.target); }
+      });
+    }, {threshold:0.5});
+    counters.forEach(function(el){ cio.observe(el); });
+  } else {
+    counters.forEach(function(el){ el.textContent = el.dataset.count + (el.dataset.suffix||''); });
+  }
+
+  /* ---- marquee: duplicar conteúdo para loop contínuo ---- */
+  var track = document.getElementById('track');
+  if(track) track.innerHTML += track.innerHTML;
+
+  /* ---- nav ativa por secção ---- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('#menu a'));
+  var sections = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  if('IntersectionObserver' in window && sections.length){
+    var sio = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(!en.isIntersecting) return;
+        links.forEach(function(a){
+          a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id);
+        });
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){ sio.observe(s); });
+  }
+
+  /* ---- scroll suave com compensação da nav ---- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href');
+      if(id === '#' || id.length < 2) return;
+      var target = document.querySelector(id);
+      if(!target) return;
+      e.preventDefault();
+      var top = target.getBoundingClientRect().top + window.scrollY - 78;
+      window.scrollTo({top: top, behavior:'smooth'});
+      history.replaceState(null, '', id);
+    });
+  });
+
+  /* ---- formulário → WhatsApp / e-mail ---- */
+  var form = document.getElementById('pedido'),
+      note = document.getElementById('formNote');
+
+  function collect(){
+    var d = {
+      nome:  document.getElementById('nome').value.trim(),
+      tel:   document.getElementById('tel').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      tipo:  document.getElementById('tipo').value,
+      msg:   document.getElementById('msg').value.trim()
+    };
+    if(!d.nome || !d.email || !d.msg){
+      note.textContent = 'Preencha o nome, o e-mail e a descrição do pedido.';
+      note.style.color = '#C4451D';
+      return null;
+    }
+    note.textContent = 'O botão principal abre o WhatsApp com o pedido já preenchido.';
+    note.style.color = '';
+    return d;
+  }
+
+  function body(d){
+    return 'Pedido — ' + d.tipo + '\n\n'
+         + 'Nome: '     + d.nome  + '\n'
+         + 'E-mail: '   + d.email + '\n'
+         + 'Telefone: ' + (d.tel || '—') + '\n\n'
+         + d.msg;
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var d = collect(); if(!d) return;
+    window.open('https://wa.me/351925770004?text=' + encodeURIComponent(body(d)), '_blank', 'noopener');
+  });
+
+  document.getElementById('viaEmail').addEventListener('click', function(){
+    var d = collect(); if(!d) return;
+    window.location.href = 'mailto:ignicaodinamica@gmail.com'
+      + '?subject=' + encodeURIComponent('Pedido — ' + d.tipo + ' — ' + d.nome)
+      + '&body='    + encodeURIComponent(body(d));
+  });
+
+  /* ---- ano no rodapé ---- */
+  document.getElementById('ano').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
