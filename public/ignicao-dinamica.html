@@ -278,6 +278,21 @@ section{position:relative}
 .card__tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);white-space:nowrap;padding-top:4px}
 .card p{color:var(--ink-soft);font-weight:300;font-size:.92rem;line-height:1.65}
 
+/* cartões de viatura (nome + preço sobre a fotografia) */
+.vcard{position:relative;display:flex;align-items:flex-end;aspect-ratio:4/3;border-radius:var(--r-md);
+  overflow:hidden;background:var(--ink);box-shadow:0 20px 44px -30px rgba(16,18,21,.6);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.vcard:hover{transform:translateY(-4px);box-shadow:0 28px 58px -30px rgba(16,18,21,.72)}
+.vcard .ph{position:absolute;inset:0}
+.vcard:hover .ph img{transform:scale(1.06)}
+.vcard__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,0) 40%,rgba(10,12,14,.30) 66%,rgba(10,12,14,.88) 100%)}
+.vcard__body{position:relative;z-index:2;padding:clamp(16px,1.8vw,22px);color:#fff}
+.vcard__name{font-size:clamp(.98rem,1.2vw,1.1rem);font-weight:500;letter-spacing:-.01em}
+.vcard__price{font-size:.88rem;font-weight:300;color:rgba(255,255,255,.74);margin-top:3px}
+.vgrid__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:18px;margin-top:clamp(22px,3vw,34px)}
+.vgrid__foot .small{max-width:64ch;margin:0}
+
 .feature{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--ink);min-height:clamp(300px,34vw,420px);display:flex;align-items:flex-end}
 .feature .ph{position:absolute;inset:0}
 .feature__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,.05) 30%,rgba(10,12,14,.86) 100%)}
@@ -535,53 +550,69 @@ section{position:relative}
     </div>
 
     <div class="grid g-3" style="margin-top:clamp(40px,6vw,68px)">
-      <article class="card reveal">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/1rCDLJoAmNk/download?force=true&amp;w=2000" alt="Berlina Mercedes-Benz preta estacionada">
-        </figure>
-        <div class="card__meta"><h3 class="h3">Berlinas &amp; Coupés</h3><span class="card__tag">Sob consulta</span></div>
-        <p>Classe executiva das marcas alemãs e britânicas, em versões novas ou semi-novas com histórico completo.</p>
+      <article class="vcard reveal">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/eUDs6kqCxig/download?force=true&amp;w=2000" alt="Porsche 911 GT3 RS branco estacionado"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">Porsche 911 GT3 RS</h3>
+          <p class="vcard__price">241.350 €</p>
+        </div>
       </article>
 
-      <article class="card reveal" data-d="1">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/Ho98UeVC_nQ/download?force=true&amp;w=2000" alt="Range Rover preto num caminho de gravilha">
-        </figure>
-        <div class="card__meta"><h3 class="h3">SUV Premium</h3><span class="card__tag">Sob consulta</span></div>
-        <p>Land Rover, Mercedes-Benz, BMW, Audi, Porsche e Lexus — preparados para qualquer tipo de piso e clima.</p>
+      <article class="vcard reveal" data-d="1">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/AvjRe7jM6-c/download?force=true&amp;w=2000" alt="Lamborghini Huracán azul junto a um edifício"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">Lamborghini Huracán</h3>
+          <p class="vcard__price">265.500 €</p>
+        </div>
       </article>
 
-      <article class="card reveal" data-d="2">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=2000" alt="Dois desportivos de luxo num showroom escuro">
-        </figure>
-        <div class="card__meta"><h3 class="h3">Desportivos &amp; Supercarros</h3><span class="card__tag">Sob consulta</span></div>
-        <p>Ferrari, Bentley, Aston Martin e Porsche. Unidades limitadas, procuradas por encomenda dirigida.</p>
+      <article class="vcard reveal" data-d="2">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/qGzFSFyFSN0/download?force=true&amp;w=2000" alt="Mercedes-AMG GT cinzento"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">Mercedes-AMG GT R</h3>
+          <p class="vcard__price">165.000 €</p>
+        </div>
       </article>
 
-      <article class="card reveal">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/vr9e_sGANOg/download?force=true&amp;w=2000" alt="SUV preto estacionado em piso pavimentado">
-        </figure>
-        <div class="card__meta"><h3 class="h3">Viaturas Blindadas</h3><span class="card__tag">Entrega imediata</span></div>
-        <p>Vasta gama de viaturas blindadas disponíveis para entrega imediata ou construídas por encomenda.</p>
+      <article class="vcard reveal">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/H66GwDFwrUM/download?force=true&amp;w=2000" alt="Aston Martin Vantage branco num caminho de gravilha"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">Aston Martin Vantage</h3>
+          <p class="vcard__price">145.900 €</p>
+        </div>
       </article>
 
-      <article class="card reveal" data-d="1">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/OZPoquurg68/download?force=true&amp;w=2000" alt="Audi branco num showroom">
-        </figure>
-        <div class="card__meta"><h3 class="h3">Semi-novos selecionados</h3><span class="card__tag">Stock rotativo</span></div>
-        <p>Viaturas verificadas ponto a ponto antes do embarque, com relatório mecânico e eletrónico entregue ao cliente.</p>
+      <article class="vcard reveal" data-d="1">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/fvWLxoXsNVo/download?force=true&amp;w=2000" alt="McLaren 720S vermelho"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">McLaren 720S</h3>
+          <p class="vcard__price">299.000 €</p>
+        </div>
       </article>
 
-      <article class="card reveal" data-d="2">
-        <figure class="ph ph--zoom">
-          <img loading="lazy" src="https://unsplash.com/photos/VMPdo-jftBg/download?force=true&amp;w=2000" alt="Desportivos pretos alinhados num espaço interior">
-        </figure>
-        <div class="card__meta"><h3 class="h3">Preparações exclusivas</h3><span class="card__tag">BRABUS · MANSORY</span></div>
-        <p>Trabalhamos diretamente com BRABUS, STARTECH e MANSORY para preparações à medida de cada cliente.</p>
+      <article class="vcard reveal" data-d="2">
+        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/5CsHwC0AuJs/download?force=true&amp;w=2000" alt="Mercedes-AMG G63 preto"></figure>
+        <div class="vcard__veil"></div>
+        <div class="vcard__body">
+          <h3 class="vcard__name">Mercedes-AMG G63</h3>
+          <p class="vcard__price">179.000 €</p>
+        </div>
       </article>
+    </div>
+
+    <div class="vgrid__foot reveal">
+      <p class="small">
+        Exemplos de stock. Preços indicativos em euros, sujeitos a versão, equipamento e disponibilidade.
+        Vasta gama de <strong>viaturas blindadas</strong> para entrega imediata ou por encomenda.
+      </p>
+      <a class="link-u" href="#contacto">Consultar stock completo
+        <svg class="ico" style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
     </div>
 
     <!-- como trabalhamos -->
