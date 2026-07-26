@@ -236,10 +236,15 @@ section{position:relative}
 .r-xl{border-radius:var(--r-xl)}
 
 /* ---------- hero ---------- */
-.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;background:var(--ink)}
+/* o hero acompanha a proporção da fotografia (3:2), para que ela apareça
+   inteira em vez de cortada em cima e em baixo */
+.hero{position:relative;width:100%;aspect-ratio:1536/1024;
+  display:flex;align-items:flex-end;overflow:hidden;background:var(--ink)}
 .hero__bg{position:absolute;inset:0;z-index:0}
 .hero__bg .ph{width:100%;height:100%}
-.hero__bg img{transform:scale(1.06)}
+/* contain garante que nada é cortado quando a altura mínima entra em ação
+   (ecrãs estreitos); em ecrãs largos coincide com a proporção do hero */
+.hero__bg img{object-fit:contain;object-position:center top}
 .hero__veil{
   position:absolute;inset:0;z-index:1;
   /* painel escuro à esquerda: assenta o texto e absorve o logótipo da parede,
@@ -394,6 +399,19 @@ section{position:relative}
 .reveal[data-d="5"]{transition-delay:.4s}
 
 /* ---------- responsive ---------- */
+
+/* Abaixo de ~1180px o texto do hero deixa de caber dentro da proporção 3:2 da
+   fotografia. Em vez de a cortar, ela passa a ocupar uma faixa completa no topo
+   e o texto assenta por baixo — a altura volta a ser ditada pelo conteúdo. */
+@media (max-width:1180px){
+  .hero{aspect-ratio:auto}
+  .hero__bg,.hero__veil,.hero__grain{height:66.7vw;bottom:auto}
+  .hero__veil{background:linear-gradient(180deg,
+    rgba(8,10,12,.58) 0%, rgba(8,10,12,.10) 30%,
+    rgba(8,10,12,.52) 72%, var(--ink) 100%)}
+  .hero__content{padding-top:calc(66.7vw + 30px);padding-bottom:46px}
+}
+
 @media (max-width:1080px){
   .nav__menu{display:none}
   .nav__tel{display:none}
@@ -416,6 +434,12 @@ section{position:relative}
   .e4{grid-column:1 / span 6}
   .e-note{grid-column:1 / span 6}
 }
+/* abaixo disto a assinatura, o botão e o menu já não cabem na barra ao mesmo
+   tempo — o botão sai (continua disponível dentro do menu) */
+@media (max-width:520px){
+  .nav__cta .btn{display:none}
+}
+
 @media (max-width:640px){
   .g-2,.g-3,.g-4{grid-template-columns:1fr}
   .field-row{grid-template-columns:1fr}
