@@ -287,9 +287,12 @@ section{position:relative}
 .brands{padding-block:clamp(56px,8vw,92px);border-bottom:1px solid var(--line-soft)}
 .marquee{margin-top:40px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
-.marquee__track{display:flex;gap:56px;width:max-content;animation:slide 42s linear infinite}
-.marquee:hover .marquee__track{animation-play-state:paused}
-.marquee span{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.75rem);color:var(--ink);opacity:.42;white-space:nowrap;transition:opacity .3s var(--ease)}
+/* a duração é calculada em JS a partir da largura, para a velocidade ser
+   sempre a mesma (~78 px/s) independentemente do número de marcas */
+.marquee__track{display:flex;gap:clamp(40px,4vw,68px);width:max-content;
+  animation:slide var(--dur,18s) linear infinite;will-change:transform}
+.marquee span{font-family:var(--serif);font-size:clamp(1.15rem,2.1vw,1.75rem);
+  color:var(--ink);opacity:.58;white-space:nowrap;transition:opacity .3s var(--ease)}
 .marquee span:hover{opacity:1}
 @keyframes slide{to{transform:translateX(-50%)}}
 .tuners{margin-top:44px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px}
@@ -1122,9 +1125,37 @@ section{position:relative}
     counters.forEach(function(el){ el.textContent = el.dataset.count + (el.dataset.suffix||''); });
   }
 
-  /* ---- marquee: duplicar conteúdo para loop contínuo ---- */
+  /* ---- desfile das marcas ----
+     Repete o conjunto até uma volta cobrir a largura visível (senão abria um
+     vazio em ecrãs largos), duplica-o para o ciclo fechar sem salto, e calcula
+     a duração a partir da largura para a velocidade ser sempre a mesma. ---- */
   var track = document.getElementById('track');
-  if(track) track.innerHTML += track.innerHTML;
+  if(track){
+    var oneSet = track.innerHTML;
+    var frame  = track.parentElement;
+    var SPEED  = 78;                       // píxeis por segundo
+
+    function buildMarquee(){
+      track.style.animation = 'none';       // medir sem transformação a interferir
+      track.innerHTML = oneSet;
+      var guard = 0;
+      while(track.getBoundingClientRect().width < frame.clientWidth && guard++ < 16){
+        track.innerHTML += oneSet;
+      }
+      var lap = track.getBoundingClientRect().width;   // largura de uma volta
+      track.innerHTML += track.innerHTML;              // duas voltas → loop contínuo
+      track.style.setProperty('--dur', (lap / SPEED).toFixed(1) + 's');
+      track.style.animation = '';
+    }
+
+    buildMarquee();
+
+    var rt = null;
+    window.addEventListener('resize', function(){
+      clearTimeout(rt);
+      rt = setTimeout(buildMarquee, 250);
+    });
+  }
 
   /* ---- nav ativa por secção ---- */
   var links = Array.prototype.slice.call(document.querySelectorAll('#menu a'));
