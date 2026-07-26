@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ignição Dinâmica® — Automóveis, Peças, Barcos | Portugal &amp; Angola</title>
+<title>Ignição Dinâmica — Automóveis, Peças, Barcos | Portugal &amp; Angola</title>
 <meta name="description" content="25 anos no sector dos automóveis de luxo, em Portugal e Angola. Importação e exportação de viaturas, viaturas blindadas, peças, acessórios e pneus para todas as marcas, barcos e motas de água.">
 <meta name="theme-color" content="#101215">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_PT">
-<meta property="og:title" content="Ignição Dinâmica® — Automóveis, Peças, Barcos">
+<meta property="og:title" content="Ignição Dinâmica — Automóveis, Peças, Barcos">
 <meta property="og:description" content="Automóveis de luxo, viaturas blindadas, peças e embarcações. De Portugal e para o mundo, com entrega rápida.">
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101215'/%3E%3Cpath d='M36 8 20 36h10l-4 20 22-30H37l45-18z' fill='%23C4451D' transform='scale(0.86) translate(6 5)'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%23101215'/%3E%3Cg%20transform='translate(4,21)%20scale(1.08)'%3E%3Cpath%20d='M3%2016C8%202.5%2020%202%2026%2011S44%2020.5%2049%207'%20stroke='%233FB3D6'%20stroke-width='7'%20stroke-linecap='round'%20fill='none'/%3E%3C/g%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,6 +38,11 @@
   --ember:     #C4451D;
   --ember-2:   #E2762E;
   --white:     #FFFFFF;
+
+  /* cores da marca (logótipo Ignição Dinâmica) */
+  --brand:     #1E7BB0;
+  --brand-2:   #3FB3D6;
+  --brand-ink: #2D5468;
 
   --r-sm: 10px;
   --r-md: 18px;
@@ -148,8 +153,12 @@ section{position:relative}
   -webkit-backdrop-filter:blur(16px) saturate(1.4);
   transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
 }
-.nav__brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.02rem;letter-spacing:-.01em;color:#fff;transition:color .45s var(--ease)}
-.nav__brand .spark{width:16px;height:16px;flex:none;color:var(--ember)}
+/* logótipo: onda por cima da assinatura, como na marca */
+.nav__brand{display:inline-flex;flex-direction:column;align-items:center;gap:3px;
+  line-height:1;color:#fff;transition:color .45s var(--ease)}
+.nav__brand .wave{width:44px;height:auto;display:block;flex:none}
+.nav__brand .name{font-family:var(--sans);font-size:.94rem;font-weight:500;
+  letter-spacing:.055em;white-space:nowrap}
 .nav__menu{display:flex;align-items:center;gap:4px}
 .nav__menu a{
   position:relative;padding:8px 15px;border-radius:999px;font-size:.83rem;font-weight:400;
@@ -172,7 +181,7 @@ section{position:relative}
   border-color:var(--line);
   box-shadow:0 14px 44px -26px rgba(16,18,21,.5);
 }
-.nav.is-stuck .nav__brand{color:var(--ink)}
+.nav.is-stuck .nav__brand{color:var(--brand-ink)}
 .nav.is-stuck .nav__menu a{color:var(--ink-soft)}
 .nav.is-stuck .nav__menu a:hover,.nav.is-stuck .nav__menu a.active{color:var(--ink)}
 .nav.is-stuck .nav__tel{color:var(--ink-soft)}
@@ -243,7 +252,10 @@ section{position:relative}
 .hero__row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:34px}
 .hero__sub{max-width:46ch}
 .hero__actions{display:flex;flex-wrap:wrap;gap:12px}
-.nav__brand sup{font-size:.46em;vertical-align:baseline;position:relative;top:-.72em;margin-left:-1px;letter-spacing:0}
+.brand-defs{position:absolute;width:0;height:0;overflow:hidden}
+.nav__brand--foot{align-items:flex-start}
+.nav__brand--foot .wave{width:48px}
+.nav__brand--foot .name{font-size:1.06rem}
 
 /* stats ribbon */
 .ribbon{border-top:1px solid rgba(255,255,255,.14);margin-top:clamp(34px,6vh,60px);padding-top:26px;
@@ -420,12 +432,24 @@ section{position:relative}
 
 <body>
 
+<!-- gradiente da onda do logótipo, partilhado pelas várias instâncias -->
+<svg class="brand-defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="idWave" x1="0" y1="0" x2="52" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3FB3D6"/>
+      <stop offset="1" stop-color="#15619E"/>
+    </linearGradient>
+  </defs>
+</svg>
+
 <!-- ══════════════ NAV ══════════════ -->
 <header class="nav" id="nav">
   <div class="nav__inner">
     <a class="nav__brand" href="#topo" aria-label="Ignição Dinâmica — início">
-      <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4 14h6.2L9 22l9.8-12.4H12L13.5 2z"/></svg>
-      Ignição Dinâmica<sup>®</sup>
+      <svg class="wave" viewBox="0 0 52 22" fill="none" aria-hidden="true">
+        <path d="M3 16C8 2.5 20 2 26 11S44 20.5 49 7" stroke="url(#idWave)" stroke-width="7" stroke-linecap="round"/>
+      </svg>
+      <span class="name">Ignição Dinâmica</span>
     </a>
 
     <nav class="nav__menu" id="menu" aria-label="Navegação principal">
@@ -464,16 +488,14 @@ section{position:relative}
 <section class="hero" id="topo">
   <div class="hero__bg">
     <figure class="ph">
-      <!-- showroom de automóveis de luxo. data-fallback = fotografias alternativas,
-           tentadas por ordem caso a principal não carregue -->
+      <!-- Fotografia do showroom da Ignição Dinâmica.
+           Coloque o ficheiro em  public/img/hero-showroom.jpg  (ver img/README.md).
+           Enquanto não existir, entram por ordem as alternativas de data-fallback. -->
       <img id="heroImg"
-           src="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=3840"
-           srcset="https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=1280 1280w,
-                   https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=2400 2400w,
-                   https://unsplash.com/photos/_fTHxOafgoM/download?force=true&amp;w=3840 3840w"
-           sizes="100vw"
-           data-fallback="VMPdo-jftBg,OZPoquurg68,mDyEVrc4uqw"
-           alt="Automóveis desportivos de luxo expostos num showroom" fetchpriority="high">
+           src="img/hero-showroom.jpg"
+           data-fallback="_fTHxOafgoM,VMPdo-jftBg,OZPoquurg68"
+           alt="Showroom da Ignição Dinâmica com automóveis de luxo em exposição"
+           fetchpriority="high">
     </figure>
   </div>
   <div class="hero__veil"></div>
@@ -912,9 +934,11 @@ section{position:relative}
   <div class="wrap">
     <div class="foot__top">
       <div>
-        <a class="nav__brand" href="#topo" style="color:#fff;font-size:1.15rem">
-          <svg class="spark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2 4 14h6.2L9 22l9.8-12.4H12L13.5 2z"/></svg>
-          Ignição Dinâmica<sup>®</sup>
+        <a class="nav__brand nav__brand--foot" href="#topo" style="color:#fff">
+          <svg class="wave" viewBox="0 0 52 22" fill="none" aria-hidden="true">
+            <path d="M3 16C8 2.5 20 2 26 11S44 20.5 49 7" stroke="url(#idWave)" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+          <span class="name">Ignição Dinâmica</span>
         </a>
         <p style="margin-top:16px;max-width:38ch">
           Importação e exportação de automóveis, peças e embarcações.
@@ -953,7 +977,7 @@ section{position:relative}
     </div>
   </div>
 
-  <div class="wordmark" aria-hidden="true">Ignição Dinâmica®</div>
+  <div class="wordmark" aria-hidden="true">Ignição Dinâmica</div>
 </footer>
 
 <script>
