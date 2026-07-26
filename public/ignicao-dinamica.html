@@ -44,13 +44,19 @@
   --brand-2:   #2E9BD4;   /* azul da onda sobre fundo escuro */
   --brand-ink: #1E757F;   /* verde-azulado da assinatura */
 
-  --r-sm: 10px;
-  --r-md: 18px;
-  --r-lg: 26px;
-  --r-xl: 34px;
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 28px;
+  --r-xl: 36px;
+
+  /* moldura branca das fotografias e elevação dos cartões */
+  --frame: 7px;
+  --sh-1: 0 1px 2px rgba(16,18,21,.04), 0 10px 24px -14px rgba(16,18,21,.22);
+  --sh-2: 0 2px 4px rgba(16,18,21,.05), 0 22px 48px -26px rgba(16,18,21,.34);
+  --sh-3: 0 3px 6px rgba(16,18,21,.06), 0 34px 64px -30px rgba(16,18,21,.42);
 
   --pad: clamp(20px, 5vw, 64px);
-  --sec: clamp(72px, 11vw, 150px);
+  --sec: clamp(88px, 12vw, 172px);
 
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --serif: "Playfair Display", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
@@ -106,7 +112,7 @@ section{position:relative}
 .small{font-size:.875rem;color:var(--ink-soft);font-weight:300;line-height:1.7}
 .italic{font-family:var(--serif);font-style:italic}
 
-.sec-head{display:flex;flex-direction:column;gap:18px;align-items:center;text-align:center;max-width:760px;margin-inline:auto}
+.sec-head{display:flex;flex-direction:column;gap:22px;align-items:center;text-align:center;max-width:760px;margin-inline:auto}
 .sec-head p{max-width:60ch}
 .sec-head.left{align-items:flex-start;text-align:left;margin-inline:0}
 .d-br{display:inline}
@@ -115,13 +121,13 @@ section{position:relative}
 .btn{
   --bg:var(--ink); --fg:#fff; --bd:var(--ink);
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:13px 26px;border-radius:999px;border:1px solid var(--bd);
+  padding:14px 28px;border-radius:999px;border:1px solid var(--bd);
   background:var(--bg);color:var(--fg);
-  font-size:.82rem;font-weight:500;letter-spacing:.05em;text-transform:uppercase;
-  cursor:pointer;white-space:nowrap;
+  font-size:.94rem;font-weight:500;letter-spacing:-.002em;
+  cursor:pointer;white-space:nowrap;box-shadow:var(--sh-1);
   transition:transform .4s var(--ease), background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
 }
-.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px -14px rgba(16,18,21,.55)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px -16px rgba(16,18,21,.5)}
 .btn:active{transform:translateY(0)}
 .btn--ember{--bg:var(--ember);--bd:var(--ember)}
 .btn--ember:hover{--bg:#A93916;--bd:#A93916}
@@ -130,13 +136,13 @@ section{position:relative}
 .btn--light{--bg:#fff;--fg:var(--ink);--bd:#fff}
 .btn--outline-light{--bg:transparent;--fg:#fff;--bd:rgba(255,255,255,.35)}
 .btn--outline-light:hover{--bg:#fff;--fg:var(--ink);--bd:#fff}
-.btn--sm{padding:10px 20px;font-size:.74rem}
+.btn--sm{padding:11px 22px;font-size:.86rem}
 .btn .ico{width:15px;height:15px;flex:none;transition:transform .4s var(--ease)}
 .btn:hover .ico{transform:translateX(3px)}
 
 .link-u{
-  display:inline-flex;align-items:center;gap:8px;font-size:.8rem;font-weight:500;
-  letter-spacing:.06em;text-transform:uppercase;padding-bottom:3px;
+  display:inline-flex;align-items:center;gap:8px;font-size:.92rem;font-weight:500;
+  letter-spacing:-.002em;padding-bottom:4px;
   border-bottom:1px solid var(--line);transition:border-color .3s var(--ease),color .3s var(--ease)
 }
 .link-u:hover{border-color:var(--ember);color:var(--ember)}
@@ -297,17 +303,25 @@ section{position:relative}
 .g-3{grid-template-columns:repeat(3,1fr)}
 .g-4{grid-template-columns:repeat(4,1fr)}
 
-.card{display:flex;flex-direction:column;gap:16px}
-.card .ph{aspect-ratio:4/3;border-radius:var(--r-md)}
+.card{display:flex;flex-direction:column;gap:18px}
+/* moldura branca à volta da fotografia. É uma borda, não padding: o recorte
+   acontece dentro dela, por isso o zoom do hover nunca invade a moldura. */
+.card .ph{aspect-ratio:4/3;border-radius:var(--r-lg);
+  border:var(--frame) solid #fff;box-shadow:var(--sh-2);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.card:hover .ph{transform:translateY(-3px);box-shadow:var(--sh-3)}
+.band .card .ph{border-color:rgba(255,255,255,.11);box-shadow:none}
+.band .card:hover .ph{box-shadow:none;border-color:rgba(255,255,255,.2)}
 .card__meta{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .card__tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);white-space:nowrap;padding-top:4px}
 .card p{color:var(--ink-soft);font-weight:300;font-size:.92rem;line-height:1.65}
 
 /* cartões de viatura (nome + preço sobre a fotografia) */
-.vcard{position:relative;display:flex;align-items:flex-end;aspect-ratio:4/3;border-radius:var(--r-md);
-  overflow:hidden;background:var(--ink);box-shadow:0 20px 44px -30px rgba(16,18,21,.6);
+.vcard{position:relative;display:flex;align-items:flex-end;aspect-ratio:4/3;
+  border-radius:var(--r-lg);border:var(--frame) solid #fff;
+  overflow:hidden;background:var(--ink);box-shadow:var(--sh-2);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
-.vcard:hover{transform:translateY(-4px);box-shadow:0 28px 58px -30px rgba(16,18,21,.72)}
+.vcard:hover{transform:translateY(-4px);box-shadow:var(--sh-3)}
 .vcard .ph{position:absolute;inset:0}
 .vcard:hover .ph img{transform:scale(1.06)}
 .vcard__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,0) 40%,rgba(10,12,14,.30) 66%,rgba(10,12,14,.88) 100%)}
@@ -318,7 +332,10 @@ section{position:relative}
   gap:18px;margin-top:clamp(22px,3vw,34px)}
 .vgrid__foot .small{max-width:64ch;margin:0}
 
-.feature{position:relative;border-radius:var(--r-lg);overflow:hidden;background:var(--ink);min-height:clamp(300px,34vw,420px);display:flex;align-items:flex-end}
+.feature{position:relative;border-radius:var(--r-lg);border:var(--frame) solid #fff;
+  box-shadow:var(--sh-2);overflow:hidden;background:var(--ink);
+  min-height:clamp(300px,34vw,420px);display:flex;align-items:flex-end}
+.band .feature{border-color:rgba(255,255,255,.11);box-shadow:none}
 .feature .ph{position:absolute;inset:0}
 .feature__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,.05) 30%,rgba(10,12,14,.86) 100%)}
 .feature__body{position:relative;z-index:2;padding:clamp(22px,3vw,36px);color:#fff;display:grid;gap:8px}
@@ -338,7 +355,7 @@ section{position:relative}
 
 /* ---------- editorial gallery (sobre nós) ---------- */
 .editorial{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(48px,7vw,86px)}
-.editorial .ph{border-radius:var(--r-md)}
+.editorial .ph{border-radius:var(--r-lg);border:var(--frame) solid #fff;box-shadow:var(--sh-2)}
 .e1{grid-column:1 / span 6;grid-row:1;aspect-ratio:4/3}
 .e2{grid-column:8 / span 5;grid-row:1;aspect-ratio:3/4;align-self:end}
 .e-note{grid-column:1 / span 5;grid-row:2;align-self:center;display:grid;gap:12px}
@@ -348,7 +365,9 @@ section{position:relative}
 /* ---------- split ---------- */
 .split{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:center}
 .split--rev .split__media{order:2}
-.split__media .ph{aspect-ratio:5/6;border-radius:var(--r-lg)}
+.split__media .ph{aspect-ratio:5/6;border-radius:var(--r-lg);
+  border:var(--frame) solid #fff;box-shadow:var(--sh-2)}
+.band .split__media .ph{border-color:rgba(255,255,255,.11);box-shadow:none}
 .split__body{display:grid;gap:20px;align-content:center}
 
 /* ---------- contact ---------- */
@@ -601,7 +620,7 @@ section{position:relative}
       </p>
     </div>
 
-    <div class="grid g-3" style="margin-top:clamp(40px,6vw,68px)">
+    <div class="grid g-3" style="margin-top:clamp(54px,7.5vw,90px)">
       <article class="vcard reveal">
         <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/eUDs6kqCxig/download?force=true&amp;w=2000" alt="Porsche 911 GT3 RS branco estacionado"></figure>
         <div class="vcard__veil"></div>
@@ -668,7 +687,7 @@ section{position:relative}
     </div>
 
     <!-- como trabalhamos -->
-    <div class="grid g-3" style="margin-top:clamp(48px,7vw,84px)">
+    <div class="grid g-3" style="margin-top:clamp(60px,8vw,100px)">
       <article class="feature reveal">
         <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/mugRWvFwOnU/download?force=true&amp;w=2400" alt="Pormenor de um automóvel no piso de um showroom"></figure>
         <div class="feature__veil"></div>
@@ -744,7 +763,7 @@ section{position:relative}
       </div>
     </div>
 
-    <div class="grid g-4" style="margin-top:clamp(52px,8vw,96px)">
+    <div class="grid g-4" style="margin-top:clamp(64px,9vw,110px)">
       <article class="card reveal">
         <figure class="ph ph--zoom r-md"><img loading="lazy" src="https://unsplash.com/photos/dYlVT5Ktj6U/download?force=true&amp;w=1600" alt="Pormenor de pneu e jante de liga leve"></figure>
         <h3 class="h3" style="color:#fff">Pneus &amp; jantes</h3>
@@ -781,7 +800,7 @@ section{position:relative}
       </p>
     </div>
 
-    <div class="feature reveal" style="margin-top:clamp(40px,6vw,68px);min-height:clamp(340px,44vw,560px)">
+    <div class="feature reveal" style="margin-top:clamp(54px,7.5vw,90px);min-height:clamp(340px,44vw,560px)">
       <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/7wpIvUM9_oI/download?force=true&amp;w=3200" alt="Grande iate branco ancorado ao largo"></figure>
       <div class="feature__veil"></div>
       <div class="feature__body" style="max-width:620px">
