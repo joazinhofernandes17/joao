@@ -262,43 +262,30 @@ section{position:relative}
 .r-lg{border-radius:var(--r-lg)}
 .r-xl{border-radius:var(--r-xl)}
 
-/* ---------- hero ---------- */
-/* o hero cabe no ecrã; a fotografia aparece inteira lá dentro */
-.hero{position:relative;width:100%;min-height:100vh;min-height:100svh;
-  display:flex;align-items:flex-end;overflow:hidden;background:var(--ink)}
-.hero__bg{position:absolute;inset:0;z-index:0}
-.hero__bg .ph{width:100%;height:100%;background:transparent}
-.hero__bg img{position:absolute;inset:0;width:100%;height:100%}
-/* a fotografia preenche o hero de lado a lado. O enquadramento é 3:2 e o ecrã
-   é mais largo, por isso sobra altura: sai a faixa de teto em cima e a de chão
-   em baixo, que não têm conteúdo. O logótipo da parede e os automóveis ficam. */
-.hero__bg #heroImg{object-fit:cover;object-position:center 48%}
-.hero__veil{
-  position:absolute;inset:0;z-index:1;
-  /* A fotografia é clara. Em vez de a escurecer toda — que a deixava baça — o
-     escurecimento concentra-se num painel à esquerda, onde assenta o texto, e
-     desaparece antes do meio para o showroom se manter limpo e luminoso.
-     A segunda camada só segura a barra no topo e a linha de números em baixo. */
-  background:
-    linear-gradient(96deg,  rgba(6,9,12,.94) 0%,  rgba(6,9,12,.88) 26%,
-                            rgba(6,9,12,.62) 45%, rgba(6,9,12,.20) 66%,
-                            rgba(6,9,12,0)  100%),
-    linear-gradient(180deg, rgba(6,9,12,.42) 0%,  rgba(6,9,12,0)    20%,
-                            rgba(6,9,12,0)   54%, rgba(6,9,12,.64) 100%);
-}
-.hero__grain{position:absolute;inset:0;z-index:2;opacity:.10;mix-blend-mode:overlay;pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E")}
-.hero__content{position:relative;z-index:3;width:100%;padding-block:clamp(120px,16vh,180px) clamp(40px,7vh,72px)}
-.hero__title{color:#fff;max-width:16ch}
+/* ---------- hero ----------
+   Duas colunas: o texto à esquerda, sobre o preto, e a fotografia à direita,
+   emoldurada e inteira. Nada assenta por cima dela — a moldura tem a mesma
+   proporção do enquadramento, por isso não há corte nem ampliação. */
+.hero{position:relative;width:100%;background:var(--ink);
+  min-height:100vh;min-height:100svh;display:flex;align-items:center;
+  padding-block:clamp(104px,13vh,148px) clamp(34px,6vh,58px)}
+.hero__inner{display:grid;width:100%;align-items:center;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.16fr);
+  gap:clamp(26px,3.5vh,44px) clamp(28px,4vw,64px)}
+.hero__text{display:grid;gap:clamp(15px,1.7vw,22px);align-content:center}
+.hero__title{color:var(--text);max-width:15ch}
 .hero__title em{font-style:normal;font-weight:500;color:var(--ember-2)}
-.hero__row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:40px;margin-top:34px}
-.hero__sub{max-width:46ch}
-.hero__actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero__sub{max-width:48ch}
+.hero__actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.hero__media{aspect-ratio:3/2;border-radius:var(--r-lg);
+  border:var(--frame) solid var(--frame-c);box-shadow:var(--sh-2)}
+.hero__media img{width:100%;height:100%;object-fit:cover}
+
 .nav.is-stuck .nav__brand .wave{color:var(--brand)}
 .nav__brand--foot{font-size:1.04rem}
 
 /* stats ribbon */
-.ribbon{border-top:1px solid rgba(201,162,39,.38);margin-top:clamp(34px,6vh,60px);padding-top:26px;
+.ribbon{grid-column:1 / -1;border-top:1px solid rgba(201,162,39,.38);padding-top:clamp(20px,3vh,28px);
   display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .ribbon div{display:grid;gap:4px}
 .ribbon b{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:600;letter-spacing:-.03em;color:var(--ember-2);line-height:1}
@@ -456,18 +443,12 @@ section{position:relative}
 
 /* ---------- responsive ---------- */
 
-/* Em ecrãs estreitos a fotografia centrada ficaria uma tira minúscula no meio
-   do hero. Passa a ocupar uma faixa completa no topo, na sua proporção, com o
-   texto por baixo — a altura volta a ser ditada pelo conteúdo. */
-@media (max-width:860px){
-  .hero{min-height:0}
-  .hero__bg,.hero__veil,.hero__grain{height:66.7vw;bottom:auto}
-  .hero__bg #heroImg{object-fit:contain}   /* a faixa é 3:2, mostra tudo */
-  /* só o suficiente para a barra assentar no topo; o resto da faixa fica limpo
-     e termina a direito contra o fundo escuro, sem esbatido */
-  .hero__veil{background:linear-gradient(180deg,
-    rgba(6,9,12,.62) 0%, rgba(6,9,12,.10) 30%, rgba(6,9,12,0) 58%)}
-  .hero__content{padding-top:calc(66.7vw + 30px);padding-bottom:46px}
+/* Em coluna única quando não há largura para as duas: a fotografia primeiro,
+   o texto por baixo. */
+@media (max-width:1000px){
+  .hero{min-height:0;padding-block:clamp(96px,12vh,124px) clamp(30px,5vh,46px)}
+  .hero__inner{grid-template-columns:1fr}
+  .hero__media{order:-1}
 }
 
 @media (max-width:1080px){
@@ -565,52 +546,49 @@ section{position:relative}
 
 <!-- ══════════════ HERO ══════════════ -->
 <section class="hero" id="topo">
-  <div class="hero__bg">
-    <figure class="ph">
-      <!-- Fotografia do showroom da Ignição Dinâmica.
-           Coloque o ficheiro em  public/img/hero-showroom.jpg  (ver img/README.md).
-           Enquanto não existir, entram por ordem as alternativas de data-fallback. -->
+  <div class="wrap hero__inner">
+
+    <div class="hero__text">
+      <span class="eyebrow on-dark reveal">Portugal · Angola · Exportação global</span>
+
+      <h1 class="h-display hero__title reveal" data-d="1">
+        Automóveis, peças e embarcações <em>de exceção.</em>
+      </h1>
+
+      <p class="lead on-dark hero__sub reveal" data-d="2">
+        Há 25 anos a colocar viaturas de marcas de luxo, peças originais e embarcações
+        onde os nossos clientes estiverem — com canais diretos aos fabricantes e prazos
+        de entrega que poucos conseguem acompanhar.
+      </p>
+
+      <div class="hero__actions reveal" data-d="3">
+        <a class="btn btn--ember" href="#automoveis">
+          Ver automóveis
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a class="btn btn--outline-light" href="#contacto">Fazer um pedido</a>
+      </div>
+    </div>
+
+    <!-- Fotografia do showroom, inteira e emoldurada — nada por cima dela.
+         Coloque o ficheiro em  public/img/hero-showroom.jpg  (ver img/README.md).
+         Se faltar, entram por ordem as alternativas de data-fallback. -->
+    <figure class="ph hero__media reveal" data-d="2">
       <img id="heroImg"
            src="img/hero-showroom.jpg"
            data-fallback="_fTHxOafgoM,VMPdo-jftBg,OZPoquurg68"
            alt="Showroom da Ignição Dinâmica com automóveis de luxo em exposição"
            fetchpriority="high">
     </figure>
-  </div>
-  <div class="hero__veil"></div>
 
-  <div class="hero__content">
-    <div class="wrap">
-      <span class="eyebrow on-dark reveal">Portugal · Angola · Exportação global</span>
-
-      <h1 class="h-display hero__title reveal" data-d="1" style="margin-top:20px">
-        Automóveis, peças e embarcações <em>de exceção.</em>
-      </h1>
-
-      <div class="hero__row">
-        <p class="lead on-dark hero__sub reveal" data-d="2">
-          Há 25 anos a colocar viaturas de marcas de luxo, peças originais e embarcações
-          onde os nossos clientes estiverem — com canais diretos aos fabricantes e prazos
-          de entrega que poucos conseguem acompanhar.
-        </p>
-        <div class="hero__actions reveal" data-d="3">
-          <a class="btn btn--ember" href="#automoveis">
-            Ver automóveis
-            <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-          <a class="btn btn--outline-light" href="#contacto">Fazer um pedido</a>
-        </div>
-      </div>
-
-      <div class="ribbon reveal" data-d="4">
-        <div><b data-count="25" data-suffix="">0</b><span>Anos de experiência</span></div>
-        <div><b data-count="2" data-suffix="">0</b><span>Continentes</span></div>
-        <div><b data-count="9" data-suffix="+">0</b><span>Marcas de luxo</span></div>
-        <div><b>24/48h</b><span>Resposta a pedidos</span></div>
-      </div>
+    <div class="ribbon reveal" data-d="4">
+      <div><b data-count="25" data-suffix="">0</b><span>Anos de experiência</span></div>
+      <div><b data-count="2" data-suffix="">0</b><span>Continentes</span></div>
+      <div><b data-count="9" data-suffix="+">0</b><span>Marcas de luxo</span></div>
+      <div><b>24/48h</b><span>Resposta a pedidos</span></div>
     </div>
-  </div>
 
+  </div>
 </section>
 
 <!-- ══════════════ MARCAS ══════════════ -->
