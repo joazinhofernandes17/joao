@@ -464,6 +464,31 @@ section{position:relative}
 .reveal[data-d="4"]{transition-delay:.20s}
 .reveal[data-d="5"]{transition-delay:.25s}
 
+/* botão de interesse no cartão + janela do formulário */
+.vcard__cta{margin-top:16px;width:100%;justify-content:center}
+.modal{border:0;padding:0;background:transparent;color:var(--text);
+  max-width:min(580px,92vw);width:100%}
+.modal::backdrop{background:rgba(0,0,0,.78)}
+.modal__inner{position:relative;background:var(--sand);
+  border:1px solid rgba(201,162,39,.45);border-radius:var(--r-lg);
+  padding:clamp(24px,3.4vw,40px)}
+.modal__x{position:absolute;top:14px;right:14px;width:38px;height:38px;
+  border-radius:999px;border:1px solid var(--line);background:transparent;
+  color:var(--text);font-size:20px;line-height:1;cursor:pointer;
+  transition:border-color .3s var(--ease),color .3s var(--ease)}
+.modal__x:hover{border-color:var(--ember);color:var(--ember)}
+.modal h2{font-family:var(--display);font-weight:600;letter-spacing:-.02em;
+  font-size:clamp(1.15rem,1.9vw,1.45rem);color:var(--ember-2);
+  max-width:26ch;padding-right:34px}
+.modal__sub{margin-top:6px;font-weight:600;font-size:.95rem}
+.modal__car{margin-top:14px;padding:10px 14px;border-radius:var(--r-sm);
+  border:1px solid rgba(201,162,39,.35);font-size:.85rem}
+.modal__car b{color:var(--ember-2);font-weight:600}
+.modal form{display:grid;gap:14px;margin-top:20px}
+.check{display:flex;align-items:flex-start;gap:10px;font-size:.8rem;
+  color:var(--ink-soft);cursor:pointer;line-height:1.5}
+.check input{width:16px;height:16px;flex:none;margin-top:2px;accent-color:var(--ember)}
+
 /* ---------- responsive ---------- */
 
 /* Sem largura para a coluna de texto ao lado dos automóveis, a fotografia
@@ -676,6 +701,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>3.996 cm³</dd></div>
           <div><dt>Potência</dt><dd>525 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="Porsche 911 GT3 RS" data-ficha="Porsche 911 GT3 RS — 3.996 cm³, 525 cv, 4.200 km">Tenho interesse</button>
         </div>
       </article>
 
@@ -692,6 +719,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>5.204 cm³</dd></div>
           <div><dt>Potência</dt><dd>640 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="Lamborghini Huracán EVO" data-ficha="Lamborghini Huracán EVO — 5.204 cm³, 640 cv, 8.900 km">Tenho interesse</button>
         </div>
       </article>
 
@@ -708,6 +737,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
           <div><dt>Potência</dt><dd>585 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="Mercedes-AMG GT R" data-ficha="Mercedes-AMG GT R — 3.982 cm³, 585 cv, 12.400 km">Tenho interesse</button>
         </div>
       </article>
 
@@ -724,6 +755,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
           <div><dt>Potência</dt><dd>510 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="Aston Martin Vantage" data-ficha="Aston Martin Vantage — 3.982 cm³, 510 cv, 18.600 km">Tenho interesse</button>
         </div>
       </article>
 
@@ -740,6 +773,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>3.994 cm³</dd></div>
           <div><dt>Potência</dt><dd>720 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="McLaren 720S" data-ficha="McLaren 720S — 3.994 cm³, 720 cv, 6.300 km">Tenho interesse</button>
         </div>
       </article>
 
@@ -756,6 +791,8 @@ section{position:relative}
           <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
           <div><dt>Potência</dt><dd>585 cv</dd></div>
           </dl>
+          <button class="btn btn--ghost btn--sm vcard__cta" type="button"
+                  data-veiculo="Mercedes-AMG G 63" data-ficha="Mercedes-AMG G 63 — 3.982 cm³, 585 cv, 21.500 km">Tenho interesse</button>
         </div>
       </article>
     </div>
@@ -1109,6 +1146,43 @@ section{position:relative}
   <div class="wordmark" aria-hidden="true">Ignição Dinâmica</div>
 </footer>
 
+<!-- formulário de interesse, aberto pelo botão de cada viatura -->
+<dialog class="modal" id="modalInteresse" aria-labelledby="mTitulo">
+  <div class="modal__inner">
+    <button class="modal__x" id="modalX" type="button" aria-label="Fechar">&times;</button>
+    <h2 id="mTitulo">Está interessado neste veículo ou num veículo similar?</h2>
+    <p class="modal__sub">Estamos aqui para ajudar</p>
+    <p class="modal__car" id="mCar" hidden>Viatura: <b></b></p>
+
+    <form id="formInteresse" novalidate>
+      <div class="field">
+        <label for="iNome">Nome</label>
+        <input id="iNome" type="text" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="iEmail">E-mail</label>
+        <input id="iEmail" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="iTel">Telefone</label>
+        <input id="iTel" type="tel" autocomplete="tel">
+      </div>
+      <div class="field">
+        <label for="iMsg">Mensagem</label>
+        <textarea id="iMsg" placeholder="Marca, Modelo, Cilindrada, Extras, etc." required></textarea>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="iPriv" required>
+        Aceito a política de privacidade do website
+      </label>
+
+      <button class="btn btn--ember" type="submit">Enviar</button>
+      <p class="form__note" id="iNote">O envio abre o WhatsApp com o pedido já preenchido.</p>
+    </form>
+  </div>
+</dialog>
+
 <script>
 (function(){
   "use strict";
@@ -1310,6 +1384,62 @@ section{position:relative}
       + '?subject=' + encodeURIComponent('Pedido — ' + d.tipo + ' — ' + d.nome)
       + '&body='    + encodeURIComponent(body(d));
   });
+
+  /* ---- formulário de interesse por viatura ---- */
+  (function(){
+    var dlg   = document.getElementById('modalInteresse');
+    var form  = document.getElementById('formInteresse');
+    var nota  = document.getElementById('iNote');
+    var carro = document.getElementById('mCar');
+    var msg   = document.getElementById('iMsg');
+    if(!dlg) return;
+
+    var atual = '';
+
+    document.querySelectorAll('.vcard__cta').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        atual = btn.dataset.veiculo || '';
+        carro.querySelector('b').textContent = atual;
+        carro.hidden = !atual;
+        msg.value = btn.dataset.ficha ? btn.dataset.ficha + '\n\n' : '';
+        nota.textContent = 'O envio abre o WhatsApp com o pedido já preenchido.';
+        nota.style.color = '';
+        if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
+        document.getElementById('iNome').focus();
+      });
+    });
+
+    function fechar(){ if(dlg.close) dlg.close(); else dlg.removeAttribute('open'); }
+    document.getElementById('modalX').addEventListener('click', fechar);
+    // clicar fora do painel fecha
+    dlg.addEventListener('click', function(e){ if(e.target === dlg) fechar(); });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var d = {
+        nome:  document.getElementById('iNome').value.trim(),
+        email: document.getElementById('iEmail').value.trim(),
+        tel:   document.getElementById('iTel').value.trim(),
+        msg:   msg.value.trim(),
+        priv:  document.getElementById('iPriv').checked
+      };
+      if(!d.nome || !d.email || !d.msg){
+        nota.textContent = 'Preencha o nome, o e-mail e a mensagem.';
+        nota.style.color = '#E3C468'; return;
+      }
+      if(!d.priv){
+        nota.textContent = 'É preciso aceitar a política de privacidade.';
+        nota.style.color = '#E3C468'; return;
+      }
+      var corpo = 'Interesse' + (atual ? ' — ' + atual : '') + '\n\n'
+                + 'Nome: '     + d.nome  + '\n'
+                + 'E-mail: '   + d.email + '\n'
+                + 'Telefone: ' + (d.tel || '—') + '\n\n'
+                + d.msg;
+      window.open('https://wa.me/351925770004?text=' + encodeURIComponent(corpo), '_blank', 'noopener');
+      fechar();
+    });
+  })();
 
   /* ---- ano no rodapé ---- */
   document.getElementById('ano').textContent = new Date().getFullYear();
