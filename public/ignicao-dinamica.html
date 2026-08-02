@@ -35,17 +35,21 @@
 
 /* ---------- tokens ---------- */
 :root{
-  --sand:      #F4F1EB;
-  --sand-2:    #EBE6DD;
-  --sand-3:    #DFD8CC;
-  --ink:       #101215;
-  --ink-2:     #191C21;
-  --ink-soft:  #55595F;
-  --ink-mute:  #83878E;
-  --line:      rgba(16,18,21,.13);
-  --line-soft: rgba(16,18,21,.07);
-  --ember:     #C4451D;
-  --ember-2:   #E2762E;
+  /* Preto e dourado, seguindo a referência. Os nomes são herdados do esquema
+     claro anterior: --sand é o fundo da página, --ink a superfície mais escura,
+     --ink-soft/-mute o texto secundário. */
+  --sand:      #0B0B0B;
+  --sand-2:    #131313;
+  --sand-3:    #1C1C1C;
+  --ink:       #000000;
+  --ink-2:     #151515;
+  --text:      #F2F0EC;
+  --ink-soft:  #B3AEA6;
+  --ink-mute:  #857F77;
+  --line:      rgba(255,255,255,.13);
+  --line-soft: rgba(255,255,255,.06);
+  --ember:     #C9A227;   /* dourado */
+  --ember-2:   #E3C468;
   --white:     #FFFFFF;
 
   /* cores da marca, medidas no logótipo original (public/img/logo-original.jpg) */
@@ -60,9 +64,11 @@
 
   /* moldura branca das fotografias e elevação dos cartões */
   --frame: 7px;
-  --sh-1: 0 1px 2px rgba(16,18,21,.04), 0 10px 24px -14px rgba(16,18,21,.22);
-  --sh-2: 0 2px 4px rgba(16,18,21,.05), 0 22px 48px -26px rgba(16,18,21,.34);
-  --sh-3: 0 3px 6px rgba(16,18,21,.06), 0 34px 64px -30px rgba(16,18,21,.42);
+  --frame-c: #151515;                       /* moldura escura */
+  --hair: 0 0 0 1px rgba(201,162,39,.30);   /* fio dourado a definir a borda */
+  --sh-1: var(--hair);
+  --sh-2: var(--hair), 0 22px 48px -26px rgba(0,0,0,.8);
+  --sh-3: 0 0 0 1px rgba(201,162,39,.55), 0 30px 60px -28px rgba(0,0,0,.9);
 
   --pad: clamp(20px, 5vw, 64px);
   --sec: clamp(88px, 12vw, 172px);
@@ -82,7 +88,7 @@ html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
   background:var(--sand);
-  color:var(--ink);
+  color:var(--text);
   font-family:var(--sans);
   font-weight:400;
   font-size:16px;
@@ -99,7 +105,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 h1,h2,h3,h4{margin:0;font-weight:400;line-height:1.06;letter-spacing:-.018em}
 p{margin:0}
 ul{margin:0;padding:0;list-style:none}
-::selection{background:var(--ember);color:#fff}
+::selection{background:var(--ember);color:#0B0B0B}
 
 /* ---------- layout ---------- */
 .wrap{width:100%;max-width:1340px;margin-inline:auto;padding-inline:var(--pad)}
@@ -132,7 +138,7 @@ section{position:relative}
 
 /* ---------- buttons ---------- */
 .btn{
-  --bg:var(--ink); --fg:#fff; --bd:var(--ink);
+  --bg:var(--text); --fg:#0B0B0B; --bd:var(--text);
   display:inline-flex;align-items:center;justify-content:center;gap:9px;
   padding:14px 28px;border-radius:999px;border:1px solid var(--bd);
   background:var(--bg);color:var(--fg);
@@ -142,13 +148,13 @@ section{position:relative}
 }
 .btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px -16px rgba(16,18,21,.5)}
 .btn:active{transform:translateY(0)}
-.btn--ember{--bg:var(--ember);--bd:var(--ember)}
-.btn--ember:hover{--bg:#A93916;--bd:#A93916}
-.btn--ghost{--bg:transparent;--fg:var(--ink);--bd:var(--line)}
-.btn--ghost:hover{--bg:var(--ink);--fg:#fff;--bd:var(--ink)}
-.btn--light{--bg:#fff;--fg:var(--ink);--bd:#fff}
+.btn--ember{--bg:var(--ember);--bd:var(--ember);--fg:#0B0B0B}
+.btn--ember:hover{--bg:var(--ember-2);--bd:var(--ember-2)}
+.btn--ghost{--bg:transparent;--fg:var(--text);--bd:var(--line)}
+.btn--ghost:hover{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
+.btn--light{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
 .btn--outline-light{--bg:transparent;--fg:#fff;--bd:rgba(255,255,255,.35)}
-.btn--outline-light:hover{--bg:#fff;--fg:var(--ink);--bd:#fff}
+.btn--outline-light:hover{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
 .btn--sm{padding:11px 22px;font-size:.86rem}
 .btn .ico{width:15px;height:15px;flex:none;transition:transform .4s var(--ease)}
 .btn:hover .ico{transform:translateX(3px)}
@@ -169,7 +175,7 @@ section{position:relative}
   /* sem backdrop-filter: o vidro fosco punha esta barra numa camada composta,
      e o texto lá dentro perdia o alisamento por subpíxel — lia-se esbatido.
      Um véu sólido dá o mesmo contraste e mantém as letras nítidas. */
-  background:rgba(12,14,17,.58);
+  background:rgba(0,0,0,.55);
   border:1px solid rgba(255,255,255,.13);
   transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
 }
@@ -199,23 +205,23 @@ section{position:relative}
 /* scrolled state */
 .nav.is-stuck{padding-top:10px}
 .nav.is-stuck .nav__inner{
-  background:var(--sand);
+  background:rgba(11,11,11,.96);
   border-color:var(--line);
   box-shadow:0 14px 44px -26px rgba(16,18,21,.5);
 }
-.nav.is-stuck .nav__brand{color:var(--brand-ink)}
+.nav.is-stuck .nav__brand{color:var(--text)}
 .nav.is-stuck .nav__menu a{color:var(--ink-soft)}
-.nav.is-stuck .nav__menu a:hover,.nav.is-stuck .nav__menu a.active{color:var(--ink)}
+.nav.is-stuck .nav__menu a:hover,.nav.is-stuck .nav__menu a.active{color:var(--text)}
 .nav.is-stuck .nav__tel{color:var(--ink-soft)}
-.nav.is-stuck .nav__tel:hover{color:var(--ink)}
-.nav.is-stuck .btn--light{--bg:var(--ink);--fg:#fff;--bd:var(--ink)}
+.nav.is-stuck .nav__tel:hover{color:var(--text)}
+.nav.is-stuck .btn--light{--bg:var(--ember);--fg:#0B0B0B;--bd:var(--ember)}
 
 /* burger */
 .burger{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;place-items:center;cursor:pointer}
 .burger span{display:block;width:16px;height:1.5px;background:#fff;border-radius:2px;transition:transform .35s var(--ease),opacity .25s var(--ease)}
 .burger span+span{margin-top:4px}
 .nav.is-stuck .burger{border-color:var(--line)}
-.nav.is-stuck .burger span{background:var(--ink)}
+.nav.is-stuck .burger span{background:var(--text)}
 
 /* mobile sheet */
 .sheet{
@@ -308,14 +314,14 @@ section{position:relative}
 /* cor sólida em vez de opacity: opacity<1 põe cada nome numa camada composta e
    o texto perde o alisamento por subpíxel — lia-se esbatido. #70706F é o
    resultado exato de --ink a 58% sobre o fundo, portanto o peso é o mesmo. */
-.marquee span{font-family:var(--display);font-weight:500;letter-spacing:-.015em;font-size:clamp(1.1rem,2vw,1.6rem);
-  color:#70706F;white-space:nowrap;transition:color .3s var(--ease)}
-.marquee span:hover{color:var(--ink)}
+.marquee span{font-family:var(--display);font-weight:500;letter-spacing:-.015em;color:#8F8A80;font-size:clamp(1.1rem,2vw,1.6rem);
+  white-space:nowrap;transition:color .3s var(--ease)}
+.marquee span:hover{color:var(--text)}
 @keyframes slide{to{transform:translateX(-50%)}}
 .tuners{margin-top:44px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px}
 .chip{border:1px solid var(--line);border-radius:999px;padding:8px 18px;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);transition:border-color .3s var(--ease),color .3s var(--ease),background .3s var(--ease)}
-.chip:hover{border-color:var(--ink);color:var(--ink)}
-.chip--solid{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip:hover{border-color:var(--ember);color:var(--text)}
+.chip--solid{background:var(--ember);border-color:var(--ember);color:#0B0B0B}
 
 /* ---------- grids / cards ---------- */
 .grid{display:grid;gap:clamp(16px,1.9vw,26px)}
@@ -327,18 +333,18 @@ section{position:relative}
 /* moldura branca à volta da fotografia. É uma borda, não padding: o recorte
    acontece dentro dela, por isso o zoom do hover nunca invade a moldura. */
 .card .ph{aspect-ratio:4/3;border-radius:var(--r-lg);
-  border:var(--frame) solid #fff;box-shadow:var(--sh-2);
+  border:var(--frame) solid var(--frame-c);box-shadow:var(--sh-2);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 .card:hover .ph{transform:translateY(-3px);box-shadow:var(--sh-3)}
-.band .card .ph{border-color:rgba(255,255,255,.11);box-shadow:none}
-.band .card:hover .ph{box-shadow:none;border-color:rgba(255,255,255,.2)}
+.band .card .ph{border-color:var(--frame-c)}
+.band .card:hover .ph{box-shadow:var(--sh-3)}
 .card__meta{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .card__tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);white-space:nowrap;padding-top:4px}
 .card p{color:var(--ink-soft);font-weight:400;font-size:.92rem;line-height:1.65}
 
 /* cartões de viatura (nome + preço sobre a fotografia) */
 .vcard{position:relative;display:flex;align-items:flex-end;aspect-ratio:4/3;
-  border-radius:var(--r-lg);border:var(--frame) solid #fff;
+  border-radius:var(--r-lg);border:var(--frame) solid var(--frame-c);
   overflow:hidden;background:var(--ink);box-shadow:var(--sh-2);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 .vcard:hover{transform:translateY(-4px);box-shadow:var(--sh-3)}
@@ -352,10 +358,10 @@ section{position:relative}
   gap:18px;margin-top:clamp(22px,3vw,34px)}
 .vgrid__foot .small{max-width:64ch;margin:0}
 
-.feature{position:relative;border-radius:var(--r-lg);border:var(--frame) solid #fff;
+.feature{position:relative;border-radius:var(--r-lg);border:var(--frame) solid var(--frame-c);
   box-shadow:var(--sh-2);overflow:hidden;background:var(--ink);
   min-height:clamp(300px,34vw,420px);display:flex;align-items:flex-end}
-.band .feature{border-color:rgba(255,255,255,.11);box-shadow:none}
+.band .feature{border-color:var(--frame-c)}
 .feature .ph{position:absolute;inset:0}
 .feature__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,.05) 30%,rgba(10,12,14,.86) 100%)}
 .feature__body{position:relative;z-index:2;padding:clamp(22px,3vw,36px);color:#fff;display:grid;gap:8px}
@@ -375,7 +381,7 @@ section{position:relative}
 
 /* ---------- editorial gallery (sobre nós) ---------- */
 .editorial{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(18px,2.4vw,34px);margin-top:clamp(48px,7vw,86px)}
-.editorial .ph{border-radius:var(--r-lg);border:var(--frame) solid #fff;box-shadow:var(--sh-2)}
+.editorial .ph{border-radius:var(--r-lg);border:var(--frame) solid var(--frame-c);box-shadow:var(--sh-2)}
 .e1{grid-column:1 / span 6;grid-row:1;aspect-ratio:4/3}
 .e2{grid-column:8 / span 5;grid-row:1;aspect-ratio:3/4;align-self:end}
 .e-note{grid-column:1 / span 5;grid-row:2;align-self:center;display:grid;gap:12px}
@@ -386,8 +392,8 @@ section{position:relative}
 .split{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(28px,4.5vw,72px);align-items:center}
 .split--rev .split__media{order:2}
 .split__media .ph{aspect-ratio:5/6;border-radius:var(--r-lg);
-  border:var(--frame) solid #fff;box-shadow:var(--sh-2)}
-.band .split__media .ph{border-color:rgba(255,255,255,.11);box-shadow:none}
+  border:var(--frame) solid var(--frame-c);box-shadow:var(--sh-2)}
+.band .split__media .ph{border-color:var(--frame-c)}
 .split__body{display:grid;gap:20px;align-content:center}
 
 /* ---------- contact ---------- */
@@ -402,12 +408,13 @@ section{position:relative}
 .field label{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-mute)}
 .field input,.field select,.field textarea{
   width:100%;padding:13px 16px;border-radius:var(--r-sm);
-  border:1px solid var(--line);background:rgba(255,255,255,.7);
+  border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);
   font-size:.95rem;font-weight:400;transition:border-color .3s var(--ease),background .3s var(--ease),box-shadow .3s var(--ease)
 }
 .field textarea{min-height:128px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{
-  outline:none;border-color:var(--ember);background:#fff;box-shadow:0 0 0 3px rgba(196,69,29,.12)
+  outline:none;border-color:var(--ember);background:rgba(255,255,255,.07);
+  box-shadow:0 0 0 3px rgba(201,162,39,.16)
 }
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .form__note{font-size:.78rem;color:var(--ink-mute);font-weight:400}
@@ -430,7 +437,7 @@ section{position:relative}
 .wordmark{
   font-family:var(--sans);font-weight:600;text-transform:uppercase;
   font-size:clamp(1.2rem,7.6vw,7rem);line-height:.9;letter-spacing:.02em;
-  color:rgba(255,255,255,.055);-webkit-text-stroke:1px rgba(255,255,255,.14);
+  color:rgba(201,162,39,.05);-webkit-text-stroke:1px rgba(201,162,39,.20);
   text-align:center;padding-bottom:clamp(12px,2vw,26px);user-select:none;white-space:nowrap
 }
 
