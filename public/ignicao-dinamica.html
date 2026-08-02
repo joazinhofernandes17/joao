@@ -116,11 +116,11 @@ section{position:relative}
 /* ---------- typography ---------- */
 .eyebrow{
   font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
-  color:var(--ink-mute);display:inline-flex;align-items:center;gap:10px;
+  color:var(--ember);display:inline-flex;align-items:center;gap:10px;
 }
 .eyebrow::before{content:"";width:22px;height:1px;background:var(--ember);opacity:.85}
 .eyebrow.center{justify-content:center}
-.eyebrow.on-dark{color:rgba(255,255,255,.62)}
+.eyebrow.on-dark{color:var(--ember)}
 
 .h-display{font-family:var(--display);font-weight:600;font-size:clamp(2.5rem,7vw,5.2rem);line-height:1.03;letter-spacing:-.038em}
 .h1{font-family:var(--display);font-weight:600;font-size:clamp(2.05rem,5.2vw,3.7rem);line-height:1.08;letter-spacing:-.032em}
@@ -153,8 +153,8 @@ section{position:relative}
 .btn--ghost{--bg:transparent;--fg:var(--text);--bd:var(--line)}
 .btn--ghost:hover{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
 .btn--light{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
-.btn--outline-light{--bg:transparent;--fg:#fff;--bd:rgba(255,255,255,.35)}
-.btn--outline-light:hover{--bg:var(--text);--fg:#0B0B0B;--bd:var(--text)}
+.btn--outline-light{--bg:transparent;--fg:var(--text);--bd:rgba(201,162,39,.55)}
+.btn--outline-light:hover{--bg:var(--ember);--fg:#0B0B0B;--bd:var(--ember)}
 .btn--sm{padding:11px 22px;font-size:.86rem}
 .btn .ico{width:15px;height:15px;flex:none;transition:transform .4s var(--ease)}
 .btn:hover .ico{transform:translateX(3px)}
@@ -199,6 +199,7 @@ section{position:relative}
 .nav__menu a:hover::after,.nav__menu a.active::after{transform:scaleX(1)}
 .nav__menu a:hover{color:#fff}
 .nav__cta{display:flex;align-items:center;gap:10px}
+.nav__cta .btn--light{--bg:var(--ember);--fg:#0B0B0B;--bd:var(--ember)}
 .nav__tel{font-size:.83rem;color:rgba(255,255,255,.8);padding:8px 10px;transition:color .3s var(--ease)}
 .nav__tel:hover{color:#fff}
 
@@ -297,11 +298,11 @@ section{position:relative}
 .nav__brand--foot{font-size:1.04rem}
 
 /* stats ribbon */
-.ribbon{border-top:1px solid rgba(255,255,255,.14);margin-top:clamp(34px,6vh,60px);padding-top:26px;
+.ribbon{border-top:1px solid rgba(201,162,39,.38);margin-top:clamp(34px,6vh,60px);padding-top:26px;
   display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
 .ribbon div{display:grid;gap:4px}
-.ribbon b{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:600;letter-spacing:-.03em;color:#fff;line-height:1}
-.ribbon span{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.ribbon b{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:600;letter-spacing:-.03em;color:var(--ember-2);line-height:1}
+.ribbon span{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.58)}
 
 /* ---------- brands ---------- */
 .brands{padding-block:clamp(56px,8vw,92px);border-bottom:1px solid var(--line-soft)}
