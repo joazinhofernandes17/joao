@@ -176,7 +176,7 @@ section{position:relative}
      e o texto lá dentro perdia o alisamento por subpíxel — lia-se esbatido.
      Um véu sólido dá o mesmo contraste e mantém as letras nítidas. */
   background:rgba(0,0,0,.55);
-  border:1px solid rgba(255,255,255,.13);
+  border:1px solid rgba(201,162,39,.42);
   transition:background .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease);
 }
 /* logótipo: onda encostada ao topo direito da assinatura, como na marca.
@@ -207,7 +207,7 @@ section{position:relative}
 .nav.is-stuck{padding-top:10px}
 .nav.is-stuck .nav__inner{
   background:rgba(11,11,11,.96);
-  border-color:var(--line);
+  border-color:rgba(201,162,39,.52);
   box-shadow:0 14px 44px -26px rgba(16,18,21,.5);
 }
 .nav.is-stuck .nav__brand{color:var(--text)}
@@ -218,10 +218,10 @@ section{position:relative}
 .nav.is-stuck .btn--light{--bg:var(--ember);--fg:#0B0B0B;--bd:var(--ember)}
 
 /* burger */
-.burger{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:transparent;place-items:center;cursor:pointer}
+.burger{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(201,162,39,.45);background:transparent;place-items:center;cursor:pointer}
 .burger span{display:block;width:16px;height:1.5px;background:#fff;border-radius:2px;transition:transform .35s var(--ease),opacity .25s var(--ease)}
 .burger span+span{margin-top:4px}
-.nav.is-stuck .burger{border-color:var(--line)}
+.nav.is-stuck .burger{border-color:rgba(201,162,39,.52)}
 .nav.is-stuck .burger span{background:var(--text)}
 
 /* mobile sheet */
