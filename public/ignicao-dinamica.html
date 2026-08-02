@@ -341,18 +341,30 @@ section{position:relative}
 .card__tag{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ember);white-space:nowrap;padding-top:4px}
 .card p{color:var(--ink-soft);font-weight:400;font-size:.92rem;line-height:1.65}
 
-/* cartões de viatura (nome + preço sobre a fotografia) */
-.vcard{position:relative;display:flex;align-items:flex-end;aspect-ratio:4/3;
+/* cartões de viatura: fotografia em cima, ficha técnica por baixo, à maneira
+   de uma listagem de stand */
+.vcard{position:relative;display:flex;flex-direction:column;
   border-radius:var(--r-lg);border:var(--frame) solid var(--frame-c);
   overflow:hidden;background:var(--ink);box-shadow:var(--sh-2);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 .vcard:hover{transform:translateY(-4px);box-shadow:var(--sh-3)}
-.vcard .ph{position:absolute;inset:0}
-.vcard:hover .ph img{transform:scale(1.06)}
-.vcard__veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,12,14,0) 40%,rgba(10,12,14,.30) 66%,rgba(10,12,14,.88) 100%)}
-.vcard__body{position:relative;z-index:2;padding:clamp(16px,1.8vw,22px);color:#fff}
-.vcard__name{font-size:clamp(.98rem,1.2vw,1.1rem);font-weight:500;letter-spacing:-.01em}
-.vcard__price{font-size:.88rem;font-weight:400;color:rgba(255,255,255,.74);margin-top:3px}
+.vcard__media{position:relative;aspect-ratio:4/3;flex:none;border-radius:0}
+.vcard:hover .vcard__media img{transform:scale(1.06)}
+.vcard__body{padding:clamp(16px,1.7vw,22px);display:flex;flex-direction:column;flex:1}
+.vcard__brand{font-size:.7rem;font-weight:500;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ember)}
+.vcard__name{margin-top:5px;font-size:clamp(1rem,1.25vw,1.16rem);font-weight:600;
+  letter-spacing:-.018em;color:var(--text)}
+.vcard__price{margin-top:9px;font-size:clamp(1.08rem,1.35vw,1.26rem);font-weight:600;
+  letter-spacing:-.025em;color:var(--ember-2)}
+.specs{margin:15px 0 0;border-top:1px solid rgba(255,255,255,.09)}
+.specs > div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:9px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+.specs > div:last-child{border-bottom:0;padding-bottom:0}
+.specs dt{font-size:.78rem;color:var(--ink-mute)}
+.specs dd{margin:0;font-size:.83rem;font-weight:500;color:var(--text);
+  text-align:right;white-space:nowrap}
+
 .vgrid__foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
   gap:18px;margin-top:clamp(22px,3vw,34px)}
 .vgrid__foot .small{max-width:64ch;margin:0}
@@ -652,64 +664,107 @@ section{position:relative}
 
     <div class="grid g-3" style="margin-top:clamp(54px,7.5vw,90px)">
       <article class="vcard reveal">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/eUDs6kqCxig/download?force=true&amp;w=2000" alt="Porsche 911 GT3 RS branco estacionado"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/eUDs6kqCxig/download?force=true&amp;w=2000" alt="Porsche 911 GT3 RS branco estacionado"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">Porsche 911 GT3 RS</h3>
+          <span class="vcard__brand">Porsche</span>
+          <h3 class="vcard__name">911 GT3 RS</h3>
           <p class="vcard__price">241.350 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>4.200 km</dd></div>
+          <div><dt>Lugares</dt><dd>2</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>3.996 cm³</dd></div>
+          <div><dt>Potência</dt><dd>525 cv</dd></div>
+          </dl>
         </div>
       </article>
 
       <article class="vcard reveal" data-d="1">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/AvjRe7jM6-c/download?force=true&amp;w=2000" alt="Lamborghini Huracán azul junto a um edifício"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/AvjRe7jM6-c/download?force=true&amp;w=2000" alt="Lamborghini Huracán azul junto a um edifício"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">Lamborghini Huracán</h3>
+          <span class="vcard__brand">Lamborghini</span>
+          <h3 class="vcard__name">Huracán EVO</h3>
           <p class="vcard__price">265.500 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>8.900 km</dd></div>
+          <div><dt>Lugares</dt><dd>2</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>5.204 cm³</dd></div>
+          <div><dt>Potência</dt><dd>640 cv</dd></div>
+          </dl>
         </div>
       </article>
 
       <article class="vcard reveal" data-d="2">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/qGzFSFyFSN0/download?force=true&amp;w=2000" alt="Mercedes-AMG GT cinzento"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/qGzFSFyFSN0/download?force=true&amp;w=2000" alt="Mercedes-AMG GT cinzento"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">Mercedes-AMG GT R</h3>
+          <span class="vcard__brand">Mercedes-AMG</span>
+          <h3 class="vcard__name">GT R</h3>
           <p class="vcard__price">165.000 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>12.400 km</dd></div>
+          <div><dt>Lugares</dt><dd>2</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
+          <div><dt>Potência</dt><dd>585 cv</dd></div>
+          </dl>
         </div>
       </article>
 
       <article class="vcard reveal">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/H66GwDFwrUM/download?force=true&amp;w=2000" alt="Aston Martin Vantage branco num caminho de gravilha"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/H66GwDFwrUM/download?force=true&amp;w=2000" alt="Aston Martin Vantage branco num caminho de gravilha"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">Aston Martin Vantage</h3>
+          <span class="vcard__brand">Aston Martin</span>
+          <h3 class="vcard__name">Vantage</h3>
           <p class="vcard__price">145.900 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>18.600 km</dd></div>
+          <div><dt>Lugares</dt><dd>2</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
+          <div><dt>Potência</dt><dd>510 cv</dd></div>
+          </dl>
         </div>
       </article>
 
       <article class="vcard reveal" data-d="1">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/fvWLxoXsNVo/download?force=true&amp;w=2000" alt="McLaren 720S vermelho"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/fvWLxoXsNVo/download?force=true&amp;w=2000" alt="McLaren 720S vermelho"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">McLaren 720S</h3>
+          <span class="vcard__brand">McLaren</span>
+          <h3 class="vcard__name">720S</h3>
           <p class="vcard__price">299.000 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>6.300 km</dd></div>
+          <div><dt>Lugares</dt><dd>2</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>3.994 cm³</dd></div>
+          <div><dt>Potência</dt><dd>720 cv</dd></div>
+          </dl>
         </div>
       </article>
 
       <article class="vcard reveal" data-d="2">
-        <figure class="ph"><img loading="lazy" src="https://unsplash.com/photos/5CsHwC0AuJs/download?force=true&amp;w=2000" alt="Mercedes-AMG G63 preto"></figure>
-        <div class="vcard__veil"></div>
+        <figure class="ph vcard__media"><img loading="lazy" src="https://unsplash.com/photos/5CsHwC0AuJs/download?force=true&amp;w=2000" alt="Mercedes-AMG G63 preto"></figure>
         <div class="vcard__body">
-          <h3 class="vcard__name">Mercedes-AMG G63</h3>
+          <span class="vcard__brand">Mercedes-AMG</span>
+          <h3 class="vcard__name">G 63</h3>
           <p class="vcard__price">179.000 €</p>
+          <dl class="specs">
+          <div><dt>Quilómetros</dt><dd>21.500 km</dd></div>
+          <div><dt>Lugares</dt><dd>5</dd></div>
+          <div><dt>Combustível</dt><dd>Gasolina</dd></div>
+          <div><dt>Cilindrada</dt><dd>3.982 cm³</dd></div>
+          <div><dt>Potência</dt><dd>585 cv</dd></div>
+          </dl>
         </div>
       </article>
     </div>
 
     <div class="vgrid__foot reveal">
       <p class="small">
-        Exemplos de stock. Preços indicativos em euros, sujeitos a versão, equipamento e disponibilidade.
-        Vasta gama de <strong>viaturas blindadas</strong> para entrega imediata ou por encomenda.
+        Exemplos de stock. Quilometragem e preços indicativos, sujeitos a versão,
+        equipamento e disponibilidade. Vasta gama de <strong>viaturas blindadas</strong>
+        para entrega imediata ou por encomenda.
       </p>
       <a class="link-u" href="#contacto">Consultar stock completo
         <svg class="ico" style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
